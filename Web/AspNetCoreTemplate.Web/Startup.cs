@@ -108,8 +108,6 @@
             services.AddTransient<ISmsSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
 
-            services.AddSingleton<DataSeeder>();
-
             services.AddTransient<IBlogService, BlogServices>();
             services.AddTransient<IAccountsServices, AccountsServices>();
             services.AddTransient<IUsersService, UsersService>();
