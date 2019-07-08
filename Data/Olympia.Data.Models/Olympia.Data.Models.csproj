@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AspNetCoreTemplate.Common\Olympia.Common.csproj" />
+    <ProjectReference Include="..\AspNetCoreTemplate.Data.Common\Olympia.Data.Common.csproj" />
+    <ProjectReference Include="..\AspNetCoreTemplate.Data.Models\Olympia.Data.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

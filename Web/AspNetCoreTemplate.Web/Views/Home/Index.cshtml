@@ -1,0 +1,55 @@
+﻿@{
+    this.ViewData["Title"] = "Home Page";
+    @model IEnumerable<Olympia.Data.Models.ViewModels.BlogPartViewModels.ArticleViewModel>
+    var list = Model.ToList();
+}
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="text-center">
+        <h1 class="display-4 text-danger">Welcome to Olympia!</h1>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4 text-danger">Welcome to Olympia, @(this.User.Identity.Name)</h1>
+    </div>
+
+    <hr class="bg-danger" />
+
+    <h2 class="mb-5">Here are five of our top read articles!</h2>
+
+    <div>
+        <div class="container">
+            <div class="row">
+                @foreach (var article in list)
+                {
+                    <div class="card mt-3 mb-3 mr-3 ml-3">
+                        <img class="card-img" src="@article.ImgUrl" alt="Bologna">
+                        <div class="card-body">
+                            <h4 class="card-title">@article.Title</h4>
+                            <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
+                            <a asp-area="Blog"
+                               asp-controller="Blog"
+                               asp-action="ArticleDetails"
+                               asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
+                        </div>
+                        <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+                            <div class="views">
+                                @article.CreatedOn
+                            </div>
+                            <div class="stats">
+                                <i class="far fa-eye"></i> @article.TimesRead
+                                <i class="far fa-comment"></i> @article.Comments.Count
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
+}

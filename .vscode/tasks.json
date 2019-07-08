@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Tests/AspNetCoreTemplate.Services.Data.Tests/Olympia.Services.Data.Tests.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/Tests/AspNetCoreTemplate.Services.Data.Tests/Olympia.Services.Data.Tests.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "${workspaceFolder}/Tests/AspNetCoreTemplate.Services.Data.Tests/Olympia.Services.Data.Tests.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        }
+    ]
+}

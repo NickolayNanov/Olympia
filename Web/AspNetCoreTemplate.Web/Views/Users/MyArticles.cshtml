@@ -1,0 +1,40 @@
+﻿@using System.Linq;
+@{
+    ViewData["Title"] = "MyArticles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @model IEnumerable<Olympia.Data.Models.ViewModels.BlogPartViewModels.ArticleViewModel>
+    var list = Model.ToList();
+}
+
+<div>
+    <a class="btn btn-danger" asp-area="" asp-controller="Users" asp-action="CreateArticle">New Article</a>
+</div>
+
+<div>
+    <div class="container">
+        <div class="row">
+            @foreach (var article in list)
+            {
+                <div class="card mt-3 mb-3 mr-3 ml-3">
+                    <img class="card-img" src="@article.ImgUrl" alt="Bologna">
+                    <div class="card-body">
+                        <h4 class="card-title">@article.Title</h4>
+                        <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
+                        <a asp-controller="Blogs" asp-action="ArticleDetails" asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+                        <div class="views">
+                            @article.CreatedOn
+                        </div>
+                        <div class="stats">
+                            <i class="far fa-eye"></i> @article.TimesRead
+                            <i class="far fa-comment"></i> @article.Comments.Count
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
