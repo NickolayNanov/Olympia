@@ -5,6 +5,7 @@
         public const string DisplayUsername = "Username";
         public const string DisplayPassword = "Password";
         public const string DisplayConfirmPassword = "Confirm password";
+        public const string DisplayRememberMe = "Remember me?";
 
         public const string DisplayTitle = "Title";
         public const string DisplayContent = "Content";

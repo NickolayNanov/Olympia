@@ -8,5 +8,7 @@
     public interface IAccountsServices
     {
         Task<OlympiaUser> RegisterUser(UserInputBingingModel model);
+
+        Task<OlympiaUser> LoginUserAsync(UserLoginBindingModel model);
     }
 }

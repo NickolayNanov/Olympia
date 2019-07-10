@@ -1,11 +1,19 @@
 ﻿<li class="nav-item active">
-    <a class="nav-link text-light" asp-area="Identity" asp-page="/" title="Manage">Hello @User.Identity.Name!</a>
+    <a class="nav-link text-light"
+       asp-controller="Home"
+       asp-action="Index">Hello@User.Identity.Name!</a>
 </li>
 
 <li class="nav-item active">
-    <a class="nav-link text-light" asp-area="" asp-controller="Blogs" asp-action="ArticlesAll">Articles</a>
+    <a class="nav-link text-light"
+       asp-area="Blog"
+       asp-controller="Blog"
+       asp-action="ArticlesAll">Articles</a>
 </li>
 
 <li class="nav-item active">
-    <a class="nav-link text-light" asp-area="" asp-controller="Shops" asp-action="Shop">Shop</a>
+    <a class="nav-link text-light"
+       asp-area="Shop"
+       asp-controller="Shop"
+       asp-action="ShopIndex">Shop</a>
 </li>

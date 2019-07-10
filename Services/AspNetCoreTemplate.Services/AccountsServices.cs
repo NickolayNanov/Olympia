@@ -15,12 +15,31 @@
         private readonly IMapper mapper;
         private readonly UserManager<OlympiaUser> userManager;
         private readonly OlympiaDbContext context;
+        private readonly SignInManager<OlympiaUser> signInManager;
 
-        public AccountsServices(IMapper mapper, UserManager<OlympiaUser> userManager, OlympiaDbContext context)
+        public AccountsServices(
+            IMapper mapper,
+            UserManager<OlympiaUser> userManager,
+            OlympiaDbContext context,
+            SignInManager<OlympiaUser> signInManager)
         {
             this.mapper = mapper;
             this.userManager = userManager;
             this.context = context;
+            this.signInManager = signInManager;
+        }
+
+        public async Task<OlympiaUser> LoginUserAsync(UserLoginBindingModel model)
+        {
+            var user = await this.userManager.FindByNameAsync(model.UserName);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            await this.signInManager.SignInAsync(user, true);
+            return user;
         }
 
         public async Task<OlympiaUser> RegisterUser(UserInputBingingModel model)

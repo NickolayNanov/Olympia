@@ -10,5 +10,6 @@
         public const string TrainerArea = "Trainer";
         public const string ClientArea = "Client";
         public const string BlogArea = "Blog";
+        public const string ShopArea = "Shop";
     }
 }

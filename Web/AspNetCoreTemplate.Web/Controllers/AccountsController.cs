@@ -17,7 +17,10 @@
         private readonly UserManager<OlympiaUser> userManager;
         private readonly IAccountsServices accountsServices;
 
-        public AccountsController(SignInManager<OlympiaUser> signInManager, UserManager<OlympiaUser> userManager ,IAccountsServices accountsServices)
+        public AccountsController(
+            SignInManager<OlympiaUser> signInManager,
+            UserManager<OlympiaUser> userManager,
+            IAccountsServices accountsServices)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -44,6 +47,24 @@
 
             var user = await this.accountsServices.RegisterUser(model);
             await this.signInManager.SignInAsync(user, isPersistent: true);
+
+            return this.Redirect(RedirectRoutes.Index);
+        }
+
+        public IActionResult Login()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginBindingModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.Redirect(RedirectRoutes.AccountLogin);
+            }
+
+            await this.accountsServices.LoginUserAsync(model);
 
             return this.Redirect(RedirectRoutes.Index);
         }
