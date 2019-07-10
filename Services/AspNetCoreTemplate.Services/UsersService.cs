@@ -24,6 +24,8 @@
 
         public IEnumerable<OlympiaUser> GetAllTrainers()
         {
+            // var trainers = await this.userManager.GetUsersInRoleAsync(GlobalConstants.TrainerRoleName);
+
             var trainerIds = this.context.UserRoles
                 .Where(ur => ur.RoleId == "e9e63982-0610-450d-9253-e66db344561b")
                 .Select(x => x.UserId)

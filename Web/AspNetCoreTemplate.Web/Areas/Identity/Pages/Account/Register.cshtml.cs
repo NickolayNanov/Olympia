@@ -1,10 +1,9 @@
 ﻿namespace Olympia.Web.Areas.Identity.Pages.Account
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-
-    using Olympia.Data.Domain;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -13,8 +12,8 @@
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
     using Olympia.Common;
+    using Olympia.Data.Domain;
     using Olympia.Data.Domain.Enums;
-    using System.Linq;
 
     [AllowAnonymous]
 #pragma warning disable SA1649 // File name should match first type name
@@ -100,22 +99,22 @@
         public class InputModel
         {
             [Required]
-            [Display(Name = "Username")]
+            [Display(Name = DisplayModelConstatnts.DisplayUsername)]
             public string Username { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = 3)]
+            [StringLength(100, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = 3)]
             public string FullName { get; set; }
 
             [Required]
-            [StringLength(50, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = 6)]
+            [StringLength(50, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = DisplayModelConstatnts.DisplayPassword)]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = GlobalConstants.ConfirmPasswordErrorMessage)]
+            [Display(Name = DisplayModelConstatnts.DisplayConfirmPassword)]
+            [Compare(DisplayModelConstatnts.DisplayPassword, ErrorMessage = ErrorConstants.ConfirmPasswordErrorMessage)]
             public string ConfirmPassword { get; set; }
 
             [Required]
@@ -123,7 +122,7 @@
             public string Email { get; set; }
 
             [Required]
-            [Range(12, 96, ErrorMessage = GlobalConstants.AgeErrorMessage)]
+            [Range(12, 96, ErrorMessage = ErrorConstants.AgeErrorMessage)]
             public int Age { get; set; }
 
             [Required]

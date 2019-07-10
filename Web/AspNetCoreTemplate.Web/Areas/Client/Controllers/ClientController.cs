@@ -2,11 +2,12 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Olympia.Common;
     using Olympia.Services.Contracts;
     using Olympia.Web.Areas.Client.Models;
 
-    [Area("Client")]
-    [Authorize(Roles = "Client")]
+    [Area(GlobalConstants.ClientArea)]
+    [Authorize(Roles = GlobalConstants.ClientRoleName)]
     public class ClientController : Controller
     {
         private readonly IUsersService usersService;
@@ -34,7 +35,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect("/Client/Client/TrainersAll");
+                return this.Redirect(RedirectRoutes.ClientTrainersAll);
             }
 
             this.usersService.SetTrainer(model.TrainerName, this.User.Identity.Name);

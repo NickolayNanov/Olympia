@@ -155,6 +155,7 @@
             return uploadResult.SecureUri.AbsoluteUri;
         }
 
+        // TODO: export to json
         private Cloudinary SetCloudinary()
         {
             CloudinaryDotNet.Account account = new CloudinaryDotNet.Account

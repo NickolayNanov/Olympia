@@ -5,7 +5,7 @@
     using Olympia.Common;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-    [Area("Administration")]
+    [Area(GlobalConstants.AdministrationArea)]
     public class AdministrationController : Controller
     {
     }

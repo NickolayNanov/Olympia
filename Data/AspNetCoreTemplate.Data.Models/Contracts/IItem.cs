@@ -9,7 +9,7 @@
          decimal Price { get; }
 
          ICollection<Review> Reviews { get; }
-         
+
          ShoppingCart ShoppingCart { get; }
     }
 }

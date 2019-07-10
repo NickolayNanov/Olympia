@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Olympia.Common;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Services.Contracts;
@@ -38,20 +39,20 @@
 
             if (this.userManager.Users.Select(users => users.UserName).Any(name => name == model.Username))
             {
-                return this.Redirect("/Accounts/Register");
+                return this.Redirect(RedirectRoutes.AccountRegister);
             }
 
             var user = await this.accountsServices.RegisterUser(model);
             await this.signInManager.SignInAsync(user, isPersistent: true);
 
-            return this.Redirect("/");
+            return this.Redirect(RedirectRoutes.Index);
         }
 
         public async Task<IActionResult> Logout()
         {
             await this.signInManager.SignOutAsync();
 
-            return this.Redirect("/");
+            return this.Redirect(RedirectRoutes.Index);
         }
 
         [Authorize]

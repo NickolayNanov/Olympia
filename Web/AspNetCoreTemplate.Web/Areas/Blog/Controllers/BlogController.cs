@@ -2,10 +2,11 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Olympia.Common;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Services.Contracts;
 
-    [Area("Blog")]
+    [Area(GlobalConstants.BlogArea)]
     [Authorize]
     public class BlogController : Controller
     {
@@ -30,7 +31,6 @@
             return this.View(article);
         }
 
-        
         public IActionResult CreateComment(CommentViewModel model)
         {
             return this.View();

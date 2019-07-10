@@ -2,11 +2,12 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Olympia.Common;
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Services.Contracts;
 
-    [Area("Trainer")]
-    [Authorize(Roles = "Trainer")]
+    [Area(GlobalConstants.TrainerArea)]
+    [Authorize(Roles = GlobalConstants.TrainerRoleName)]
     public class TrainerController : Controller
     {
         private readonly IBlogService blogService;
@@ -42,19 +43,19 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect("/Users/CreateArticle");
+                return this.Redirect(RedirectRoutes.TrainerCreateArticle);
             }
 
             this.blogService.CreateArticle(model, this.User.Identity.Name);
 
-            return this.Redirect("/Trainer/Trainer/MyArticles");
+            return this.Redirect(RedirectRoutes.TrainerMyArticles);
         }
 
         public IActionResult DeleteArticle(int articleId)
         {
             this.blogService.DeleteArticleById(articleId);
 
-            return this.Redirect("/Trainer/Trainer/MyArticles");
+            return this.Redirect(RedirectRoutes.TrainerMyArticles);
         }
     }
 }
