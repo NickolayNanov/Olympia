@@ -1,7 +1,6 @@
 ﻿namespace Olympia.Services.Contracts
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     using Olympia.Data.Domain;
 
@@ -9,8 +8,10 @@
     {
         OlympiaUser GetUserByUsername(string username);
 
-        Task<IEnumerable<OlympiaUser>> GetAllTrainers();
+        IEnumerable<OlympiaUser> GetAllTrainers();
 
         IEnumerable<OlympiaUser> GetAllClientsByUser(string trainerUsername);
+
+        bool SetTrainer(string trainerUsername, string clientUsername);
     }
 }

@@ -58,6 +58,9 @@
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
 
+
+            services.AddSingleton<RoleManager<IdentityRole<string>>>();
+
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
