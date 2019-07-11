@@ -14,18 +14,15 @@
     {
         private readonly IMapper mapper;
         private readonly UserManager<OlympiaUser> userManager;
-        private readonly OlympiaDbContext context;
         private readonly SignInManager<OlympiaUser> signInManager;
 
         public AccountsServices(
             IMapper mapper,
             UserManager<OlympiaUser> userManager,
-            OlympiaDbContext context,
             SignInManager<OlympiaUser> signInManager)
         {
             this.mapper = mapper;
             this.userManager = userManager;
-            this.context = context;
             this.signInManager = signInManager;
         }
 
@@ -42,9 +39,9 @@
             return user;
         }
 
-        public async Task<OlympiaUser> RegisterUser(UserInputBingingModel model)
+        public async Task<OlympiaUser> RegisterUserAsync(UserRegisterBingingModel model)
         {
-            await this.AddRootAdminIfDoesNotExist();
+            await this.AddRootAdminIfDoesNotExistAsync();
 
             var user = this.mapper.Map<OlympiaUser>(model);
 
@@ -58,9 +55,9 @@
             return user;
         }
 
-        private async Task AddRootAdminIfDoesNotExist()
+        private async Task AddRootAdminIfDoesNotExistAsync()
         {
-            if (!this.userManager.Users.AnyAsync().Result)
+            if (!await this.userManager.Users.AnyAsync())
             {
                 var god = new OlympiaUser { UserName = "God", Email = "God@abv.bg", FullName = "God God" };
                 await this.userManager.CreateAsync(god, password: "imgod123");

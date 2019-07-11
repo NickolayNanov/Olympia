@@ -1,5 +1,7 @@
 ﻿namespace Olympia.Web.Areas.Blog.Controllers
 {
+    using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
@@ -17,16 +19,17 @@
             this.blogService = blogService;
         }
 
-        public IActionResult ArticlesAll()
+        public async Task<IActionResult> ArticlesAll()
         {
-            var articles = this.blogService.GetAllArticles();
+            var articles = await this.blogService
+                .GetAllArticlesAsync();
 
             return this.View(articles);
         }
 
-        public IActionResult ArticleDetails(int articleId)
+        public async Task<IActionResult> ArticleDetails(int articleId)
         {
-            var article = this.blogService.GetArticleAndIncrementTimesRead(articleId);
+            var article = await this.blogService.GetArticleAndIncrementTimesReadAsync(articleId);
 
             return this.View(article);
         }

@@ -27,13 +27,16 @@
             this.accountsServices = accountsServices;
         }
 
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return this.View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserInputBingingModel model)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(UserRegisterBingingModel model)
         {
             if (!this.ModelState.IsValid)
             {
@@ -42,21 +45,24 @@
 
             if (this.userManager.Users.Select(users => users.UserName).Any(name => name == model.Username))
             {
-                return this.Redirect(RedirectRoutes.AccountRegister);
+                return this.View(model);
             }
 
-            var user = await this.accountsServices.RegisterUser(model);
+            var user = await this.accountsServices.RegisterUserAsync(model);
             await this.signInManager.SignInAsync(user, isPersistent: true);
 
             return this.Redirect(RedirectRoutes.Index);
         }
 
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return this.View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLoginBindingModel model)
         {
             if (!this.ModelState.IsValid)
@@ -69,6 +75,7 @@
             return this.Redirect(RedirectRoutes.Index);
         }
 
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await this.signInManager.SignOutAsync();

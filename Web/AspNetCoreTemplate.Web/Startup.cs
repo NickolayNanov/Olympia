@@ -12,7 +12,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-
+    
     using Olympia.Data;
     using Olympia.Data.Common;
     using Olympia.Data.Common.Repositories;

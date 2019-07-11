@@ -1,24 +1,25 @@
 ﻿namespace Olympia.Services.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
 
     public interface IBlogService
     {
-        IEnumerable<ArticleViewModel> GetAllArticles();
+        Task<IEnumerable<ArticleViewModel>> GetAllArticlesAsync();
 
-        IEnumerable<ArticleViewModel> GetAllByUserId(string authorName);
+        Task<IEnumerable<ArticleViewModel>> GetAllByUserIdAsync(string authorName);
 
-        IEnumerable<ArticleViewModel> GetTopFiveArticles();
+        Task<IEnumerable<ArticleViewModel>> GetTopFiveArticlesAsync();
 
-        int CreateArticle(CreateArticleBindingModel model, string usersName);
+        Task<int> CreateArticleAsync(CreateArticleBindingModel model, string usersName);
 
-        ArticleViewModel GetArticleById(int articleId);
+        Task<ArticleViewModel> GetArticleByIdAsync(int articleId);
 
-        bool DeleteArticleById(int articleId);
+        Task<bool> DeleteArticleByIdAsync(int articleId);
 
-        ArticleViewModel GetArticleAndIncrementTimesRead(int articleId);
+        Task<ArticleViewModel> GetArticleAndIncrementTimesReadAsync(int articleId);
     }
 }

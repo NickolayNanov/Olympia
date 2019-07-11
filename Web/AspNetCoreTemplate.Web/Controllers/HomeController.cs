@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using Olympia.Services.Contracts;
+    using System.Threading.Tasks;
 
     public class HomeController : Controller
     {
@@ -13,9 +14,9 @@
             this.blogsService = blogsService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var articles = this.blogsService.GetTopFiveArticles();
+            var articles = await this.blogsService.GetTopFiveArticlesAsync();
 
             return this.View(articles);
         }

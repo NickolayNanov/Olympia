@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using AutoMapper;
     using CloudinaryDotNet;
@@ -20,108 +21,142 @@
     public class BlogServices : IBlogService
     {
         private readonly OlympiaDbContext context;
-        private readonly UserManager<OlympiaUser> userManager;
         private readonly IMapper mapper;
         private readonly IUsersService usersService;
 
         public BlogServices(
             OlympiaDbContext context,
-            UserManager<OlympiaUser>
-            userManager,
             IMapper mapper,
             IUsersService usersService)
         {
             this.context = context;
-            this.userManager = userManager;
             this.mapper = mapper;
             this.usersService = usersService;
         }
 
-        public IEnumerable<ArticleViewModel> GetAllArticles()
+        public async Task<IEnumerable<ArticleViewModel>> GetAllArticlesAsync()
         {
-            var articlesFromDb = this.context.Articles
+            IEnumerable<ArticleViewModel> articlesFromDb = new List<ArticleViewModel>();
+
+            await Task.Run(() =>
+            {
+                articlesFromDb = this.context.Articles
                 .Select(ar => this.mapper.Map<ArticleViewModel>(ar))
                 .ToList();
+            });
 
             return articlesFromDb;
         }
 
-        public IEnumerable<ArticleViewModel> GetAllByUserId(string authorName)
+        public async Task<IEnumerable<ArticleViewModel>> GetAllByUserIdAsync(string authorName)
         {
-            var articlesFromDb = this.context.Articles
+            IEnumerable<ArticleViewModel> articlesFromDb = new List<ArticleViewModel>();
+
+            await Task.Run(() =>
+            {
+                articlesFromDb = this.context.Articles
                 .Where(article => article.Author.UserName == authorName)
                 .Select(ar => this.mapper.Map<ArticleViewModel>(ar))
                 .ToList();
+            });
 
             return articlesFromDb;
         }
 
-        public IEnumerable<ArticleViewModel> GetTopFiveArticles()
+        public async Task<IEnumerable<ArticleViewModel>> GetTopFiveArticlesAsync()
         {
-            var mostPopularArticles = this.context.Articles
+            IEnumerable<ArticleViewModel> mostPopularArticles = new List<ArticleViewModel>();
+
+            await Task.Run(() =>
+            {
+                mostPopularArticles = this.context.Articles
                 .OrderByDescending(article => article.TimesRead)
                 .Take(5)
                 .Select(article => this.mapper.Map<ArticleViewModel>(article))
                 .ToList();
+            });
 
             return mostPopularArticles;
         }
 
-        public int CreateArticle(CreateArticleBindingModel model, string usersName)
+        public async Task<int> CreateArticleAsync(CreateArticleBindingModel model, string usersName)
         {
-            var cloudinaryAccount = this.SetCloudinary();
-            var user = this.usersService.GetUserByUsername(usersName);
-            var url = this.UploadImage(cloudinaryAccount, model.ImgUrl, model.Title);
+            Article articleForDb = null;
 
-            var articleForDb = this.mapper.Map<Article>(model);
-            articleForDb.ImgUrl = url ?? Constants.CloudinaryInvalidUrl;
-            articleForDb.AuthorId = user.Id;
+            await Task.Run(async () =>
+            {
+                var cloudinaryAccount = this.SetCloudinary();
+                var user = await this.usersService.GetUserByUsernameAsync(usersName);
+                var url = this.UploadImage(cloudinaryAccount, model.ImgUrl, model.Title);
 
-            this.context.Articles.Add(articleForDb);
-            this.context.SaveChanges();
+                articleForDb = this.mapper.Map<Article>(model);
+                articleForDb.ImgUrl = url ?? Constants.CloudinaryInvalidUrl;
+                articleForDb.AuthorId = user.Id;
+
+                this.context.Articles.Add(articleForDb);
+                this.context.SaveChanges();
+            });
 
             var articleToReturn = this.mapper.Map<ArticleViewModel>(articleForDb);
 
             return articleToReturn.Id;
         }
 
-        public ArticleViewModel GetArticleById(int articleId)
+        public async Task<ArticleViewModel> GetArticleByIdAsync(int articleId)
         {
-            var articleFromDb = this.context
+            ArticleViewModel articleViewModel = null;
+
+            await Task.Run(() =>
+            {
+                var articleFromDb = this.context
                 .Articles
                 .Include(article => article.Author)
                 .ThenInclude(author => author.Articles)
                 .SingleOrDefault(article => article.Id == articleId);
 
-            var articleViewModel = this.mapper.Map<ArticleViewModel>(articleFromDb);
+                articleViewModel = this.mapper.Map<ArticleViewModel>(articleFromDb);
+            });
+
             return articleViewModel;
         }
 
-        public ArticleViewModel GetArticleAndIncrementTimesRead(int articleId)
+        public async Task<ArticleViewModel> GetArticleAndIncrementTimesReadAsync(int articleId)
         {
-            var articleFromDb = this.context
+            ArticleViewModel articleViewModel = null;
+
+            await Task.Run(() =>
+            {
+                var articleFromDb = this.context
                 .Articles
                 .Include(article => article.Author)
                 .ThenInclude(author => author.Articles)
                 .SingleOrDefault(article => article.Id == articleId);
 
-            articleFromDb.TimesRead++;
-            this.context.Update(articleFromDb);
-            this.context.SaveChanges();
-            var articleViewModel = this.mapper.Map<ArticleViewModel>(articleFromDb);
+                articleFromDb.TimesRead++;
+                this.context.Update(articleFromDb);
+                this.context.SaveChanges();
+                articleViewModel = this.mapper.Map<ArticleViewModel>(articleFromDb);
+            });
+
             return articleViewModel;
         }
 
-        public bool DeleteArticleById(int articleId)
+        public async Task<bool> DeleteArticleByIdAsync(int articleId)
         {
-            var articleFromDb = this.context
+            bool doesContain = true;
+
+            await Task.Run(() =>
+            {
+                var articleFromDb = this.context
                 .Articles
                 .SingleOrDefault(article => article.Id == articleId);
 
-            this.context.Articles.Remove(articleFromDb);
-            this.context.SaveChanges();
+                this.context.Articles.Remove(articleFromDb);
+                this.context.SaveChanges();
+                doesContain = this.context.Articles.Contains(articleFromDb);
+            });
 
-            return this.context.Articles.Contains(articleFromDb);
+            return doesContain;
         }
 
         private string UploadImage(Cloudinary cloudinary, IFormFile fileform, string articleTitle)

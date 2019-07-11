@@ -6,7 +6,7 @@
 
 
 <h1>CreateArticle</h1>
-<form method="post" enctype="multipart/form-data" 
+<form class="form-group" method="post" enctype="multipart/form-data" 
       asp-antiforgery="true"      
       asp-area="Trainer"
       asp-controller="Trainer"
@@ -15,21 +15,21 @@
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <label asp-for="@Model.Title"></label>
+        <input asp-for="@Model.Title" class="form-control" />
+        <span asp-validation-for="@Model.Title" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Content"></label>
-        <textarea asp-for="Content" class="form-control" rows="5" cols="60">
+        <label asp-for="@Model.Content"></label>
+        <textarea asp-for="@Model.Content" class="form-control" rows="5" cols="60">
             Enter details here...
          </textarea>        
-        <span asp-validation-for="Content" class="text-danger"></span>
+        <span asp-validation-for="@Model.Content" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ImgUrl"></label>
-        <input type="file" asp-for="ImgUrl" class="form-control-file" multiple>
-        <span asp-validation-for="ImgUrl" class="text-danger"></span>
+        <label asp-for="@Model.ImgUrl"></label>
+        <input type="file" asp-for="@Model.ImgUrl" class="form-control-file" multiple>
+        <span asp-validation-for="@Model.ImgUrl" class="text-danger"></span>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Create</button>

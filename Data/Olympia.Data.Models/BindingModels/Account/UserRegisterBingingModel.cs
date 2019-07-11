@@ -4,7 +4,7 @@
     using Olympia.Data.Domain.Enums;
     using System.ComponentModel.DataAnnotations;
 
-    public class UserInputBingingModel
+    public class UserRegisterBingingModel
     {
         private const int FullnameMaxLength = 100;
         private const int FullnameMinLength = 3;
@@ -39,7 +39,7 @@
         public string Email { get; set; }
 
         [Required]
-        [Range(minimum:AgeMinNumber, maximum:AgeMaxNumber, ErrorMessage = ErrorConstants.AgeErrorMessage)]
+        [Range(minimum: AgeMinNumber, maximum: AgeMaxNumber, ErrorMessage = ErrorConstants.AgeErrorMessage)]
         public int Age { get; set; }
 
         [Required]

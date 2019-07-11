@@ -1,5 +1,7 @@
 ﻿namespace Olympia.Web.Areas.Trainer.Controllers
 {
+    using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
@@ -19,16 +21,18 @@
             this.usersService = usersService;
         }
 
-        public IActionResult ClientsAll()
+        public async Task<IActionResult> ClientsAll()
         {
-            var clients = this.usersService.GetAllClientsByUser(this.User.Identity.Name);
+            var clients = await this.usersService
+                .GetAllClientsByUserAsync(this.User.Identity.Name);
 
             return this.View(clients);
         }
 
-        public IActionResult MyArticles()
+        public async Task<IActionResult> MyArticles()
         {
-            var currentUserArticles = this.blogService.GetAllByUserId(this.User.Identity.Name);
+            var currentUserArticles = await this.blogService
+                .GetAllByUserIdAsync(this.User.Identity.Name);
 
             return this.View(currentUserArticles);
         }
@@ -39,21 +43,21 @@
         }
 
         [HttpPost]
-        public IActionResult CreateArticle(CreateArticleBindingModel model)
+        public async Task<IActionResult> CreateArticle(CreateArticleBindingModel model)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect(RedirectRoutes.TrainerCreateArticle);
+                return this.View(model);
             }
 
-            this.blogService.CreateArticle(model, this.User.Identity.Name);
+            await this.blogService.CreateArticleAsync(model, this.User.Identity.Name);
 
             return this.Redirect(RedirectRoutes.TrainerMyArticles);
         }
 
-        public IActionResult DeleteArticle(int articleId)
+        public async Task<IActionResult> DeleteArticle(int articleId)
         {
-            this.blogService.DeleteArticleById(articleId);
+            await this.blogService.DeleteArticleByIdAsync(articleId);
 
             return this.Redirect(RedirectRoutes.TrainerMyArticles);
         }

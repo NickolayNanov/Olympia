@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -12,59 +13,77 @@
     public class UsersService : IUsersService
     {
         private readonly OlympiaDbContext context;
-        private readonly UserManager<OlympiaUser> userManager;
-        private readonly RoleManager<OlympiaUserRole> roleManager;
 
-        public UsersService(OlympiaDbContext context, UserManager<OlympiaUser> userManager, RoleManager<OlympiaUserRole> roleManager)
+        public UsersService(
+            OlympiaDbContext context)
         {
             this.context = context;
-            this.userManager = userManager;
-            this.roleManager = roleManager;
         }
 
-        public IEnumerable<OlympiaUser> GetAllTrainers()
+        public async Task<IEnumerable<OlympiaUser>> GetAllTrainersAsync()
         {
-            // var trainers = await this.userManager.GetUsersInRoleAsync(GlobalConstants.TrainerRoleName);
+            IEnumerable<OlympiaUser> trainers = new List<OlympiaUser>();
 
-            var trainerIds = this.context.UserRoles
-                .Where(ur => ur.RoleId == "e9e63982-0610-450d-9253-e66db344561b")
-                .Select(x => x.UserId)
-                .ToList();
+            await Task.Run(() =>
+            {
+                var trainerIds = this.context.UserRoles
+                    .Where(ur => ur.RoleId == "e9e63982-0610-450d-9253-e66db344561b")
+                    .Select(x => x.UserId)
+                    .ToList();
 
-            var trainers = this.context
-                .Users
-                .Include(x => x.Articles)
-                .Where(id => trainerIds.Any(x => x == id.Id));
+                trainers = this.context
+                    .Users
+                    .Include(x => x.Articles)
+                    .Where(id => trainerIds.Any(x => x == id.Id));
+            });
 
             return trainers;
         }
 
-        public IEnumerable<OlympiaUser> GetAllClientsByUser(string trainerUsername)
+        public async Task<IEnumerable<OlympiaUser>> GetAllClientsByUserAsync(string trainerUsername)
         {
-            var clients = this.context.Users.Where(x => x.Trainer.UserName == trainerUsername);
+            IEnumerable<OlympiaUser> clients = new List<OlympiaUser>();
+
+            await Task.Run(() =>
+            {
+                clients = this.context.Users.Where(x => x.Trainer.UserName == trainerUsername);
+            });
 
             return clients;
         }
 
-        public OlympiaUser GetUserByUsername(string username)
+        public async Task<OlympiaUser> GetUserByUsernameAsync(string username)
         {
-            var userFromDb = this.context.Users.SingleOrDefault(user => user.UserName == username);
+            OlympiaUser userFromDb = null;
+
+            await Task.Run(() =>
+            {
+                userFromDb = this.context.Users.SingleOrDefault(user => user.UserName == username);
+            });
+
             return userFromDb;
         }
 
-        public bool SetTrainer(string trainerUsername, string clientUsername)
+        public async Task<bool> SetTrainerAsync(string trainerUsername, string clientUsername)
         {
-            var trainer = this.GetUserByUsername(trainerUsername);
-            var client = this.GetUserByUsername(clientUsername);
+            bool done = false;
 
-            trainer.Clients.Add(client);
-            client.TrainerId = trainer.Id;
+            await Task.Run(async () =>
+            {
+                var trainer = await this.GetUserByUsernameAsync(trainerUsername);
+                var client = await this.GetUserByUsernameAsync(clientUsername);
 
-            this.context.Update(trainer);
-            this.context.Update(client);
-            this.context.SaveChanges();
+                trainer.Clients.Add(client);
+                client.TrainerId = trainer.Id;
 
-            return client.TrainerId == trainer.Id;
+                this.context.Update(trainer);
+                this.context.Update(client);
+                this.context.SaveChanges();
+
+                done = client.TrainerId == trainer.Id;
+            });
+
+            return done;
         }
     }
 }

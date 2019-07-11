@@ -5,6 +5,7 @@
     using Olympia.Common;
     using Olympia.Services.Contracts;
     using Olympia.Web.Areas.Client.Models;
+    using System.Threading.Tasks;
 
     [Area(GlobalConstants.ClientArea)]
     [Authorize(Roles = GlobalConstants.ClientRoleName)]
@@ -17,9 +18,9 @@
             this.usersService = usersService;
         }
 
-        public IActionResult TrainersAll()
+        public async Task<IActionResult> TrainersAll()
         {
-            var trainers = this.usersService.GetAllTrainers();
+            var trainers = await this.usersService.GetAllTrainersAsync();
 
             UsernamesAndTrainerNameModel model = new UsernamesAndTrainerNameModel
             {
@@ -31,14 +32,14 @@
         }
 
         [HttpPost]
-        public IActionResult ChooseTrainer(UsernamesAndTrainerNameModel model)
+        public async Task<IActionResult> ChooseTrainer(UsernamesAndTrainerNameModel model)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect(RedirectRoutes.ClientTrainersAll);
+                return this.View(model);
             }
 
-            this.usersService.SetTrainer(model.TrainerName, this.User.Identity.Name);
+            await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
 
             return this.View("SuccessfullSignInTrainer");
         }

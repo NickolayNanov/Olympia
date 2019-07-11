@@ -14,7 +14,7 @@
             this.CreateMap<Article, ArticleViewModel>();
             this.CreateMap<CreateArticleBindingModel, Article>();
 
-            this.CreateMap<UserInputBingingModel, OlympiaUser>();
+            this.CreateMap<UserRegisterBingingModel, OlympiaUser>();
             this.CreateMap<OlympiaUser, UserViewModel>();
         }
     }

@@ -1,17 +1,18 @@
 ﻿namespace Olympia.Services.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using Olympia.Data.Domain;
 
     public interface IUsersService
     {
-        OlympiaUser GetUserByUsername(string username);
+        Task<OlympiaUser> GetUserByUsernameAsync(string username);
 
-        IEnumerable<OlympiaUser> GetAllTrainers();
+        Task<IEnumerable<OlympiaUser>> GetAllTrainersAsync();
 
-        IEnumerable<OlympiaUser> GetAllClientsByUser(string trainerUsername);
+        Task<IEnumerable<OlympiaUser>> GetAllClientsByUserAsync(string trainerUsername);
 
-        bool SetTrainer(string trainerUsername, string clientUsername);
+        Task<bool> SetTrainerAsync(string trainerUsername, string clientUsername);
     }
 }

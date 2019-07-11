@@ -6,9 +6,14 @@
 
     public class CreateArticleBindingModel
     {
+        private const int TitleMaxLength = 255;
+        private const int TitleMinLength = 3;
+
+
         [Required]
         [Display(Name = DisplayModelConstatnts.DisplayTitle)]
         [DataType(DataType.Text)]
+        [StringLength(TitleMaxLength, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = TitleMinLength)]
         public string Title { get; set; }
 
         [Required]
@@ -17,7 +22,7 @@
         public string Content { get; set; }
 
         [Display(Name = DisplayModelConstatnts.DisplayImg)]
-        [DataType(DataType.Upload)]
+        [DataType(DataType.Upload)]       
         public IFormFile ImgUrl { get; set; }
     }
 }
