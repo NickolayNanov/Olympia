@@ -31,14 +31,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCoreTemplate.Common\Olympia.Common.csproj" />
-    <ProjectReference Include="..\..\Data\AspNetCoreTemplate.Data.Common\Olympia.Data.Common.csproj" />
-    <ProjectReference Include="..\..\Data\AspNetCoreTemplate.Data.Models\Olympia.Data.Domain.csproj" />
-    <ProjectReference Include="..\..\Data\AspNetCoreTemplate.Data\Olympia.Data.csproj" />
-    <ProjectReference Include="..\..\Services\AspNetCoreTemplate.Services.Data\Olympia.Services.Data.csproj" />
-    <ProjectReference Include="..\..\Services\AspNetCoreTemplate.Services.Messaging\Olympia.Services.Messaging.csproj" />
-    <ProjectReference Include="..\..\Services\AspNetCoreTemplate.Services\Olympia.Services.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,96 +1,101 @@
-﻿namespace Sandbox
+﻿namespace TemplateRenamer
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
-
-    using Olympia.Data;
-    using Olympia.Data.Common;
-    using Olympia.Data.Common.Repositories;
-    using Olympia.Data.Domain;
-    using Olympia.Data.Repositories;
-    using Olympia.Data.Seeding;
-    using Olympia.Services.Data;
-    using Olympia.Services.Messaging;
-
-    using CommandLine;
-
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
+    using System.Text;
 
     public static class Program
     {
-        public static int Main(string[] args)
+        public static void Main()
         {
-            Console.WriteLine($"{typeof(Program).Namespace} ({string.Join(" ", args)}) starts working...");
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
-            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(true);
+            Console.WriteLine("ASP.NET MVC Template Renamer v1.0");
+            Console.WriteLine("Working in: " + Environment.CurrentDirectory);
 
-            // Seed data on application startup
-            using (var serviceScope = serviceProvider.CreateScope())
+            var oldName = string.Empty;
+            while (string.IsNullOrWhiteSpace(oldName))
             {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<OlympiaDbContext>();
-                dbContext.Database.Migrate();
-                new OlympiaDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+                Console.Write("What is your project's old name ([a-zA-z]): ");
+                oldName = Console.ReadLine();
             }
 
-            using (var serviceScope = serviceProvider.CreateScope())
+            var newName = string.Empty;
+            while (string.IsNullOrWhiteSpace(newName))
             {
-                serviceProvider = serviceScope.ServiceProvider;
-
-                return Parser.Default.ParseArguments<SandboxOptions>(args).MapResult(
-                    opts => SandboxCode(opts, serviceProvider),
-                    _ => 255);
+                Console.Write("What is your project's name ([a-zA-z]): ");
+                newName = Console.ReadLine();
             }
+
+            Console.WriteLine("Renaming directories...");
+            RenameDirectories(Environment.CurrentDirectory, oldName, newName);
+            Console.WriteLine("Directories renamed.");
+
+            Console.WriteLine("Renaming files...");
+            RenameFiles(Environment.CurrentDirectory, oldName, newName);
+            Console.WriteLine("Files renamed.");
+
+            Console.WriteLine("Renaming file contents...");
+            RenameFileContents(Environment.CurrentDirectory, oldName, newName);
+            Console.WriteLine("File contents renamed.");
+
+            Console.WriteLine("Done!");
         }
 
-        private static int SandboxCode(SandboxOptions options, IServiceProvider serviceProvider)
+        private static void RenameDirectories(string currentDirectory, string originalName, string newName)
         {
-            var sw = Stopwatch.StartNew();
-            var settingsService = serviceProvider.GetService<ISettingsService>();
-            Console.WriteLine($"Count of settings: {settingsService.GetCount()}");
-            Console.WriteLine(sw.Elapsed);
-            return 0;
-        }
-
-        private static void ConfigureServices(ServiceCollection services)
-        {
-            var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false, true)
-                .AddEnvironmentVariables()
-                .Build();
-
-            services.AddSingleton<IConfiguration>(configuration);
-            services.AddDbContext<OlympiaDbContext>(
-                options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
-                    .UseLoggerFactory(new LoggerFactory()));
-
-            services
-                .AddIdentity<OlympiaUser, OlympiaUserRole>(options =>
+            var directories = Directory.GetDirectories(currentDirectory);
+            foreach (var directory in directories)
+            {
+                var newDirectoryName = directory.Replace(originalName, newName);
+                if (newDirectoryName != directory)
                 {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequiredLength = 6;
-                })
-                .AddEntityFrameworkStores<OlympiaDbContext>()
-                .AddUserStore<OlympiaUserStore>()
-                .AddRoleStore<OlympiaRoleStore>()
-                .AddDefaultTokenProviders();
+                    Directory.Move(directory, newDirectoryName);
+                }
+            }
 
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped<IDbQueryRunner, DbQueryRunner>();
+            directories = Directory.GetDirectories(currentDirectory);
+            foreach (var directory in directories)
+            {
+                RenameDirectories(directory, originalName, newName);
+            }
+        }
 
-            // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISmsSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
+        private static void RenameFiles(string currentDirectory, string originalName, string newName)
+        {
+            var files = Directory.GetFiles(currentDirectory);
+            foreach (var file in files)
+            {
+                var newFileName = file.Replace(originalName, newName);
+                if (newFileName != file)
+                {
+                    Directory.Move(file, newFileName);
+                }
+            }
+
+            var subDirectories = Directory.GetDirectories(currentDirectory);
+            foreach (var directory in subDirectories)
+            {
+                RenameFiles(directory, originalName, newName);
+            }
+        }
+
+        private static void RenameFileContents(string currentDirectory, string originalName, string newName)
+        {
+            var files = Directory.GetFiles(currentDirectory);
+            foreach (var file in files)
+            {
+                if (!file.EndsWith(".exe"))
+                {
+                    var contents = File.ReadAllText(file);
+                    contents = contents.Replace(originalName, newName);
+                    File.WriteAllText(file, contents, Encoding.UTF8);
+                }
+            }
+
+            var subDirectories = Directory.GetDirectories(currentDirectory);
+            foreach (var directory in subDirectories)
+            {
+                RenameFileContents(directory, originalName, newName);
+            }
         }
     }
 }

@@ -1,0 +1,37 @@
+﻿@using Olympia.Common
+@using Olympia.Data.Domain
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<OlympiaUser> SignInManager
+@inject UserManager<OlympiaUser> UserManager
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            @if (this.SignInManager.IsSignedIn(this.User))
+            {
+                <ul class="navbar-nav">
+                    <partial name="_CommonNavButtonsPartial" />
+                    @if (this.User.IsInRole(GlobalConstants.ClientRoleName))
+                    {
+                        <partial name="_ClientPartial" />
+                    }
+                    else if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
+                    {
+                        <partial name="_TrainerPartial" />
+                    }
+                    <li class="nav-item active">
+                        <a class="nav-link text-light fas fa-user" asp-area="" asp-controller="Users" asp-action="Profile"> Profile</a>
+                    </li>
+                </ul>
+            }
+
+            @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+            {
+                <partial name="_AdministratorPartial" />
+            }
+            @if (!this.User.Identity.IsAuthenticated)
+            {
+                <partial name="_GuestPartial" />
+            }
+        </div>
+    </nav>
+

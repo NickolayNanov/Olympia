@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\Olympia.Data.Common\Olympia.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\Olympia.Data.Domain\Olympia.Data.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

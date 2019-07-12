@@ -5,9 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCoreTemplate.Common\Olympia.Common.csproj" />
-    <ProjectReference Include="..\AspNetCoreTemplate.Data.Common\Olympia.Data.Common.csproj" />
-    <ProjectReference Include="..\AspNetCoreTemplate.Data.Models\Olympia.Data.Domain.csproj" />
+    <ProjectReference Include="..\..\Olympia.Common\Olympia.Common.csproj" />
+    <ProjectReference Include="..\Olympia.Data.Common\Olympia.Data.Common.csproj" />
+    <ProjectReference Include="..\Olympia.Data.Domain\Olympia.Data.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http.Features">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.http.features\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.2.0\ref\netcoreapp2.2\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
