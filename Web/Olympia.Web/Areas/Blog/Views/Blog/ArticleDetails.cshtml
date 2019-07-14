@@ -28,7 +28,7 @@
             <h2>About Me</h2>
             @if (@Model.Author.ProfilePicturImgUrl != null)
             {
-                <img src="@Model.Author.ProfilePicturImgUrl" class="card-img" style="height:100px;">
+                <img src="@Model.Author.ProfilePicturImgUrl" class="card-img" style="height:100px;width:200px">
             }
             @if (string.IsNullOrEmpty(@Model.Author.Description))
             {

@@ -60,6 +60,7 @@
             await Task.Run(() =>
             {
                 articlesFromDb = this.context.Articles
+                .Include(article => article.Author)
                 .Where(article => article.Author.UserName == authorName)
                 .Select(ar => this.mapper.Map<ArticleViewModel>(ar))
                 .ToList();
@@ -202,7 +203,7 @@
             {
 
                 Cloud = Constants.CloudinaryCloudName,
-                ApiKey = Constants.CloudinaryApiSecret,
+                ApiKey = Constants.CloudinaryApiKey,
                 ApiSecret = Constants.CloudinaryApiSecret,
             };
 

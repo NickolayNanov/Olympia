@@ -1,5 +1,6 @@
 ﻿namespace Olympia.Data.Models.BindingModels.Account
 {
+    using Microsoft.AspNetCore.Http;
     using Olympia.Common;
     using Olympia.Data.Domain.Enums;
     using System.ComponentModel.DataAnnotations;
@@ -44,5 +45,9 @@
 
         [Required]
         public Gender Gender { get; set; }
+
+        [Display(Name = DisplayModelConstatnts.DisplayProfilePic)]
+        [DataType(DataType.Upload)]
+        public IFormFile ProfilePicturImgUrl { get; set; }
     }
 }

@@ -11,13 +11,15 @@
     <div class="row">
         <div class="col-md-4 col-md-offset-5">
             <div class="input-group">
-                <form enctype="multipart/form-data" 
-                      asp-antiforgery="true" 
-                      asp-route-returnUrl="" 
-                      method="post" 
+                <form enctype="multipart/form-data"
+                      asp-antiforgery="true"
+                      asp-action="BecomeTrainerAsync"
+                      asp-controller="Client"
+                      asp-area="Client"
+                      method="post"
                       class="form-group">
                     <hr />
-                    <div asp-validation-summary="All" class="text-danger"></div>                    
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div>
                         <label asp-for="@Model.FullName"></label>
                         <input type="text" asp-for="@Model.FullName" class="form-control" />
@@ -32,7 +34,7 @@
                         <label asp-for="@Model.Age"></label>
                         <input type="number" asp-for="@Model.Age" class="form-control" />
                         <span asp-validation-for="@Model.Age" class="text-danger"></span>
-                    </div>                    
+                    </div>
                     <div>
                         <label asp-for="@Model.Weight"></label>
                         <input type="number" asp-for="@Model.Weight" class="form-control" />
@@ -50,15 +52,12 @@
                 </textarea>
                         <span asp-validation-for="@Model.Description" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label asp-for="@Model.ProfilePictureUrl"></label>
                         <input type="file" asp-for="@Model.ProfilePictureUrl" class="form-control-file" multiple>
                         <span asp-validation-for="@Model.ProfilePictureUrl" class="text-danger"></span>
                     </div>
-                    <button class="btn btn-primary form-control"
-                            asp-action="BecomeTrainerAsync"
-                            asp-controller="Client"
-                            asp-area="Client">
+                    <button class="btn btn-primary form-control">
                         Become Trainer!
                     </button>
                 </form>

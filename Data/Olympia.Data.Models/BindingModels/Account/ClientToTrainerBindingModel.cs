@@ -40,7 +40,7 @@
 
         [Display(Name = DisplayModelConstatnts.DisplayProfilePic)]
         [DataType(DataType.Upload)]
-        public IFormFile ProfilePictureUrl;
+        public IFormFile ProfilePictureUrl { get; set; }
 
         public double Weight { get; set; }
 

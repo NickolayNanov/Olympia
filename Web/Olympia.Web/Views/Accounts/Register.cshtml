@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-route-returnUrl="" method="post">
+        <form enctype="multipart/form-data" method="post">
             <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -34,8 +34,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Gender"></label>
-                <select asp-for="@Model.Gender" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.Gender>()">                    
-                </select>
+                <select asp-for="@Model.Gender" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.Gender>()"></select>
                 <span asp-validation-for="@Model.Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -47,6 +46,11 @@
                 <label asp-for="@Model.ConfirmPassword"></label>
                 <input type="password" asp-for="@Model.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ProfilePicturImgUrl"></label>
+                <input type="file" asp-for="@Model.ProfilePicturImgUrl" class="form-control-file" />
+                <span asp-validation-for="@Model.ProfilePicturImgUrl" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
