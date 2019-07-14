@@ -100,28 +100,25 @@
 
         public async Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username)
         {
-            var client = this.mapper.Map<OlympiaUser>(model);
-            var realUser = this.context.Users.Include(x => x.OlympiaUserRole).SingleOrDefault(user => user.UserName == username);
+            OlympiaUser realUser = this.context.Users.Include(x => x.OlympiaUserRole).SingleOrDefault(user => user.UserName == username);
 
-            client.Id = realUser.Id;
+            realUser.Age = model.Age;
+            realUser.Description = model.Description;
+            realUser.Email = model.Email;
+            realUser.FullName = model.FullName;
+            realUser.Weight = model.Weight;
+            realUser.Height = model.Height;
 
-            //await this.userManager.UpdateSecurityStampAsync(client);
+            await this.userManager.UpdateSecurityStampAsync(realUser);          
 
-            var removed = await this.userManager.RemoveFromRoleAsync(realUser, "Client");
+            var roleHasChanged = await this.userManager.AddToRoleAsync(realUser, GlobalConstants.TrainerRoleName);
 
-            if (!removed.Succeeded)
+            if (!roleHasChanged.Succeeded)
             {
                 return false;
             }
-
-            var added = await this.userManager.AddToRoleAsync(client, GlobalConstants.TrainerArea);
-
-            if (added.Succeeded)
-            {
-                return false;
-            }
-
-            await this.userManager.UpdateAsync(client);            
+         
+            await this.userManager.UpdateAsync(realUser);            
 
             return true;
         }

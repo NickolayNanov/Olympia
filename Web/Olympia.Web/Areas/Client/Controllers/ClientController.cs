@@ -2,8 +2,10 @@
 {
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
+    using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Services.Contracts;
     using Olympia.Web.Areas.Client.Models;
@@ -15,11 +17,16 @@
     {
         private readonly IUsersService usersService;
         private readonly IMapper mapper;
+        private readonly SignInManager<OlympiaUser> signInManager;
 
-        public ClientController(IUsersService usersService, IMapper mapper)
+        public ClientController(
+            IUsersService usersService,
+            IMapper mapper,
+            SignInManager<OlympiaUser> signInManager)
         {
             this.usersService = usersService;
             this.mapper = mapper;
+            this.signInManager = signInManager;
         }
 
         public async Task<IActionResult> TrainersAll()
@@ -70,6 +77,8 @@
             {
                 return this.Redirect($"Client/Client/BecomeTrainer?username={model.Username}");
             }
+
+            await this.signInManager.SignOutAsync();
 
             return this.Redirect(RedirectRoutes.Index);
         }

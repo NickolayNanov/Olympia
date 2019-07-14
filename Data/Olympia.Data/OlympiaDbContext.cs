@@ -146,7 +146,7 @@
 
             builder.Entity<OlympiaUser>()
                 .HasMany(u => u.OlympiaUserRole)
-                .WithOne(our => our.User)
+                .WithOne()
                 .HasForeignKey(fk => fk.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);

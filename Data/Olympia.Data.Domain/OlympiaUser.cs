@@ -17,7 +17,7 @@ namespace Olympia.Data.Domain
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.Addresses = new HashSet<Address>();
             this.Clients = new HashSet<OlympiaUser>();
-            this.OlympiaUserRole = new HashSet<OlympiaRolesUsers>();
+            this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>();
         }
 
         public Gender Gender { get; set; }
@@ -38,6 +38,8 @@ namespace Olympia.Data.Domain
 
         public virtual OlympiaUser Trainer { get; set; }
 
+        public int Age { get; set; }
+
         public virtual FitnessPlan FitnessPlan { get; set; }
 
         public double Rating { get; set; }
@@ -52,7 +54,7 @@ namespace Olympia.Data.Domain
 
         public virtual ICollection<OlympiaUser> Clients { get; set; }
 
-        public ICollection<OlympiaRolesUsers> OlympiaUserRole { get; set; }
+        public ICollection<IdentityUserRole<string>> OlympiaUserRole { get; set; }
 
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
