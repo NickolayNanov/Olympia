@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Olympia.Data.Domain;
+    using Olympia.Data.Models.BindingModels.Account;
 
     public interface IUsersService
     {
@@ -14,5 +15,7 @@
         Task<IEnumerable<OlympiaUser>> GetAllClientsByUserAsync(string trainerUsername);
 
         Task<bool> SetTrainerAsync(string trainerUsername, string clientUsername);
+
+        Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username);
     }
 }

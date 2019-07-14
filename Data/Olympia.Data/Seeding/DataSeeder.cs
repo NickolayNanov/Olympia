@@ -1,9 +1,6 @@
 ﻿namespace Olympia.Data.Seeding
 {
     using System.Linq;
-    using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Identity;
     using Olympia.Data.Domain;
 
     public class DataSeeder

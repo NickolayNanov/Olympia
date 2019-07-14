@@ -23,7 +23,6 @@
     using Olympia.Services.Contracts;
     using Olympia.Services.Data;
     using Olympia.Web.Mappings;
-    using System.Linq;
 
     public class Startup
     {
@@ -114,7 +113,7 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, RoleManager<OlympiaUserRole> roleManager)
         {
             var optionsBuilder = new DbContextOptionsBuilder<OlympiaDbContext>();
             optionsBuilder.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection"));

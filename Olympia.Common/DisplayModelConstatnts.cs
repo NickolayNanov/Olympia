@@ -10,5 +10,6 @@
         public const string DisplayTitle = "Title";
         public const string DisplayContent = "Content";
         public const string DisplayImg = "Display Image";
+        public const string DisplayProfilePic = "Profile Picture";
     }
 }

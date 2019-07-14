@@ -5,6 +5,7 @@
     using AutoMapper;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
@@ -49,7 +50,7 @@
 
             if (result.Succeeded)
             {
-                await this.userManager.AddToRoleAsync(user, "Client");
+                await this.userManager.AddToRoleAsync(user, GlobalConstants.ClientRoleName);
             }
 
             return user;
@@ -61,7 +62,7 @@
             {
                 var god = new OlympiaUser { UserName = "God", Email = "God@abv.bg", FullName = "God God" };
                 await this.userManager.CreateAsync(god, password: "imgod123");
-                await this.userManager.AddToRoleAsync(god, "Administrator");
+                await this.userManager.AddToRoleAsync(god, GlobalConstants.AdministratorRoleName);
             }
         }
     }

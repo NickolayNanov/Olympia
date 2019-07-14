@@ -3,21 +3,32 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using AutoMapper;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
+    using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Services.Contracts;
 
     public class UsersService : IUsersService
     {
         private readonly OlympiaDbContext context;
+        private readonly IMapper mapper;
+        private readonly UserManager<OlympiaUser> userManager;
+        private readonly RoleManager<OlympiaUserRole> roleManager;
 
         public UsersService(
-            OlympiaDbContext context)
+            OlympiaDbContext context,
+            IMapper mapper,
+            UserManager<OlympiaUser> userManager,
+            RoleManager<OlympiaUserRole> roleManager)
         {
             this.context = context;
+            this.mapper = mapper;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         public async Task<IEnumerable<OlympiaUser>> GetAllTrainersAsync()
@@ -84,6 +95,35 @@
             });
 
             return done;
+        }
+
+
+        public async Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username)
+        {
+            var client = this.mapper.Map<OlympiaUser>(model);
+            var realUser = this.context.Users.Include(x => x.OlympiaUserRole).SingleOrDefault(user => user.UserName == username);
+
+            client.Id = realUser.Id;
+
+            //await this.userManager.UpdateSecurityStampAsync(client);
+
+            var removed = await this.userManager.RemoveFromRoleAsync(realUser, "Client");
+
+            if (!removed.Succeeded)
+            {
+                return false;
+            }
+
+            var added = await this.userManager.AddToRoleAsync(client, GlobalConstants.TrainerArea);
+
+            if (added.Succeeded)
+            {
+                return false;
+            }
+
+            await this.userManager.UpdateAsync(client);            
+
+            return true;
         }
     }
 }

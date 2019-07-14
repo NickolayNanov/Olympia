@@ -11,6 +11,8 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Blogs;
@@ -23,15 +25,18 @@
         private readonly OlympiaDbContext context;
         private readonly IMapper mapper;
         private readonly IUsersService usersService;
+        private readonly IConfiguration configuration;
 
         public BlogServices(
             OlympiaDbContext context,
             IMapper mapper,
-            IUsersService usersService)
+            IUsersService usersService,
+            IConfiguration configuration)
         {
             this.context = context;
             this.mapper = mapper;
             this.usersService = usersService;
+            this.configuration = configuration;
         }
 
         public async Task<IEnumerable<ArticleViewModel>> GetAllArticlesAsync()
@@ -195,8 +200,9 @@
         {
             CloudinaryDotNet.Account account = new CloudinaryDotNet.Account
             {
+
                 Cloud = Constants.CloudinaryCloudName,
-                ApiKey = Constants.CloudinaryApiKey,
+                ApiKey = Constants.CloudinaryApiSecret,
                 ApiSecret = Constants.CloudinaryApiSecret,
             };
 

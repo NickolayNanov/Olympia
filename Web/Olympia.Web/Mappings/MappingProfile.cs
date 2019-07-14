@@ -16,6 +16,10 @@
 
             this.CreateMap<UserRegisterBingingModel, OlympiaUser>();
             this.CreateMap<OlympiaUser, UserViewModel>();
+            this.CreateMap<OlympiaUser, ClientToTrainerBindingModel>()
+                .ForMember(x => x.Username, y => y.MapFrom(z => z.UserName))
+                .ForMember(x => x.FullName, y => y.MapFrom(z => z.FullName))
+            .ReverseMap();
         }
     }
 }

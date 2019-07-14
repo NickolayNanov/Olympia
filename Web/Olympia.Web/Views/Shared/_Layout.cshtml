@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Olympia.Data.Domain
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<OlympiaUser> UserManager
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -35,6 +39,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (this.User.IsInRole(GlobalConstants.ClientRoleName) && 
+                            this.UserManager.Users
+                                .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null)
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-light" 
+                               asp-area="Client"
+                               asp-controller="Client" 
+                               asp-action="BecomeTrainer"
+                               asp-route-username="@this.User.Identity.Name">Become a trainer</a>
+                        </li>
+                        }
                     </ul>
                 </div>
             </div>
