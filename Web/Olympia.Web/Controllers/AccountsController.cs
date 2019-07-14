@@ -70,8 +70,9 @@
                 return this.Redirect(RedirectRoutes.AccountLogin);
             }
 
-            await this.accountsServices.LoginUserAsync(model);
+            var user = await this.accountsServices.LoginUserAsync(model);
 
+            
             return this.Redirect(RedirectRoutes.Index);
         }
 

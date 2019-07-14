@@ -1,11 +1,17 @@
 ﻿@using System.Linq;
 @{
-    this.ViewData["Title"] = "Articles";
+    ViewData["Title"] = "MyArticles";
     Layout = "~/Views/Shared/_Layout.cshtml";
     @model IEnumerable<Olympia.Data.Models.ViewModels.BlogPartViewModels.ArticleViewModel>
-
     var list = Model.ToList();
 }
+
+<div>
+    <a class="btn btn-danger" 
+       asp-area="AreaTrainer" 
+       asp-controller="Trainer" 
+       asp-action="CreateArticle">New Article</a>
+</div>
 
 <div>
     <div class="container">
@@ -17,9 +23,9 @@
                     <div class="card-body">
                         <h4 class="card-title">@article.Title</h4>
                         <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
-                        <a asp-area="Blog"
-                           asp-controller="Blog"
-                           asp-action="ArticleDetails"
+                        <a asp-area="AreaBlog"
+                           asp-controller="Blog" 
+                           asp-action="ArticleDetails" 
                            asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
                     </div>
                     <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
@@ -30,11 +36,11 @@
                             <i class="far fa-eye"></i> @article.TimesRead
                             <i class="far fa-comment"></i> @article.Comments.Count
                         </div>
-
                     </div>
                 </div>
             }
         </div>
     </div>
 </div>
+
 

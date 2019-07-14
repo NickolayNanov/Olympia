@@ -14,6 +14,7 @@
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
+    using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
 
@@ -40,10 +41,12 @@
         {
             IEnumerable<OlympiaUser> trainers = new List<OlympiaUser>();
 
+            // var trainers = await this.userManager.GetUsersInRoleAsync(GlobalConstants.TrainerRoleName);
+            // cannot include articles when using user manager
             await Task.Run(() =>
             {
                 var trainerIds = this.context.UserRoles
-                    .Where(ur => ur.RoleId == "e9e63982-0610-450d-9253-e66db344561b")
+                    .Where(ur => ur.RoleId == "e9a584d9-3bcd-439b-ac73-aa996070897e")
                     .Select(x => x.UserId)
                     .ToList();
 
@@ -56,13 +59,16 @@
             return trainers;
         }
 
-        public async Task<IEnumerable<OlympiaUser>> GetAllClientsByUserAsync(string trainerUsername)
+        public async Task<IEnumerable<UserViewModel>> GetAllClientsByUserAsync(string trainerUsername)
         {
-            IEnumerable<OlympiaUser> clients = new List<OlympiaUser>();
+            IEnumerable<UserViewModel> clients = new List<UserViewModel>();
 
             await Task.Run(() =>
             {
-                clients = this.context.Users.Where(x => x.Trainer.UserName == trainerUsername);
+                clients = this.context
+                .Users
+                .Where(x => x.Trainer.UserName == trainerUsername)
+                .Select(x => this.mapper.Map<UserViewModel>(x));
             });
 
             return clients;
@@ -131,6 +137,21 @@
             this.context.Update(realUser);
             await this.context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<OlympiaUser> GetUsersTrainer(string username)
+        {
+            OlympiaUser trainer = null;
+
+            await Task.Run(async () =>
+            {
+                trainer = await this.context
+                .Users
+                .Include(user => user.Trainer)
+                .SingleOrDefaultAsync(x => x.UserName == username);
+            });
+
+            return trainer.Trainer;
         }
 
         private string UploadImage(Cloudinary cloudinary, IFormFile fileform, string articleTitle)

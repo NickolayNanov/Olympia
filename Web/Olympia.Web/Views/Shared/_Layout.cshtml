@@ -11,6 +11,7 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <script src="~/js/site.js"></script>
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -46,7 +47,7 @@
                         {
                         <li class="nav-item">
                             <a class="nav-link text-light" 
-                               asp-area="Client"
+                               asp-area="AreaClient"
                                asp-controller="Client" 
                                asp-action="BecomeTrainer"
                                asp-route-username="@this.User.Identity.Name">Become a trainer</a>

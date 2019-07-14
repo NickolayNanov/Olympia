@@ -1,7 +1,7 @@
 ﻿namespace Olympia.Web.Areas.Trainer.Controllers
 {
     using System.Threading.Tasks;
-
+    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
@@ -15,7 +15,9 @@
         private readonly IBlogService blogService;
         private readonly IUsersService usersService;
 
-        public TrainerController(IBlogService blogService, IUsersService usersService)
+        public TrainerController(
+            IBlogService blogService,
+            IUsersService usersService)
         {
             this.blogService = blogService;
             this.usersService = usersService;
@@ -60,6 +62,14 @@
             await this.blogService.DeleteArticleByIdAsync(articleId);
 
             return this.Redirect(RedirectRoutes.TrainerMyArticles);
+        }
+
+
+        public async Task<IActionResult> ClientDetails(string username)
+        { 
+            var user = await this.usersService.GetUserByUsernameAsync(username);
+
+            return this.View(user);
         }
     }
 }

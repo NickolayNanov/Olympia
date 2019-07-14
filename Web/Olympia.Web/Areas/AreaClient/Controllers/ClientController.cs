@@ -82,5 +82,12 @@
 
             return this.Redirect(RedirectRoutes.Index);
         }
+
+        public async Task<IActionResult> MyTrainer(string username)
+        {
+            var trainer = await this.usersService.GetUsersTrainer(username);
+
+            return this.View(trainer);
+        }
     }
 }

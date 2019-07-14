@@ -30,7 +30,7 @@ else
                         <div class="card-body">
                             <h4 class="card-title">@article.Title</h4>
                             <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
-                            <a asp-area="Blog"
+                            <a asp-area="AreaBlog"
                                asp-controller="Blog"
                                asp-action="ArticleDetails"
                                asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>

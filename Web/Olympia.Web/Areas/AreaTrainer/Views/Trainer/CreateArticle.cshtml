@@ -8,7 +8,7 @@
 <h1>CreateArticle</h1>
 <form class="form-group" method="post" enctype="multipart/form-data" 
       asp-antiforgery="true"      
-      asp-area="Trainer"
+      asp-area="AreaTrainer"
       asp-controller="Trainer"
       asp-action="CreateArticle">
     <h4>Use a local account to log in.</h4>
@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <label asp-for="@Model.Content"></label>
-        <textarea asp-for="@Model.Content" class="form-control" rows="5" cols="60">
+        <textarea asp-for="@Model.Content" class="form-control" rows="5" cols="60" contenteditable>
             Enter details here...
          </textarea>        
         <span asp-validation-for="@Model.Content" class="text-danger"></span>

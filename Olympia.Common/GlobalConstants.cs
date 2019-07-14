@@ -6,10 +6,10 @@
         public const string TrainerRoleName = "Trainer";
         public const string ClientRoleName = "Client";
 
-        public const string AdministrationArea = "Administration";
-        public const string TrainerArea = "Trainer";
-        public const string ClientArea = "Client";
-        public const string BlogArea = "Blog";
-        public const string ShopArea = "Shop";
+        public const string AdministrationArea = "AreaAdministration";
+        public const string TrainerArea = "AreaTrainer";
+        public const string ClientArea = "AreaClient";
+        public const string BlogArea = "AreaBlog";
+        public const string ShopArea = "AreaShop";
     }
 }

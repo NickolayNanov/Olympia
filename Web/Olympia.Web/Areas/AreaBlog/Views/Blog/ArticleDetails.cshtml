@@ -10,7 +10,7 @@
         <div class="card">
             <h2 class="text-center">@Model.Title</h2>
             <img src="@Model.ImgUrl" class="card-img">
-            <p class="mt-4">@Model.Content</p>
+            <p class="mt-4" contenteditable>@Model.Content</p>
         </div>
     </div>
     <div class="rightcolumn">
@@ -18,7 +18,7 @@
         {
             <div>
                 <a class="btn btn-danger"
-                   asp-area="Trainer"
+                   asp-area="AreaTrainer"
                    asp-controller="Trainer"
                    asp-action="DeleteArticle"
                    asp-route-articleId="@Model.Id">Delete</a>
@@ -28,7 +28,7 @@
             <h2>About Me</h2>
             @if (@Model.Author.ProfilePicturImgUrl != null)
             {
-                <img src="@Model.Author.ProfilePicturImgUrl" class="card-img" style="height:100px;width:200px">
+                <img src="@Model.Author.ProfilePicturImgUrl" class="card-img" style="height:auto;width:auto">
             }
             @if (string.IsNullOrEmpty(@Model.Author.Description))
             {
@@ -44,7 +44,7 @@
             @foreach (var article in popularArticle.Where(article => article.Id != Model.Id))
             {
                 <h5>
-                    <a asp-area="Blog"
+                    <a asp-area="AreaBlog"
                        asp-controller="Blog"
                        asp-action="ArticleDetails"
                        asp-route-articleId="@article.Id">@article.Title</a>

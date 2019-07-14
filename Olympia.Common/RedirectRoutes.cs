@@ -2,9 +2,11 @@
 {
     public static class RedirectRoutes
     {
-        public const string ClientTrainersAll = "/Client/Client/TrainersAll";
-        public const string TrainerMyArticles = "/Trainer/Trainer/MyArticles";
-        public const string TrainerCreateArticle = "/Trainer/Trainer/CreateArticle";
+        public const string ClientTrainersAll = "/AreaClient/Client/TrainersAll";
+        public const string TrainerMyArticles = "/AreaTrainer/Trainer/MyArticles";
+        public const string TrainerCreateArticle = "/AreaTrainer/Trainer/CreateArticle";
+        public const string Blog = "/AreaBlog/Blog/";
+        public const string Shop = "/AreaShop/Shop/";
 
         public const string AccountRegister = "/Accounts/Register";
         public const string AccountLogin = "/Accounts/Login";
