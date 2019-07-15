@@ -6,7 +6,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI;
-    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -22,7 +21,6 @@
     using Olympia.Services;
     using Olympia.Services.Contracts;
     using Olympia.Services.Data;
-    using Olympia.Web.Mappings;
 
     public class Startup
     {

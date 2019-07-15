@@ -1,18 +1,12 @@
 ﻿namespace Olympia.Services
 {
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
     using AutoMapper;
-    using CloudinaryDotNet;
-    using CloudinaryDotNet.Actions;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Blogs;
@@ -90,9 +84,8 @@
 
             await Task.Run(async () =>
             {
-                var cloudinaryAccount = this.SetCloudinary();
                 var user = await this.usersService.GetUserByUsernameAsync(usersName);
-                var url = this.UploadImage(cloudinaryAccount, model.ImgUrl, model.Title);
+                var url = MyCloudinary.UploadImage(model.ImgUrl, model.Title);
 
                 articleForDb = this.mapper.Map<Article>(model);
                 articleForDb.ImgUrl = url ?? Constants.CloudinaryInvalidUrl;
@@ -162,52 +155,6 @@
             });
 
             return doesContain;
-        }
-
-        private string UploadImage(Cloudinary cloudinary, IFormFile fileform, string articleTitle)
-        {
-            if (fileform == null)
-            {
-                return null;
-            }
-
-            byte[] articleImg;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                fileform.CopyTo(memoryStream);
-                articleImg = memoryStream.ToArray();
-            }
-
-            ImageUploadResult uploadResult;
-
-            using (var ms = new MemoryStream(articleImg))
-            {
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(articleTitle, ms),
-                    Transformation = new Transformation(),
-                };
-
-                uploadResult = cloudinary.Upload(uploadParams);
-            }
-
-            return uploadResult.SecureUri.AbsoluteUri;
-        }
-
-        // TODO: export to json
-        private Cloudinary SetCloudinary()
-        {
-            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account
-            {
-
-                Cloud = Constants.CloudinaryCloudName,
-                ApiKey = Constants.CloudinaryApiKey,
-                ApiSecret = Constants.CloudinaryApiSecret,
-            };
-
-            Cloudinary cloudinary = new Cloudinary(account);
-            return cloudinary;
         }
     }
 }

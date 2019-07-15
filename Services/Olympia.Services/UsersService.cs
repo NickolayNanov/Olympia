@@ -1,13 +1,9 @@
 ﻿namespace Olympia.Services
 {
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using CloudinaryDotNet;
-    using CloudinaryDotNet.Actions;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Olympia.Common;
@@ -123,9 +119,8 @@
             realUser.Height = model.Height;
 
             if (model.ProfilePictureUrl != null)
-            {
-                var cloudinaryAccount = this.SetCloudinary();
-                var url = this.UploadImage(cloudinaryAccount, model.ProfilePictureUrl, model.Username);
+            {                
+                var url = MyCloudinary.UploadImage(model.ProfilePictureUrl, model.Username);
                 realUser.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
             }
 
@@ -173,66 +168,6 @@
             return true;
         }
 
-        public Task<FitnessPlan> CreateFitnessPlanAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-
-        private string UploadImage(Cloudinary cloudinary, IFormFile fileform, string articleTitle)
-        {
-            if (fileform == null)
-            {
-                return null;
-            }
-
-            byte[] articleImg;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                fileform.CopyTo(memoryStream);
-                articleImg = memoryStream.ToArray();
-            }
-
-            ImageUploadResult uploadResult;
-
-            using (var ms = new MemoryStream(articleImg))
-            {
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(articleTitle, ms),
-                    Transformation = new Transformation(),
-                };
-
-                uploadResult = cloudinary.Upload(uploadParams);
-            }
-
-            return uploadResult.SecureUri.AbsoluteUri;
-        }
-
-        // TODO: export to json
-        private Cloudinary SetCloudinary()
-        {
-            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account
-            {
-
-                Cloud = Constants.CloudinaryCloudName,
-                ApiKey = Constants.CloudinaryApiKey,
-                ApiSecret = Constants.CloudinaryApiSecret,
-            };
-
-            Cloudinary cloudinary = new Cloudinary(account);
-            return cloudinary;
-        }
-
-        public IEnumerable<ListedUserViewModel> GetAllUsers()
-        {
-            var users = this.userManager.Users;
-            var userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
-
-            return userDtos;
-        }
-
         public async Task<bool> DeleteUser(string username)
         {
             var userToDelete = await this.GetUserByUsernameAsync(username);
@@ -244,6 +179,19 @@
             await this.context.SaveChangesAsync();
 
             return !this.userManager.Users.Contains(userToDelete);
+        }
+
+        public Task<FitnessPlan> CreateFitnessPlanAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<ListedUserViewModel> GetAllUsers()
+        {
+            var users = this.userManager.Users;
+            var userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
+
+            return userDtos;
         }
     }
 }
