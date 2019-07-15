@@ -5,33 +5,31 @@
     @model Olympia.Data.Domain.OlympiaUser
 }
 
-<h1 class="text-md-center text-danger">@Model.UserName</h1>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-3 form-group">
-            <div class="mt-4 text-danger form-control-plaintext"><strong>Full Name - @Model.FullName</strong></div>
-            <div class="mt-4 text-danger form-control-plaintext"><strong>Age - @Model.Age</strong></div>
-            <div class="mt-4 text-danger form-control-plaintext"><strong>Gender - @Model.Gender</strong></div>
-            <div class="mt-4 text-danger form-control-plaintext"<strong>>Weight - @Model.Weight</strong></div>
-            <div class="mt-4 text-danger form-control-plaintext"><strong>Height - @Model.Height</strong></div>
-            <div class="mt-4 text-danger form-control-plaintext"><strong>Phone number - @(string.IsNullOrEmpty(Model.PhoneNumber) ? "" : Model.PhoneNumber)</strong></div>
-           
-            <div class="d-flex justify-content-between">
-                <button class="mt-4 btn btn-primary mr-4"
-                        asp-area="AreaTrainer"
-                        asp-controller="Trainer"
-                        asp-action="CalculateCalories"
-                        asp-route-user="@Model">
-                    Calculate Calories
-                </button>
-                <button class="mt-4 btn btn-primary"
-                        asp-area="AreaTrainer"
-                        asp-controller="Trainer"
-                        asp-action="CalculateCalories"
-                        asp-route-user="@Model">
-                    Create Fitness Plan
-                </button>
-            </div>
+<hr class="bg-danger" />
+
+<div class="row">
+    <div class="col-lg-3 form-group mr-5 ml-5">
+        <div class="mt-4 text-danger form-control-plaintext"><strong>Full Name - @Model.FullName</strong></div>
+        <div class="mt-4 text-danger form-control-plaintext"><strong>Age - @Model.Age</strong></div>
+        <div class="mt-4 text-danger form-control-plaintext"><strong>Gender - @Model.Gender</strong></div>
+        <div class="mt-4 text-danger form-control-plaintext"><strong>Weight - @Model.Weight</strong></div>
+        <div class="mt-4 text-danger form-control-plaintext"><strong>Height - @Model.Height</strong></div>
+        <div class="mt-4 text-danger form-control-plaintext"><strong>Phone number - @(string.IsNullOrEmpty(Model.PhoneNumber) ? "" : Model.PhoneNumber)</strong></div>
+
+        <a class="btn btn-primary mt-5"
+                asp-area="AreaTrainer"
+                asp-controller="Trainer"
+                asp-action="CreateFitnessPlan"
+                asp-route-username="@Model.UserName">
+            Create Fitness Plan
+        </a>
+
+    </div>
+    <div>
+        <div class="card card-trainer ml-5">
+            <img src="@Model.ProfilePicturImgUrl" alt="John" style="width:100%">
+            <h3>@Model.FullName</h3>
+            <p class="title">Client</p>
         </div>
     </div>
 </div>

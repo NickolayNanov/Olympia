@@ -11,17 +11,17 @@
 
 
         [Required]
-        [Display(Name = DisplayModelConstatnts.DisplayTitle)]
+        [Display(Name = GlobalConstants.DisplayTitle)]
         [DataType(DataType.Text)]
-        [StringLength(TitleMaxLength, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = TitleMinLength)]
+        [StringLength(TitleMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = TitleMinLength)]
         public string Title { get; set; }
 
         [Required]
-        [Display(Name = DisplayModelConstatnts.DisplayContent)]
-        [DataType(DataType.Text)]
+        [Display(Name = GlobalConstants.DisplayContent)]
+        [DataType(DataType.MultilineText)]
         public string Content { get; set; }
 
-        [Display(Name = DisplayModelConstatnts.DisplayImg)]
+        [Display(Name = GlobalConstants.DisplayImg)]
         [DataType(DataType.Upload)]       
         public IFormFile ImgUrl { get; set; }
     }

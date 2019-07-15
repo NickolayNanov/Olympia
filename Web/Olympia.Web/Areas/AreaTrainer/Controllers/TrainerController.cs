@@ -9,7 +9,7 @@
     using Olympia.Services.Contracts;
 
     [Area(GlobalConstants.TrainerArea)]
-    [Authorize(Roles = GlobalConstants.TrainerRoleName)]
+    [Authorize(Roles =  GlobalConstants.TrainerAdministratorRoleName)]
     public class TrainerController : Controller
     {
         private readonly IBlogService blogService;
@@ -39,6 +39,7 @@
             return this.View(currentUserArticles);
         }
 
+        [Authorize(Roles = "Administrator")]
         public IActionResult CreateArticle()
         {
             return this.View();
@@ -54,19 +55,27 @@
 
             await this.blogService.CreateArticleAsync(model, this.User.Identity.Name);
 
-            return this.Redirect(RedirectRoutes.TrainerMyArticles);
+            return this.Redirect(GlobalConstants.TrainerMyArticles);
         }
 
         public async Task<IActionResult> DeleteArticle(int articleId)
         {
             await this.blogService.DeleteArticleByIdAsync(articleId);
 
-            return this.Redirect(RedirectRoutes.TrainerMyArticles);
+            return this.Redirect(GlobalConstants.TrainerMyArticles);
         }
 
 
         public async Task<IActionResult> ClientDetails(string username)
         { 
+            var user = await this.usersService.GetUserByUsernameAsync(username);
+
+            return this.View(user);
+        }
+        
+
+        public async Task<IActionResult> CreateFitnessPlan(string username)
+        {
             var user = await this.usersService.GetUserByUsernameAsync(username);
 
             return this.View(user);

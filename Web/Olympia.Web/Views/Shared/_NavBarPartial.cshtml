@@ -18,20 +18,17 @@
                 {
                     <partial name="_ClientPartial" />
                 }
-                <li class="nav-item active">
-                    <a class="nav-link text-light fas fa-user" asp-area="" asp-controller="Users" asp-action="Profile"> Profile</a>
-                </li>
+                else if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                {
+                    <partial name="_AdministratorPartial" />
+                }                
             </ul>
-            }
-
-            @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-            {
-                <partial name="_AdministratorPartial" />
-            }
-            @if (!this.User.Identity.IsAuthenticated)
+            }            
+            else if (!this.User.Identity.IsAuthenticated)
             {
                 <partial name="_GuestPartial" />
             }
+            
         </div>
     </nav>
 

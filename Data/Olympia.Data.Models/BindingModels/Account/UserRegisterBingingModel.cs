@@ -17,22 +17,22 @@
         private const int AgeMinNumber = 12;
 
         [Required]
-        [Display(Name = DisplayModelConstatnts.DisplayUsername)]
+        [Display(Name = GlobalConstants.DisplayUsername)]
         public string Username { get; set; }
 
         [Required]
-        [StringLength(FullnameMaxLength, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = FullnameMinLength)]
+        [StringLength(FullnameMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = FullnameMinLength)]
         public string FullName { get; set; }
 
         [Required]
-        [StringLength(PasswordMaxLength, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = PasswordMinLength)]
+        [StringLength(PasswordMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = PasswordMinLength)]
         [DataType(DataType.Password)]
-        [Display(Name = DisplayModelConstatnts.DisplayPassword)]
+        [Display(Name = GlobalConstants.DisplayPassword)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = DisplayModelConstatnts.DisplayConfirmPassword)]
-        [Compare(DisplayModelConstatnts.DisplayPassword, ErrorMessage = ErrorConstants.ConfirmPasswordErrorMessage)]
+        [Display(Name = GlobalConstants.DisplayConfirmPassword)]
+        [Compare(GlobalConstants.DisplayPassword, ErrorMessage = GlobalConstants.ConfirmPasswordErrorMessage)]
         public string ConfirmPassword { get; set; }
 
         [Required]
@@ -40,13 +40,13 @@
         public string Email { get; set; }
 
         [Required]
-        [Range(minimum: AgeMinNumber, maximum: AgeMaxNumber, ErrorMessage = ErrorConstants.AgeErrorMessage)]
+        [Range(minimum: AgeMinNumber, maximum: AgeMaxNumber, ErrorMessage = GlobalConstants.AgeErrorMessage)]
         public int Age { get; set; }
 
         [Required]
         public Gender Gender { get; set; }
 
-        [Display(Name = DisplayModelConstatnts.DisplayProfilePic)]
+        [Display(Name = GlobalConstants.DisplayProfilePic)]
         [DataType(DataType.Upload)]
         public IFormFile ProfilePicturImgUrl { get; set; }
     }

@@ -1,0 +1,34 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @model Olympia.Data.Domain.OlympiaUser
+    ViewData["Title"] = "CreateFitnessPlan";
+}
+
+<h1 class="text-lg-center">Fitness plan for @Model.FullName</h1>
+
+<form method="post">
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="@Model.Weight"></label>
+        <input disabled type="text" asp-for="@Model.Weight" class="form-control" />
+        <span asp-validation-for="@Model.Weight" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Height"></label>
+        <input disabled type="text" asp-for="@Model.Height" class="form-control" />
+        <span asp-validation-for="@Model.Height" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Age"></label>
+        <input disabled type="email" asp-for="@Model.Age" class="form-control" />
+        <span asp-validation-for="@Model.Age" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+    <label asp-for="@Model.Gender"></label>
+    <input disabled type="email" asp-for="@Model.Gender" class="form-control" />
+    <span asp-validation-for="@Model.Gender" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Calculate Calories</button>
+</form>

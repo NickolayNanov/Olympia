@@ -7,15 +7,15 @@
     {
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = DisplayModelConstatnts.DisplayUsername)]
+        [Display(Name = GlobalConstants.DisplayUsername)]
         public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = DisplayModelConstatnts.DisplayPassword)]
+        [Display(Name = GlobalConstants.DisplayPassword)]
         public string Password { get; set; }
 
-        [Display(Name = DisplayModelConstatnts.DisplayRememberMe)]
+        [Display(Name = GlobalConstants.DisplayRememberMe)]
         public bool RememberMe { get; set; }
     }
 }

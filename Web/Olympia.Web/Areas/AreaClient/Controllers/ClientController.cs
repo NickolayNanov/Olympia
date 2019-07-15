@@ -7,6 +7,7 @@
     using Olympia.Common;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
+    using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Services.Contracts;
     using Olympia.Web.Areas.Client.Models;
     using System.Threading.Tasks;
@@ -50,6 +51,13 @@
                 return this.View(model);
             }
 
+            var currnetUser = await this.usersService.GetUserByUsernameAsync(this.User.Identity.Name);
+
+            if (currnetUser.Weight == null || currnetUser.Height == null)
+            {
+                return this.View("EditWeightHeight");
+            }
+
             await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
 
             return this.View("SuccessfullSignInTrainer");
@@ -80,7 +88,7 @@
 
             await this.signInManager.SignOutAsync();
 
-            return this.Redirect(RedirectRoutes.Index);
+            return this.Redirect(GlobalConstants.Index);
         }
 
         public async Task<IActionResult> MyTrainer(string username)
@@ -88,6 +96,15 @@
             var trainer = await this.usersService.GetUsersTrainer(username);
 
             return this.View(trainer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateWeightHeight(ClientHeightWeightBindingModel model)
+        {
+          
+            await this.usersService.UpdateUserHeightAndWeight(model, this.User.Identity.Name);
+
+            return this.Redirect(GlobalConstants.ClientTrainersAll);
         }
     }
 }

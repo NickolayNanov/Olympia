@@ -52,6 +52,8 @@ namespace Olympia.Data.Domain
 
         public double? Height { get; set; }
 
+        public ActityLevel Activity { get; set; }
+
         public virtual ICollection<OlympiaUser> Clients { get; set; }
 
         public ICollection<IdentityUserRole<string>> OlympiaUserRole { get; set; }

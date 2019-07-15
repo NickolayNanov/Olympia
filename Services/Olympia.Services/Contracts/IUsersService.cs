@@ -5,6 +5,8 @@
 
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
+    using Olympia.Data.Models.BindingModels.Client;
+    using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
 
     public interface IUsersService
@@ -20,5 +22,13 @@
         Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username);
 
         Task<OlympiaUser> GetUsersTrainer(string username);
+
+        Task<FitnessPlan> CreateFitnessPlanAsync();
+
+        Task<bool> UpdateUserHeightAndWeight(ClientHeightWeightBindingModel user, string username);
+
+        IEnumerable<ListedUserViewModel> GetAllUsers();
+
+        Task<bool> DeleteUser(string username);
     }
 }

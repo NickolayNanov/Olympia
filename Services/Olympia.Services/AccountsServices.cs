@@ -40,7 +40,7 @@
             var user = await this.userManager.FindByNameAsync(model.UserName);
 
             if (user == null)
-            {
+            {                
                 return null;
             }
 

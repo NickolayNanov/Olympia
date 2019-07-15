@@ -99,22 +99,22 @@
         public class InputModel
         {
             [Required]
-            [Display(Name = DisplayModelConstatnts.DisplayUsername)]
+            [Display(Name = GlobalConstants.DisplayUsername)]
             public string Username { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = 3)]
+            [StringLength(100, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = 3)]
             public string FullName { get; set; }
 
             [Required]
-            [StringLength(50, ErrorMessage = ErrorConstants.ErrorInputMessage, MinimumLength = 6)]
+            [StringLength(50, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = DisplayModelConstatnts.DisplayPassword)]
+            [Display(Name = GlobalConstants.DisplayPassword)]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = DisplayModelConstatnts.DisplayConfirmPassword)]
-            [Compare(DisplayModelConstatnts.DisplayPassword, ErrorMessage = ErrorConstants.ConfirmPasswordErrorMessage)]
+            [Display(Name = GlobalConstants.DisplayConfirmPassword)]
+            [Compare(GlobalConstants.DisplayPassword, ErrorMessage = GlobalConstants.ConfirmPasswordErrorMessage)]
             public string ConfirmPassword { get; set; }
 
             [Required]
@@ -122,7 +122,7 @@
             public string Email { get; set; }
 
             [Required]
-            [Range(12, 96, ErrorMessage = ErrorConstants.AgeErrorMessage)]
+            [Range(12, 96, ErrorMessage = GlobalConstants.AgeErrorMessage)]
             public int Age { get; set; }
 
             [Required]

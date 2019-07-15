@@ -45,9 +45,8 @@
 
             await Task.Run(() =>
             {
-                articlesFromDb = this.context.Articles
-                .Select(ar => this.mapper.Map<ArticleViewModel>(ar))
-                .ToList();
+                var articles = this.context.Articles;
+                articlesFromDb = this.mapper.ProjectTo<ArticleViewModel>(articles).ToList();
             });
 
             return articlesFromDb;
@@ -59,11 +58,11 @@
 
             await Task.Run(() =>
             {
-                articlesFromDb = this.context.Articles
-                .Include(article => article.Author)
-                .Where(article => article.Author.UserName == authorName)
-                .Select(ar => this.mapper.Map<ArticleViewModel>(ar))
-                .ToList();
+                articlesFromDb = this.mapper
+                .ProjectTo<ArticleViewModel>(this.context.Articles
+                                            .Include(article => article.Author)
+                                            .Where(article => article.Author.UserName == authorName))
+                                            .ToList();
             });
 
             return articlesFromDb;
@@ -75,10 +74,10 @@
 
             await Task.Run(() =>
             {
-                mostPopularArticles = this.context.Articles
+                mostPopularArticles = this.mapper
+                .ProjectTo<ArticleViewModel>(this.context.Articles
                 .OrderByDescending(article => article.TimesRead)
-                .Take(5)
-                .Select(article => this.mapper.Map<ArticleViewModel>(article))
+                .Take(5))
                 .ToList();
             });
 

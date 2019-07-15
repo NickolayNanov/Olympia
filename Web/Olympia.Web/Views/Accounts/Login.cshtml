@@ -10,6 +10,10 @@
 <div class="row">
     <div class="col-md-4">
         <section>
+            @if (this.ViewData["Errors"] != null)
+            {
+                <h5 class="text-danger">@this.ViewData["Errors"];</h5>
+            }
             <form id="account" method="post">
                 <h4>Use a local account to log in.</h4>
                 <hr />

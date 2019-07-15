@@ -21,7 +21,7 @@
         @foreach (var client in Model.Trainers)
         {
             <tr>
-                <th scope="row">@Model.Trainers.ToList().IndexOf(client)</th>
+                <th scope="row">@(Model.Trainers.ToList().IndexOf(client) + 1)</th>
                 <td>@client.UserName</td>
                 <td>@client.Rating</td>
                 <td>@client.Clients.Count</td>

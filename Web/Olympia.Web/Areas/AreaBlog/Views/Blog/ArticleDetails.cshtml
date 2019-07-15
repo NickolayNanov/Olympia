@@ -25,10 +25,10 @@
             </div>
         }
         <div class="card">
-            <h2>About Me</h2>
+            <h2 class="mb-3 text-center">About Me</h2>
             @if (@Model.Author.ProfilePicturImgUrl != null)
             {
-                <img src="@Model.Author.ProfilePicturImgUrl" class="card-img" style="height:auto;width:auto">
+                <img src="@Model.Author.ProfilePicturImgUrl" class="card-img" style="height:70%">
             }
             @if (string.IsNullOrEmpty(@Model.Author.Description))
             {
@@ -36,7 +36,7 @@
             }
             else
             {
-                <p>@Model.Author.Description</p>
+                <p class="mt-3">@Model.Author.Description</p>
             }
         </div>
         <div class="card">

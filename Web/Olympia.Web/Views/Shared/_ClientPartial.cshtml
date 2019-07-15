@@ -1,6 +1,6 @@
-﻿@inject UserManager<OlympiaUser> UserManager
+﻿@inject OlympiaDbContext context
 
-@if (this.UserManager.Users.FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null)
+@if (this.context.Users.Include(x => x.Trainer).FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null)
 {
     <li class="nav-item active">
         <a class="nav-link text-light"
@@ -19,8 +19,12 @@ else
            asp-route-username="@this.User.Identity.Name">My Trainer</a>
     </li>
 }
-
-<li class="nav-item">
+<li class="nav-item active">
+    <a class="nav-link text-light fas fa-user"
+        asp-controller="Users" 
+       asp-action="Profile"> Profile</a>
+</li>
+<li class="nav-item active">
     <a class="nav-link text-light"
        asp-controller="Accounts"
        asp-action="Logout">Logout</a>

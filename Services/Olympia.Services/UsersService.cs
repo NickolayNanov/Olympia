@@ -14,6 +14,8 @@
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
+    using Olympia.Data.Models.BindingModels.Client;
+    using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
@@ -120,11 +122,14 @@
             realUser.Weight = model.Weight;
             realUser.Height = model.Height;
 
-            var cloudinaryAccount = this.SetCloudinary();
-            var url = this.UploadImage(cloudinaryAccount, model.ProfilePictureUrl, model.Username);
-            realUser.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
+            if (model.ProfilePictureUrl != null)
+            {
+                var cloudinaryAccount = this.SetCloudinary();
+                var url = this.UploadImage(cloudinaryAccount, model.ProfilePictureUrl, model.Username);
+                realUser.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
+            }
 
-            await this.userManager.UpdateSecurityStampAsync(realUser);          
+            await this.userManager.UpdateSecurityStampAsync(realUser);
 
             var roleHasChanged = await this.userManager.AddToRoleAsync(realUser, GlobalConstants.TrainerRoleName);
 
@@ -132,7 +137,7 @@
             {
                 return false;
             }
-         
+
             await this.userManager.UpdateAsync(realUser);
             this.context.Update(realUser);
             await this.context.SaveChangesAsync();
@@ -153,6 +158,26 @@
 
             return trainer.Trainer;
         }
+
+        public async Task<bool> UpdateUserHeightAndWeight(ClientHeightWeightBindingModel model, string username)
+        {
+            var user = await this.GetUserByUsernameAsync(username);
+
+            user.Activity = model.Activity;
+            user.Height = model.Height;
+            user.Weight = model.Weight;
+
+            this.context.Update(user);
+            await this.context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public Task<FitnessPlan> CreateFitnessPlanAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
 
         private string UploadImage(Cloudinary cloudinary, IFormFile fileform, string articleTitle)
         {
@@ -198,6 +223,27 @@
 
             Cloudinary cloudinary = new Cloudinary(account);
             return cloudinary;
+        }
+
+        public IEnumerable<ListedUserViewModel> GetAllUsers()
+        {
+            var users = this.userManager.Users;
+            var userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
+
+            return userDtos;
+        }
+
+        public async Task<bool> DeleteUser(string username)
+        {
+            var userToDelete = await this.GetUserByUsernameAsync(username);
+
+            this.context.Articles.RemoveRange(this.context.Articles.Where(x => x.AuthorId == userToDelete.Id));
+            this.context.UserRoles.Remove(this.context.UserRoles.FirstOrDefault(x => x.UserId == userToDelete.Id));
+            this.context.Users.Remove(userToDelete);
+
+            await this.context.SaveChangesAsync();
+
+            return !this.userManager.Users.Contains(userToDelete);
         }
     }
 }

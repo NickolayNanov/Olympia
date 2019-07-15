@@ -5,18 +5,19 @@
     @model Olympia.Data.Domain.OlympiaUser
 }
 
-<h1 class="text-lg-center">@Model.UserName</h1>
+
 
 <div class="container">
-    <div class="d-flex align-content-lg-between">
-        <div class="card card-trainer">
+    <div class="d-flex justify-content-between">
+        <div class="card card-trainer ml-4">
             <img src="@Model.ProfilePicturImgUrl" alt="John" style="width:100%">
             <h3>@Model.FullName</h3>
             <p class="title">Olympia Trainer</p>
-            <p>@Model.Description</p>
+            <p>@Model.Description</p>           
         </div>
         <div>
-            <h1>kur</h1>
+            <h1 class="ml-4">Chat area</h1>
         </div>
+
     </div>
 </div>

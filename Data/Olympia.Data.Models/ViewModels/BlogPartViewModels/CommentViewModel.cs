@@ -12,7 +12,7 @@
 
 
         [Required]
-        [StringLength(CommentMaxLength, ErrorMessage = ErrorConstants.CommentLengthMessage, MinimumLength = CommentMinLength)]
+        [StringLength(CommentMaxLength, ErrorMessage = GlobalConstants.CommentLengthMessage, MinimumLength = CommentMinLength)]
         public string Content { get; set; }
 
         public int ArticleId { get; set; }

@@ -1,16 +1,20 @@
-﻿@using System.Linq;
-@{
-    this.ViewData["Title"] = "Articles";
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "ArticlesAll";
     @model IEnumerable<Olympia.Data.Models.ViewModels.BlogPartViewModels.ArticleViewModel>
-
-    var list = Model.ToList();
 }
+
+<div>
+    <a class="btn btn-danger" 
+       asp-area="AreaTrainer" 
+       asp-controller="Trainer" 
+       asp-action="CreateArticle">New Article</a>
+</div>
 
 <div>
     <div class="container">
         <div class="row">
-            @foreach (var article in list)
+            @foreach (var article in Model)
             {
                 <div class="card mt-3 mb-3 mr-3 ml-3">
                     <img class="card-img" src="@article.ImgUrl" alt="Bologna">
@@ -21,7 +25,11 @@
                         <a asp-area="AreaBlog"
                            asp-controller="Blog"
                            asp-action="ArticleDetails"
-                           asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>                        
+                           asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
+                        <a asp-area="AreaAdministration"
+                           asp-controller="Administration"
+                           asp-action="DeleteArticle"
+                           asp-route-articleId="@article.Id" class="btn btn-danger">Delete</a>
                     </div>
                     <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
                         <div class="views">
@@ -38,4 +46,3 @@
         </div>
     </div>
 </div>
-

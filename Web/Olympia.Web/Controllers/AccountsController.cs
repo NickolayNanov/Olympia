@@ -51,7 +51,7 @@
             var user = await this.accountsServices.RegisterUserAsync(model);
             await this.signInManager.SignInAsync(user, isPersistent: true);
 
-            return this.Redirect(RedirectRoutes.Index);
+            return this.Redirect(GlobalConstants.Index);
         }
 
         [AllowAnonymous]
@@ -67,13 +67,18 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect(RedirectRoutes.AccountLogin);
+                return this.Redirect(GlobalConstants.AccountLogin);
             }
 
             var user = await this.accountsServices.LoginUserAsync(model);
 
+            if(user == null)
+            {
+                this.ViewData["Errors"] = "Invalid username or password";
+                return this.View();
+            }
             
-            return this.Redirect(RedirectRoutes.Index);
+            return this.Redirect(GlobalConstants.Index);
         }
 
         [Authorize]
@@ -81,7 +86,7 @@
         {
             await this.signInManager.SignOutAsync();
 
-            return this.Redirect(RedirectRoutes.Index);
+            return this.Redirect(GlobalConstants.Index);
         }
 
         [Authorize]

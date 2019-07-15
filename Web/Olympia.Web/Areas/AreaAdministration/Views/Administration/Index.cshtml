@@ -1,0 +1,24 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    this.ViewData["Title"] = "Admin dashboard";
+}
+
+<form method="get"
+      class="form-group"
+      asp-controller=""
+      asp-action="">
+    <div class="">
+        <button class="btn btn-success form-control mb-3" 
+                asp-area="AreaAdministration"
+                asp-controller="Administration"
+                asp-action="UsersAll">Users</button>
+        <button class="btn btn-success form-control mb-3"
+                asp-area="AreaAdministration"
+                asp-controller="Administration"
+                asp-action="ArticlesAll">Articles</button>
+        <button class="btn btn-success form-control mb-3"
+                asp-area="AreaAdministration"
+                asp-controller="Administration"
+                asp-action="ItemsAll">Items</button>
+    </div>
+</form>
