@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    @model Olympia.Data.Domain.OlympiaUser
+    @model Olympia.Data.Models.BindingModels.Client.ClientHeightWeightBindingModel
     ViewData["Title"] = "CreateFitnessPlan";
 }
 
@@ -30,5 +30,9 @@
     <input disabled type="email" asp-for="@Model.Gender" class="form-control" />
     <span asp-validation-for="@Model.Gender" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Calculate Calories</button>
+    <button type="submit" class="btn btn-primary"
+            asp-area="AreaTrainer"
+            asp-controller="Trainer"
+            asp-action="CalculateCalories"
+            asp-route-username="@Model.UserName">Calculate Calories</button>
 </form>

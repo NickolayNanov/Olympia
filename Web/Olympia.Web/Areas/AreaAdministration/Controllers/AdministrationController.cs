@@ -52,7 +52,7 @@
 
         public async Task<IActionResult> DeleteUser(string username)
         {
-            await this.usersService.DeleteUser(username);
+            await this.usersService.DeleteUserAsync(username);
 
             return this.Redirect(GlobalConstants.AdministrationUsers);
         }

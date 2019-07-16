@@ -93,7 +93,7 @@
 
         public async Task<IActionResult> MyTrainer(string username)
         {
-            var trainer = await this.usersService.GetUsersTrainer(username);
+            var trainer = await this.usersService.GetUsersTrainerAsync(username);
 
             return this.View(trainer);
         }
@@ -102,9 +102,16 @@
         public async Task<IActionResult> UpdateWeightHeight(ClientHeightWeightBindingModel model)
         {
           
-            await this.usersService.UpdateUserHeightAndWeight(model, this.User.Identity.Name);
+            await this.usersService.UpdateUserHeightAndWeightAsync(model, this.User.Identity.Name);
 
             return this.Redirect(GlobalConstants.ClientTrainersAll);
+        }
+
+        public async Task<IActionResult> LeaveTrainer()
+        {
+            await this.usersService.UnsetTrainerAsync(this.User.Identity.Name);
+
+            return this.Redirect(GlobalConstants.Index);
         }
     }
 }

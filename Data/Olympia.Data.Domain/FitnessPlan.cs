@@ -10,7 +10,7 @@
         public int Id { get; set; }
 
         [Required]
-        public DietPlan DietPlan { get; set; }
+        public int CaloriesGoal { get; set; }
 
         [Required]
         public Workout Workout { get; set; }

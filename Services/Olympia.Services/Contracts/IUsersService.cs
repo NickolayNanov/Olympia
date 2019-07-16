@@ -11,6 +11,8 @@
 
     public interface IUsersService
     {
+        Task<ClientHeightWeightBindingModel> GetFitnessPlanModelAsync(string username);
+
         Task<OlympiaUser> GetUserByUsernameAsync(string username);
 
         Task<IEnumerable<OlympiaUser>> GetAllTrainersAsync();
@@ -21,14 +23,18 @@
 
         Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username);
 
-        Task<OlympiaUser> GetUsersTrainer(string username);
+        Task<OlympiaUser> GetUsersTrainerAsync(string username);
 
         Task<FitnessPlan> CreateFitnessPlanAsync();
 
-        Task<bool> UpdateUserHeightAndWeight(ClientHeightWeightBindingModel user, string username);
+        Task<bool> UpdateUserHeightAndWeightAsync(ClientHeightWeightBindingModel user, string username);
 
         IEnumerable<ListedUserViewModel> GetAllUsers();
 
-        Task<bool> DeleteUser(string username);
+        Task<bool> DeleteUserAsync(string username);
+
+        Task<bool> UnsetTrainerAsync(string username);
+
+        int CalculateCalories(string username);
     }
 }

@@ -9,6 +9,7 @@
     using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
+    using Olympia.Data.Domain.Enums;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.ViewModels.AdminViewModels;
@@ -139,7 +140,7 @@
             return true;
         }
 
-        public async Task<OlympiaUser> GetUsersTrainer(string username)
+        public async Task<OlympiaUser> GetUsersTrainerAsync(string username)
         {
             OlympiaUser trainer = null;
 
@@ -154,7 +155,7 @@
             return trainer.Trainer;
         }
 
-        public async Task<bool> UpdateUserHeightAndWeight(ClientHeightWeightBindingModel model, string username)
+        public async Task<bool> UpdateUserHeightAndWeightAsync(ClientHeightWeightBindingModel model, string username)
         {
             var user = await this.GetUserByUsernameAsync(username);
 
@@ -168,7 +169,7 @@
             return true;
         }
 
-        public async Task<bool> DeleteUser(string username)
+        public async Task<bool> DeleteUserAsync(string username)
         {
             var userToDelete = await this.GetUserByUsernameAsync(username);
 
@@ -192,6 +193,72 @@
             var userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
 
             return userDtos;
+        }
+
+        public async Task<bool> UnsetTrainerAsync(string username)
+        {
+            var user = await this.GetUserByUsernameAsync(username);
+
+            user.Trainer = null;
+            user.TrainerId = null;
+
+            this.context.Update(user);
+            await this.context.SaveChangesAsync();
+
+            return (await this.GetUserByUsernameAsync(username)).Trainer == null;
+        }
+
+        public int CalculateCalories(string username)
+        {
+            double result = 0;
+
+            var realUser = this.context
+                .Users
+                .Include(user => user.FitnessPlan)
+                .SingleOrDefault(user => user.UserName == username);
+
+            if(realUser.Gender == Gender.Male)
+            {
+                result = (double)(66.4730 + (13.7516 * realUser.Weight) + (5.0033 * realUser.Height) - (6.7550 * realUser.Age));
+            }
+            else if(realUser.Gender == Gender.Female)
+            {
+                result = (double)(655.0955 + (9.5634 * realUser.Weight) + (1.8496 * realUser.Height) - (4.6756 * realUser.Age));
+            }
+
+            switch (realUser.Activity)
+            {
+                case ActityLevel.Zero:
+                    result *= 1.2;
+                    break;
+                case ActityLevel.OneToThree:
+                    result *= 1.375;
+                    break;
+                case ActityLevel.ThreeToFive:
+                    result *= 1.55;
+                    break;
+                case ActityLevel.SixToServen:
+                    result *= 1.725;
+                    break;
+                case ActityLevel.Beast:
+                    result *= 1.9;
+                    break;
+            }
+
+            realUser.FitnessPlan.CaloriesGoal = (int)result;
+
+            this.context.Update(realUser);
+            this.context.SaveChanges();
+
+            return (int)result;
+        }
+
+        public async Task<ClientHeightWeightBindingModel> GetFitnessPlanModelAsync(string username)
+        {
+            var user = await this.GetUserByUsernameAsync(username);
+
+            var dto = this.mapper.Map<ClientHeightWeightBindingModel>(user);
+            return dto;
         }
     }
 }

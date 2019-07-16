@@ -5,7 +5,14 @@
     @model Olympia.Data.Domain.OlympiaUser
 }
 
-
+<div class="offset-6">
+    <a class="btn btn-danger"
+       asp-area="AreaClient"
+       asp-controller="Client"
+       asp-action="LeaveTrainer">
+        Break contract
+    </a>
+</div>
 
 <div class="container">
     <div class="d-flex justify-content-between">
@@ -13,7 +20,7 @@
             <img src="@Model.ProfilePicturImgUrl" alt="John" style="width:100%">
             <h3>@Model.FullName</h3>
             <p class="title">Olympia Trainer</p>
-            <p>@Model.Description</p>           
+            <p>@Model.Description</p>
         </div>
         <div>
             <h1 class="ml-4">Chat area</h1>

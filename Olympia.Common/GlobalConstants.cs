@@ -24,6 +24,7 @@
         public const string AdministrationArticles = "/AreaAdministration/Administration/ArticlesAll";
         public const string Blog = "/AreaBlog/Blog/";
         public const string Shop = "/AreaShop/Shop/";
+        public const string ChooseExercisesRoute = "/AreaTrainer/Trainer/ChooseWorkout";
 
         public const string AccountRegister = "/Accounts/Register";
         public const string AccountLogin = "/Accounts/Login";
