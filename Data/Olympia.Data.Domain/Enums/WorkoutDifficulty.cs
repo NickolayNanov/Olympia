@@ -2,7 +2,7 @@
 {
     public enum WorkoutDifficulty
     {
-        Beginner = 1,
+        Beginners = 1,
         Intermediate = 2,
         Advanced = 3,
     }

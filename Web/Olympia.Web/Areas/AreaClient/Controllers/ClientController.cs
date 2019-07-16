@@ -99,7 +99,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateWeightHeight(ClientHeightWeightBindingModel model)
+        public async Task<IActionResult> UpdateWeightHeight(ClientViewModel model)
         {
           
             await this.usersService.UpdateUserHeightAndWeightAsync(model, this.User.Identity.Name);

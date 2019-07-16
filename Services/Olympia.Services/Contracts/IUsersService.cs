@@ -11,7 +11,7 @@
 
     public interface IUsersService
     {
-        Task<ClientHeightWeightBindingModel> GetFitnessPlanModelAsync(string username);
+        Task<ClientViewModel> GetFitnessPlanModelAsync(string username);
 
         Task<OlympiaUser> GetUserByUsernameAsync(string username);
 
@@ -27,7 +27,7 @@
 
         Task<FitnessPlan> CreateFitnessPlanAsync();
 
-        Task<bool> UpdateUserHeightAndWeightAsync(ClientHeightWeightBindingModel user, string username);
+        Task<bool> UpdateUserHeightAndWeightAsync(ClientViewModel user, string username);
 
         IEnumerable<ListedUserViewModel> GetAllUsers();
 

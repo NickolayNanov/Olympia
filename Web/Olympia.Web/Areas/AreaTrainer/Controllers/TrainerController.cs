@@ -1,11 +1,9 @@
 ﻿namespace Olympia.Web.Areas.Trainer.Controllers
 {
     using System.Threading.Tasks;
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
-    using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Services.Contracts;
@@ -16,20 +14,24 @@
     {
         private readonly IBlogService blogService;
         private readonly IUsersService usersService;
+        private readonly IFitnessService fitnessService;
 
         public TrainerController(
             IBlogService blogService,
-            IUsersService usersService)
+            IUsersService usersService,
+            IFitnessService fitnessService)
         {
             this.blogService = blogService;
             this.usersService = usersService;
+            this.fitnessService = fitnessService;
         }
 
-        public async Task<IActionResult> CalculateCalories(ClientHeightWeightBindingModel model, string username)
+        public IActionResult CalculateCalories(ClientViewModel user)
         {
-            var calories = this.usersService.CalculateCalories(username);
+            var calories = this.usersService.CalculateCalories(user.UserName);
+            user.Calories = calories;
 
-            return this.View("ChooseWorkout");
+            return this.View("CreateFitnessPlan", user);
         }
 
         public async Task<IActionResult> ClientsAll()
@@ -88,6 +90,23 @@
             var model = await this.usersService.GetFitnessPlanModelAsync(username);
 
             return this.View(model);
+        }
+
+        public IActionResult ChooseWorkout()
+        {
+            return this.View(new WorkoutBindingModel());
+        }
+
+        [HttpPost]
+        public IActionResult FileterWorkouts(WorkoutBindingModel model)
+         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("ChooseWorkout", model);
+            }
+
+            var workouts = this.fitnessService.GetWorkouts(model);
+            return this.View("Workouts", workouts);
         }
     }
 }

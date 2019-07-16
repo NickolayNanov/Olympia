@@ -28,7 +28,7 @@
                 .ForMember(x => x.FullName, y => y.MapFrom(z => z.FullName))
             .ReverseMap();
 
-            this.CreateMap<OlympiaUser, ClientHeightWeightBindingModel>()
+            this.CreateMap<OlympiaUser, ClientViewModel>()
                 .ReverseMap();
 
             this.CreateMap<OlympiaUser, ListedUserViewModel>()

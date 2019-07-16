@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    @model Olympia.Data.Models.BindingModels.Client.ClientHeightWeightBindingModel
+    @model Olympia.Data.Models.BindingModels.Client.ClientViewModel
     ViewData["Title"] = "CreateFitnessPlan";
 }
 
@@ -13,26 +13,40 @@
     <div class="form-group">
         <label asp-for="@Model.Weight"></label>
         <input disabled type="text" asp-for="@Model.Weight" class="form-control" />
-        <span asp-validation-for="@Model.Weight" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="@Model.Height"></label>
         <input disabled type="text" asp-for="@Model.Height" class="form-control" />
-        <span asp-validation-for="@Model.Height" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="@Model.Age"></label>
         <input disabled type="email" asp-for="@Model.Age" class="form-control" />
-        <span asp-validation-for="@Model.Age" class="text-danger"></span>
     </div>
     <div class="form-group">
-    <label asp-for="@Model.Gender"></label>
-    <input disabled type="email" asp-for="@Model.Gender" class="form-control" />
-    <span asp-validation-for="@Model.Gender" class="text-danger"></span>
+        <label asp-for="@Model.Gender"></label>
+        <input disabled type="email" asp-for="@Model.Gender" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Calories"></label>
+        <input disabled type="email" asp-for="@Model.Calories" class="form-control" />
     </div>
     <button type="submit" class="btn btn-primary"
             asp-area="AreaTrainer"
             asp-controller="Trainer"
             asp-action="CalculateCalories"
-            asp-route-username="@Model.UserName">Calculate Calories</button>
+            asp-route-weight="@Model.Weight"
+            asp-route-height="@Model.Height"
+            asp-route-age="@Model.Age"
+            asp-route-activity="@Model.Activity"
+            asp-route-gender="@Model.Gender"
+            asp-route-username="@Model.UserName">
+        Calculate Calories
+    </button>
+    <button type="submit" class="btn btn-primary"
+            asp-area="AreaTrainer"
+            asp-controller="Trainer"
+            asp-action="ChooseWorkout"
+            asp-route-username="@Model.UserName">
+        Choose Workout
+    </button>
 </form>

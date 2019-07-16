@@ -2,9 +2,8 @@
 {
     using Olympia.Data.Domain.Enums;
 
-    public class ClientHeightWeightBindingModel
+    public class ClientViewModel
     {
-
         public string FullName { get; set; }
 
         public string UserName { get; set; }
@@ -18,5 +17,7 @@
         public ActityLevel Activity { get; set; }
 
         public Gender Gender { get; set; }
+
+        public int Calories { get; set; }
     }
 }

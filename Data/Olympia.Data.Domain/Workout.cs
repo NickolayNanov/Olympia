@@ -16,13 +16,15 @@
             this.CreatedOn = DateTime.UtcNow;
         }
 
-        [Required]
+        public string ImgUrl { get; set; }
+
+        
         public string Name { get; set; }
 
-        [Required]
+   
         public WorkoutDifficulty WorkoutDifficulty { get; set; }
 
-        [Required]
+      
         public WorkoutType WorkoutType { get; set; }
 
         public virtual ICollection<Exercise> Exercises { get; set; }

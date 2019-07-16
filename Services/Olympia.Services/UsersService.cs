@@ -155,7 +155,7 @@
             return trainer.Trainer;
         }
 
-        public async Task<bool> UpdateUserHeightAndWeightAsync(ClientHeightWeightBindingModel model, string username)
+        public async Task<bool> UpdateUserHeightAndWeightAsync(ClientViewModel model, string username)
         {
             var user = await this.GetUserByUsernameAsync(username);
 
@@ -245,6 +245,9 @@
                     break;
             }
 
+            realUser.FitnessPlan = new FitnessPlan();
+            realUser.FitnessPlan.Workout = new Workout();
+            
             realUser.FitnessPlan.CaloriesGoal = (int)result;
 
             this.context.Update(realUser);
@@ -253,11 +256,11 @@
             return (int)result;
         }
 
-        public async Task<ClientHeightWeightBindingModel> GetFitnessPlanModelAsync(string username)
+        public async Task<ClientViewModel> GetFitnessPlanModelAsync(string username)
         {
             var user = await this.GetUserByUsernameAsync(username);
 
-            var dto = this.mapper.Map<ClientHeightWeightBindingModel>(user);
+            var dto = this.mapper.Map<ClientViewModel>(user);
             return dto;
         }
     }

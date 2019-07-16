@@ -7,6 +7,7 @@
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
+    using Olympia.Data.Models.ViewModels.Fitness;
     using System.Linq;
 
     public class MappingProfile : Profile
@@ -28,7 +29,7 @@
                 .ForMember(x => x.FullName, y => y.MapFrom(z => z.FullName))
             .ReverseMap();
 
-            this.CreateMap<OlympiaUser, ClientHeightWeightBindingModel>()
+            this.CreateMap<OlympiaUser, ClientViewModel>()
                 .ReverseMap();
 
             this.CreateMap<OlympiaUser, ListedUserViewModel>()
@@ -36,6 +37,9 @@
                 y => y.MapFrom(z => z.OlympiaUserRole
                         .Select(x => x.RoleId)
                         .Contains("e9a584d9-3bcd-439b-ac73-aa996070897e") ? "Trainer" : "Client"));
+
+            this.CreateMap<Workout, WorkoutViewModel>()
+                .ReverseMap();
         }
     }
 }
