@@ -47,8 +47,6 @@
 
         public DbSet<OrderItem> OrderItems { get; set; }
 
-        public DbSet<ParentCategory> ParentCategories { get; set; }
-
         public DbSet<Review> Reviews { get; set; }
 
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }

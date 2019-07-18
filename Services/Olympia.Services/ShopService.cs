@@ -1,0 +1,63 @@
+﻿namespace Olympia.Services
+{
+    using AutoMapper;
+    using Olympia.Common;
+    using Olympia.Data;
+    using Olympia.Data.Domain;
+    using Olympia.Data.Models.BindingModels.Shop;
+    using Olympia.Data.Models.ViewModels.Shop;
+    using Olympia.Services.Contracts;
+    using Olympia.Services.Utilities;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    public class ShopService : IShopService
+    {
+        private readonly IMapper mapper;
+        private readonly OlympiaDbContext context;
+
+        public ShopService(
+            IMapper mapper,
+            OlympiaDbContext context)
+        {
+            this.mapper = mapper;
+            this.context = context;
+        }
+
+        public async Task<bool> CreateItemAsync(ItemBindingModel model)
+        {
+            if (model.Price <= 0 ||
+                string.IsNullOrEmpty(model.Name) ||
+                string.IsNullOrEmpty(model.Description) ||
+                model.ImgUrl == null)
+            {
+                return false;
+            }
+
+            var item = this.mapper.Map<Item>(model);
+
+            var url = MyCloudinary.UploadImage(model.ImgUrl, model.Name);
+
+            item.ImgUrl = url ?? Constants.CloudinaryInvalidUrl;
+
+            var category = this.context.ChildCategories.FirstOrDefault(cat => cat.Name == model.CategoryName.ToString());
+            var supplier = this.context.Suppliers.FirstOrDefault(sup => sup.Name == model.SupplierName);
+
+            item.ItemCategories.Add(new ItemCategory { ChildCategoryId = category.Id });
+            item.Supplier = supplier;
+
+            await this.context.Items.AddAsync(item);
+            await this.context.SaveChangesAsync();
+
+            return this.context.Items.Contains(item);
+        }
+
+        public IEnumerable<ItemViewModel> GetAllItems()
+        {
+            var itemsViewModels = this.mapper.ProjectTo<ItemViewModel>(this.context.Items).AsEnumerable();
+
+            return itemsViewModels;
+        }
+    }
+}

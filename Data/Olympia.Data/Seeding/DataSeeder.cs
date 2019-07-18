@@ -14,7 +14,7 @@
             this.context = context;
         }
 
-        public void Seed()
+        public void SeedRoles()
         {
             if (!this.context.Roles.Any())
             {
@@ -156,6 +156,22 @@
                 this.context.SaveChanges();
             }
         }
+
+        public void SeedCategories()
+        {
+            if (!this.context.ChildCategories.Any())
+            {
+                this.context.ChildCategories.AddRange(new List<ChildCategory>()
+                {
+                   new ChildCategory() { Name = "Fitness" , Description = "A category for all the items."},
+                   new ChildCategory() { Name = "Clothing" , Description = "A category for all clothes."},
+                   new ChildCategory() { Name = "Supplements" , Description = "A category for all the supplements."},
+                });
+
+                this.context.SaveChanges();
+            }
+        }
+
     }
 }
 

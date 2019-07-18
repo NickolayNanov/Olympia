@@ -36,6 +36,7 @@
 
         public const string ConfirmPasswordErrorMessage = "The password and confirmation password do not match.";
         public const string AgeErrorMessage = "Your age must be between 12 and 65";
+        public const string ItemPriceErrorMessage = "The price must be at least 0.01лв.";
         public const string EmailError = "The email is required";
         public const string GenderErrorMessage = "Gender is required. If you wish you can choose 'unknown'";
 
@@ -52,6 +53,8 @@
         public const string DisplayContent = "Content";
         public const string DisplayImg = "Display Image";
         public const string DisplayProfilePic = "Profile Picture";
+
+        public const string DisplayCategoryName = "Category";
 
         #endregion
     }

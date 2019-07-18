@@ -6,6 +6,11 @@
 
     public class FitnessPlan
     {
+        public FitnessPlan()
+        {
+            this.Workout = new Workout();
+        }
+
         [Key]
         public int Id { get; set; }
 

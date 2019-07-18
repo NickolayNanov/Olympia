@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "AddSupplier";
+    @model Olympia.Data.Models.BindingModels.Shop.SupplierBindingModel
+}
+
+<div class="container container-fluid"> 
+    <form method="post" class="form-group"
+          asp-area="AreaAdministration"
+          asp-controller="Administration"
+          asp-action="AddSupplier">
+        <h1 class="text-center">Add Supplier</h1>
+        <hr class="w-100" />
+        <div class="form-group">
+            @if (this.ViewData["Errors"] != null)
+            {
+                <h5 class="text-danger">@this.ViewData["Errors"]</h5>
+            }
+            <label asp-for="@Model.Name"></label>
+            <input type="text" asp-for="@Model.Name" class="form-control" />
+            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        </div>
+        <div >
+            <button class="btn btn-danger form-control">Add Supplier</button>
+        </div>
+    </form>
+</div>
+

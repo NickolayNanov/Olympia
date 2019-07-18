@@ -36,5 +36,7 @@
         Task<bool> UnsetTrainerAsync(string username);
 
         int CalculateCalories(string username);
+
+        bool SetFitnessPlanToUser(ClientViewModel model);
     }
 }

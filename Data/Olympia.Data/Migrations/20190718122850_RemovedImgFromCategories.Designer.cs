@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Olympia.Data;
 
 namespace Olympia.Data.Migrations
 {
     [DbContext(typeof(OlympiaDbContext))]
-    partial class OlympiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190718122850_RemovedImgFromCategories")]
+    partial class RemovedImgFromCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,7 +175,11 @@ namespace Olympia.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<int>("ParentCategoryId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("ChildCategories");
                 });
@@ -475,6 +481,20 @@ namespace Olympia.Data.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("Olympia.Data.Domain.ParentCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParentCategories");
+                });
+
             modelBuilder.Entity("Olympia.Data.Domain.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -642,6 +662,14 @@ namespace Olympia.Data.Migrations
                     b.HasOne("Olympia.Data.Domain.OlympiaUser", "Author")
                         .WithMany("Articles")
                         .HasForeignKey("AuthorId");
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.ChildCategory", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.ParentCategory", "ParentCategory")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.Comment", b =>

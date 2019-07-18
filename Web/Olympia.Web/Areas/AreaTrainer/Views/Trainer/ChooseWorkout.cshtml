@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "ChooseWorkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    @model Olympia.Data.Models.BindingModels.Client.WorkoutBindingModel
+    @model Olympia.Data.Models.BindingModels.Client.ClientViewModel
 }
 
 <div class="container">
@@ -14,22 +14,34 @@
             <br />
             <div class="mr-3 col-xl-6 sr-only-focusable text-center">
                 <h5>Difficulty</h5>
-                <select asp-for="@Model.WorkoutDifficulty" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.WorkoutDifficulty>()"></select>
-                <span asp-validation-for="@Model.WorkoutDifficulty" class="text-danger"></span>
+                <select asp-for="@Model.WorkoutInputModel.WorkoutDifficulty" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.WorkoutDifficulty>()"></select>
+                <span asp-validation-for="@Model.WorkoutInputModel.WorkoutDifficulty" class="text-danger"></span>
             </div>
             <div class="mr-3 col-xl-6 sr-only-focusable text-center">
                 <h5>Intermediate</h5>
-                <select asp-for="@Model.WorkoutType" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.WorkoutType>()"></select>
-                <span asp-validation-for="@Model.WorkoutType" class="text-danger"></span>
+                <select asp-for="@Model.WorkoutInputModel.WorkoutType" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.WorkoutType>()"></select>
+                <span asp-validation-for="@Model.WorkoutInputModel.WorkoutType" class="text-danger"></span>
             </div>
             <div class="mr-3 col-xl-6 sr-only-focusable  text-center">
                 <h5>Duration</h5>
-                <select asp-for="@Model.Duration" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.WeekWorkoutDuration>()"></select>
-                <span asp-validation-for="@Model.Duration" class="text-danger"></span>
+                <select asp-for="@Model.WorkoutInputModel.Duration" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.WeekWorkoutDuration>()"></select>
+                <span asp-validation-for="@Model.WorkoutInputModel.Duration" class="text-danger"></span>
             </div>
             <button class="btn btn-primary" r asp-area="AreaTrainer"
                     asp-controller="Trainer"
-                    asp-action="FileterWorkouts">
+                    asp-action="FileterWorkouts"
+                    asp-route-fullname="@Model.FullName"
+                    asp-route-weight="@Model.Weight"
+                    asp-route-height="@Model.Height"
+                    asp-route-age="@Model.Age"
+                    asp-route-activity="@Model.Activity"
+                    asp-route-gender="@Model.Gender"
+                    asp-route-username="@Model.UserName"
+                    asp-route-calories="@Model.Calories"
+                    asp-route-workoutdifficulty="@Model.WorkoutViewModel.WorkoutDifficulty"
+                    asp-route-workout="@Model.WorkoutViewModel.WorkoutType"
+                    asp-route-duration="@Model.WorkoutInputModel.Duration"
+                    >
                 Fileter Workouts
             </button>
         </form>

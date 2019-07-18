@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "SuppliersAll";
+    @model IEnumerable<Olympia.Data.Domain.Supplier>
+}
+
+<div class="container container-fluid">
+    <div>
+
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Supplier's name</th>
+                    <th scope="col">Count of items</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var supplier in Model)
+                {
+                    <tr>                        
+                        <td>@supplier.Name</td>
+                        <td>@supplier.Items.Count</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

@@ -109,6 +109,7 @@
             services.AddTransient<IAccountsServices, AccountsServices>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IFitnessService, FitnessService>();
+            services.AddTransient<IShopService, ShopService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,8 +119,9 @@
             optionsBuilder.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection"));
             OlympiaDbContext context = new OlympiaDbContext(optionsBuilder.Options);
 
-            new DataSeeder(context).Seed();
+            new DataSeeder(context).SeedRoles();
             new DataSeeder(context).SeedExercises();
+            new DataSeeder(context).SeedCategories();
 
             if (env.IsDevelopment())
             {
@@ -136,6 +138,7 @@
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseIdentity();
 
             app.UseMvc(routes =>
             {

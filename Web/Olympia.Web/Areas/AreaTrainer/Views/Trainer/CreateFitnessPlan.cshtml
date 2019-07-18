@@ -12,41 +12,75 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="@Model.Weight"></label>
-        <input disabled type="text" asp-for="@Model.Weight" class="form-control" />
+        <input disabled type="number" asp-for="@Model.Weight" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="@Model.Height"></label>
-        <input disabled type="text" asp-for="@Model.Height" class="form-control" />
+        <input disabled type="number" asp-for="@Model.Height" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="@Model.Age"></label>
-        <input disabled type="email" asp-for="@Model.Age" class="form-control" />
+        <input disabled type="number" asp-for="@Model.Age" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="@Model.Gender"></label>
-        <input disabled type="email" asp-for="@Model.Gender" class="form-control" />
+        <input disabled type="text" asp-for="@Model.Gender" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="@Model.Calories"></label>
-        <input disabled type="email" asp-for="@Model.Calories" class="form-control" />
+        <input disabled type="number" asp-for="@Model.Calories" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-primary"
-            asp-area="AreaTrainer"
-            asp-controller="Trainer"
-            asp-action="CalculateCalories"
-            asp-route-weight="@Model.Weight"
-            asp-route-height="@Model.Height"
-            asp-route-age="@Model.Age"
-            asp-route-activity="@Model.Activity"
-            asp-route-gender="@Model.Gender"
-            asp-route-username="@Model.UserName">
-        Calculate Calories
-    </button>
-    <button type="submit" class="btn btn-primary"
-            asp-area="AreaTrainer"
-            asp-controller="Trainer"
-            asp-action="ChooseWorkout"
-            asp-route-username="@Model.UserName">
-        Choose Workout
-    </button>
+    <div class="form-group">
+        <label asp-for="@Model.WorkoutViewModel.Name"></label>
+        <input disabled type="text" asp-for="@Model.WorkoutViewModel.Name" class="form-control" />
+    </div>
+    <div class="d-flex form-inline justify-content-between">
+        <div>
+            <button type="submit" class="btn btn-primary"
+                    asp-area="AreaTrainer"
+                    asp-controller="Trainer"
+                    asp-action="CalculateCalories"
+                    asp-route-FullName="@Model.FullName"
+                    asp-route-weight="@Model.Weight"
+                    asp-route-height="@Model.Height"
+                    asp-route-age="@Model.Age"
+                    asp-route-workoutId="@Model.WorkoutViewModel.Id"
+                    asp-route-activity="@Model.Activity"
+                    asp-route-gender="@Model.Gender"
+                    asp-route-username="@Model.UserName">
+                Calculate Calories
+            </button>
+            <button type="submit" class="btn btn-primary"
+                    asp-area="AreaTrainer"
+                    asp-controller="Trainer"
+                    asp-action="ChooseWorkout"
+                    asp-route-FullName="@Model.FullName"
+                    asp-route-weight="@Model.Weight"
+                    asp-route-height="@Model.Height"
+                    asp-route-age="@Model.Age"
+                    asp-route-activity="@Model.Activity"
+                    asp-route-workoutId="@Model.WorkoutViewModel.Id"
+                    asp-route-gender="@Model.Gender"
+                    asp-route-username="@Model.UserName"
+                    asp-route-calories="@Model.Calories">
+                Choose Workout
+            </button>
+        </div>
+        <button class="btn btn-danger"
+                asp-area="AreaTrainer"
+                asp-controller="Trainer"
+                asp-action="SetFitnessPlan"
+                asp-route-fullname="@Model.FullName"
+                asp-route-weight="@Model.Weight"
+                asp-route-height="@Model.Height"
+                asp-route-age="@Model.Age"
+                asp-route-activity="@Model.Activity"
+                asp-route-gender="@Model.Gender"
+                asp-route-username="@Model.UserName"
+                asp-route-calories="@Model.Calories"
+                asp-route-workoutId="@Model.WorkoutViewModel.Id"
+                >
+            Create
+        </button>
+    </div>
 </form>

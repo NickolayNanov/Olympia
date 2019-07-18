@@ -6,10 +6,11 @@
     using Olympia.Common;
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.BindingModels.Client;
+    using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Services.Contracts;
 
     [Area(GlobalConstants.TrainerArea)]
-    [Authorize(Roles =  GlobalConstants.TrainerAdministratorRoleName)]
+    [Authorize(Roles = GlobalConstants.TrainerAdministratorRoleName)]
     public class TrainerController : Controller
     {
         private readonly IBlogService blogService;
@@ -26,13 +27,7 @@
             this.fitnessService = fitnessService;
         }
 
-        public IActionResult CalculateCalories(ClientViewModel user)
-        {
-            var calories = this.usersService.CalculateCalories(user.UserName);
-            user.Calories = calories;
 
-            return this.View("CreateFitnessPlan", user);
-        }
 
         public async Task<IActionResult> ClientsAll()
         {
@@ -50,7 +45,7 @@
             return this.View(currentUserArticles);
         }
 
-        [Authorize(Roles = "Administrator")]
+
         public IActionResult CreateArticle()
         {
             return this.View();
@@ -78,12 +73,12 @@
 
 
         public async Task<IActionResult> ClientDetails(string username)
-        { 
+        {
             var user = await this.usersService.GetUserByUsernameAsync(username);
 
             return this.View(user);
         }
-        
+
 
         public async Task<IActionResult> CreateFitnessPlan(string username)
         {
@@ -92,21 +87,49 @@
             return this.View(model);
         }
 
-        public IActionResult ChooseWorkout()
+        public IActionResult ChooseWorkout(ClientViewModel model)
         {
-            return this.View(new WorkoutBindingModel());
+            return this.View(model);
         }
 
         [HttpPost]
-        public IActionResult FileterWorkouts(WorkoutBindingModel model)
-         {
+        public IActionResult FileterWorkouts(ClientViewModel model)
+        {
             if (!this.ModelState.IsValid)
             {
                 return this.View("ChooseWorkout", model);
             }
 
-            var workouts = this.fitnessService.GetWorkouts(model);
-            return this.View("Workouts", workouts);
+            model.Workouts = this.fitnessService.GetWorkouts(model.WorkoutInputModel);
+            return this.View("Workouts", model);
+        }
+
+        public IActionResult CalculateCalories(ClientViewModel user)
+        {
+            var calories = this.usersService.CalculateCalories(user.UserName);
+            user.Calories = calories;
+
+            return this.View("CreateFitnessPlan", user);
+        }
+
+        public IActionResult AssignFitnessPlan(ClientViewModel user, int workoutId)
+        {
+            WorkoutViewModel workout = this.fitnessService.GetWorkoutById(workoutId);
+
+            user.WorkoutViewModel = workout;
+
+            return this.View("CreateFitnessPlan", user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetFitnessPlan(ClientViewModel model, int workoutId)
+        {
+            model.WorkoutViewModel = this.fitnessService.GetWorkoutById(workoutId);
+            this.usersService.SetFitnessPlanToUser(model);
+
+            var clients = await this.usersService.GetAllClientsByUserAsync(this.User.Identity.Name);
+
+            return this.View("ClientsAll", clients);
         }
     }
 }

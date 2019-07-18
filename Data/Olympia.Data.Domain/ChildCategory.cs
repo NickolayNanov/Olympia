@@ -20,10 +20,6 @@
         [Required]
         public string Description { get; set; }
 
-        public string ImageUrl { get; set; }
-
-        [Required]
-        public ParentCategory ParentCategory { get; set; }
 
         public virtual ICollection<ItemCategory> ItemCategories { get; set; }
     }

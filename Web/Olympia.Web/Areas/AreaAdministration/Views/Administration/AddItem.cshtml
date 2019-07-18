@@ -1,0 +1,55 @@
+﻿
+@{
+    @model Olympia.Data.Models.BindingModels.Shop.ItemBindingModel
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "AddItem";
+}
+
+<div class="container container-fluid">    
+    <form method="post" enctype="multipart/form-data">
+        <h4>Create a new item.</h4>
+        <hr class="w-100" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="@Model.CategoryName"></label>
+            <select asp-for="@Model.CategoryName" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Models.BindingModels.Shop.Category>()"></select>
+            <span asp-validation-for="@Model.CategoryName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.SupplierName"></label>
+            <select asp-for="@Model.SupplierName" class="form-control"  asp-items="@(new SelectList(Model.SupplierNames))"></select>
+            <span asp-validation-for="@Model.SupplierName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Name"></label>
+            <input type="text" asp-for="@Model.Name" class="form-control" />
+            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Price"></label>
+            <input type="number" asp-for="@Model.Price" class="form-control" />
+            <span asp-validation-for="@Model.Price" class="text-danger"></span>
+        </div>
+        <div class="d-flex justify-content-around">
+
+            <div class="form-group mr-3">
+                <label asp-for="@Model.Description"></label>
+                <textarea type="text" asp-for="@Model.Description" class="form-control" cols="30" rows="10"></textarea>
+                <span asp-validation-for="@Model.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ImgUrl"></label>
+                <input type="file" asp-for="@Model.ImgUrl" class="form-control-file" />
+                <span asp-validation-for="@Model.ImgUrl" class="text-danger"></span>
+            </div>
+        </div>
+
+        <button class="btn btn-danger form-control mt-5"
+                asp-area="AreaAdministration"
+                asp-controller="Administration"
+                asp-action="CreateItem">
+            Create
+        </button>
+    </form>
+</div>
+

@@ -5,9 +5,11 @@
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.BindingModels.Client;
+    using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Data.Models.ViewModels.Fitness;
+    using Olympia.Data.Models.ViewModels.Shop;
     using System.Linq;
 
     public class MappingProfile : Profile
@@ -40,6 +42,18 @@
 
             this.CreateMap<Workout, WorkoutViewModel>()
                 .ReverseMap();
+
+            this.CreateMap<ClientViewModel, FitnessPlan>()
+                .ForMember(x => x.CaloriesGoal, y => y.MapFrom(z => z.Calories))
+                .ForMember(x => x.WeekWorkoutDuration, y => y.MapFrom(z => z.WorkoutInputModel.Duration))
+                .ForMember(x => x.Workout, y => y.MapFrom(z => z.WorkoutViewModel))
+                .ForMember(x => x.WeekWorkoutDuration, y => y.MapFrom(z => z.WorkoutInputModel.Duration))
+                .ReverseMap();
+
+            this.CreateMap<Item, ItemViewModel>();
+            this.CreateMap<ItemBindingModel, Item>();
+
+            this.CreateMap<SupplierBindingModel, Supplier>();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Olympia.Data.Domain
             this.Clients = new HashSet<OlympiaUser>();
             this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>();
 
+            this.FitnessPlan = new FitnessPlan();
         }
 
         public Gender Gender { get; set; }

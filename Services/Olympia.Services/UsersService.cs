@@ -42,10 +42,11 @@
 
             // var trainers = await this.userManager.GetUsersInRoleAsync(GlobalConstants.TrainerRoleName);
             // cannot include articles when using user manager
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
+                var adminRole = await this.roleManager.GetRoleIdAsync(await this.roleManager.FindByNameAsync(GlobalConstants.TrainerRoleName));
                 var trainerIds = this.context.UserRoles
-                    .Where(ur => ur.RoleId == "e9a584d9-3bcd-439b-ac73-aa996070897e")
+                    .Where(ur => ur.RoleId == adminRole)
                     .Select(x => x.UserId)
                     .ToList();
 
@@ -245,13 +246,7 @@
                     break;
             }
 
-            realUser.FitnessPlan = new FitnessPlan();
-            realUser.FitnessPlan.Workout = new Workout();
-            
             realUser.FitnessPlan.CaloriesGoal = (int)result;
-
-            this.context.Update(realUser);
-            this.context.SaveChanges();
 
             return (int)result;
         }
@@ -262,6 +257,20 @@
 
             var dto = this.mapper.Map<ClientViewModel>(user);
             return dto;
+        }
+
+        public bool SetFitnessPlanToUser(ClientViewModel model)
+        {
+            var user = this.GetUserByUsernameAsync(model.UserName).Result;
+            var exercises = model.WorkoutViewModel.Exercises;
+            var fitnessPlan = this.mapper.Map<FitnessPlan>(model);
+            fitnessPlan.Workout.Exercises = exercises;
+
+            user.FitnessPlan = fitnessPlan;
+            this.context.Update(user);
+            this.context.SaveChanges();
+
+            return user.FitnessPlan != null;
         }
     }
 }

@@ -2,7 +2,55 @@
 @{
     ViewData["Title"] = "Shop";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    @model IEnumerable<Olympia.Data.Models.ViewModels.Shop.ItemViewModel>
 }
 
-<h1>Shop</h1>
+@if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+{
+    <div class="row">
+        <h1 class="text-lg-center text-danger col-sm-8">Shop</h1>
 
+        <div class="col-sm-2 mb-3">
+            <a class="btn btn-danger"
+               asp-area="AreaAdministration"
+               asp-controller="Administration"
+               asp-action="AddItem">Add Item</a>
+        </div>
+
+        <div class="col-sm-2">
+            <a class="btn btn-danger"
+               asp-area="AreaAdministration"
+               asp-controller="Administration"
+               asp-action="AddSupplier">Add Supplier</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <h1 class="text-lg-center text-danger">Shop</h1>
+    </div>
+}
+
+<div class="container">
+    <div class="row">
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 card">
+                    <h5 class="card-header">@item.Name</h5>s
+                    <img class="card-img" src="@item.ImgUrl" alt="Loading..." />
+                    <div class="d-flex justify-content-between">
+                        <p>@item.Description</p>
+                        <p>@item.Supplier.Name</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h3 class="mt-5">No items in the shop</h3>
+        }
+    </div>
+</div>

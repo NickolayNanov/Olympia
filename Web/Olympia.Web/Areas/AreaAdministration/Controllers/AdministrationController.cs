@@ -4,7 +4,9 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
+    using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Services.Contracts;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
@@ -13,16 +15,19 @@
     {
         private readonly IUsersService usersService;
         private readonly IBlogService blogService;
-        private readonly IMapper mapper;
+        private readonly IShopService shopService;
+        private readonly IFitnessService fitnessService;
 
         public AdministrationController(
             IUsersService usersService,
             IBlogService blogService,
-            IMapper mapper)
+            IShopService shopService,
+            IFitnessService fitnessService)
         {
             this.usersService = usersService;
             this.blogService = blogService;
-            this.mapper = mapper;
+            this.shopService = shopService;
+            this.fitnessService = fitnessService;
         }
 
         public IActionResult Index()
@@ -30,7 +35,7 @@
             return this.View();
         }
 
-        public async Task<IActionResult> UsersAll()
+        public IActionResult UsersAll()
         {
             var users = this.usersService.GetAllUsers();
             return this.View(users);
@@ -44,7 +49,7 @@
         }
 
         // TODO: GetAllItems
-        public async Task<IActionResult> ItemsAll()
+        public IActionResult ItemsAll()
         {
             return this.View();
         }
@@ -68,6 +73,58 @@
         public IActionResult CreateArticle()
         {
             return this.View();
+        }
+
+        public IActionResult AddItem()
+        {
+            var names = this.fitnessService.GetAllSuppliers().Select(x => x.Name);
+
+            return this.View(new ItemBindingModel() { SupplierNames = names });
+        }
+
+        public IActionResult CreateItem()
+        {
+            
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateItem(ItemBindingModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            var item = await this.shopService.CreateItemAsync(model);
+
+            return this.View();
+        }
+
+        public IActionResult AddSupplier()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddSupplier(SupplierBindingModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            var action = await this.fitnessService.AddSupplierAsync(model);
+
+            if (!action)
+            {
+                this.ViewData["Errors"] = "A supplier with the same name has already been added or the name is invalid! Please try again.";
+                return this.View(model);
+            }
+
+            var suppliers = this.fitnessService.GetAllSuppliers();
+
+            return this.View("SuppliersAll", suppliers);
         }
     }
 }

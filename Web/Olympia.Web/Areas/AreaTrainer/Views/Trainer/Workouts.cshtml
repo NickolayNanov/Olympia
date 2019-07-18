@@ -2,33 +2,47 @@
 @{
     ViewData["Title"] = "Workouts";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    @model IEnumerable<Olympia.Data.Models.ViewModels.Fitness.WorkoutViewModel>
+    @model Olympia.Data.Models.BindingModels.Client.ClientViewModel
 }
-
 <div class="container">
     <div class="row">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Workouts)
         {
-        <div class="col-md-12 card">
-            <h3>@item.Name</h3>
-            <hr class="w-100" />
-            <div class="card-body">
-                <img class="card-img-top mb-4" src="@item.ImgUrl" alt="Unavailabe" />
-                @foreach (var exerciese in item.Exercises)
-                {
-                    <h5>@exerciese.Name - @exerciese.Sets Sets</h5>
-                    <p>Targeting body part: @exerciese.TargetBodyPart</p>
-                }
+            <div class="col-md-12 card">
+                <h3>@item.Name</h3>
+                <hr class="w-100" />
+                <div class="card-body">
+                    <img class="card-img-top mb-4" src="@item.ImgUrl" alt="Unavailabe" />
+                    @foreach (var exerciese in item.Exercises)
+                    {
+                        <h5>@exerciese.Name - @exerciese.Sets Sets</h5>
+                        <p>Targeting body part: @exerciese.TargetBodyPart</p>
+                    }
+                </div>
+                <p>This workout is for people who are <strong>@item.WorkoutDifficulty</strong></p>
+                <h5>@item.WorkoutType</h5>
+                <a class="btn btn-primary"
+                   asp-area="AreaTrainer"
+                   asp-controller="Trainer"
+                   asp-action="AssignFitnessPlan"
+                   asp-route-fullname="@Model.FullName"
+                   asp-route-workoutId="@item.Id"
+                   asp-route-weight="@Model.Weight"
+                   asp-route-height="@Model.Height"
+                   asp-route-age="@Model.Age"
+                   asp-route-activity="@Model.Activity"
+                   asp-route-gender="@Model.Gender"
+                   asp-route-username="@Model.UserName"
+                   asp-route-calories="@Model.Calories"
+                   asp-route-workoutdifficulty="@item.WorkoutDifficulty"
+                   asp-route-workouttype="@Model.WorkoutViewModel.WorkoutType"
+                   asp-route-imgurl="@Model.WorkoutViewModel.ImgUrl"
+                   asp-route-name="@Model.WorkoutViewModel.Name"
+                   asp-route-id="@Model.WorkoutViewModel.Id">
+                    assign to client
+                </a>
             </div>
-            <p>This workout is for people who are <strong>@item.WorkoutDifficulty</strong></p>
-            <h5>@item.WorkoutType</h5>
-            <button class="btn btn-primary">
-                assign to client
-            </button>
-        </div>
-            
         }
-
     </div>
 </div>
 
