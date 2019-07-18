@@ -10,5 +10,7 @@
         IEnumerable<ItemViewModel> GetAllItems();
 
         Task<bool> CreateItemAsync(ItemBindingModel model);
+
+        Task<IEnumerable<ItemViewModel>> GetAllItemsByCategory(string categoryName);
     }
 }

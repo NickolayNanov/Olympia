@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Services
 {
     using AutoMapper;
+    using Microsoft.EntityFrameworkCore;
     using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
@@ -58,6 +59,26 @@
             var itemsViewModels = this.mapper.ProjectTo<ItemViewModel>(this.context.Items).AsEnumerable();
 
             return itemsViewModels;
+        }
+
+        public async Task<IEnumerable<ItemViewModel>> GetAllItemsByCategory(string categoryName)
+        {
+            IEnumerable<ItemViewModel> itemViewModels = new List<ItemViewModel>();
+
+            await Task.Run(async () =>
+            {
+                itemViewModels = this.mapper.ProjectTo<ItemViewModel>((await this.context.ChildCategories
+                .Include(x => x.ItemCategories)
+                .ThenInclude(ic => ic.Item)
+                .ThenInclude(item => item.Supplier)
+                .FirstOrDefaultAsync(x => x.Name == categoryName))
+                .ItemCategories
+                .Select(x => x.Item)
+                .AsQueryable())
+                .AsEnumerable(); 
+            });
+
+            return itemViewModels;
         }
     }
 }

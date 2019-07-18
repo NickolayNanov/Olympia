@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "ItemsAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @model IEnumerable<Olympia.Data.Models.ViewModels.Shop.ItemViewModel>
+}
+
+
+<button class="btn btn-success fas fa-shopping-cart">Cart</button>
+<div class="container">
+    <div class="row">
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 card mr-5 mb-4">
+                    <i><h5 class="card-header text-center">@item.Name</h5></i>
+                    <img class="card-img" src="@item.ImgUrl" alt="Loading..." />
+                    <div class="d-flex justify-content-center">
+                        <strong><p class="text-center">@item.Supplier.Name</p></strong>
+                    </div>
+                    <div class="d-flex justify-content-center row">
+                        <button class="btn btn-primary col-lg-5 mb-2 mr-2">Add To Cart</button>
+                        <button class="btn btn-primary col-lg-5 mb-2">Details</button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h3 class="mt-5">No items in the shop</h3>
+        }
+    </div>
+</div>
