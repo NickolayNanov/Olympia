@@ -1,5 +1,6 @@
 ﻿namespace Olympia.Services.Contracts
 {
+    using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.Shop;
     using System.Collections.Generic;
@@ -13,5 +14,6 @@
 
         Task<IEnumerable<ItemViewModel>> GetAllItemsByCategory(string categoryName);
         Task<ItemViewModel> GetItemByIdAsync(int itemId);
+        IEnumerable<Supplier> GetAllSuppliers();
     }
 }

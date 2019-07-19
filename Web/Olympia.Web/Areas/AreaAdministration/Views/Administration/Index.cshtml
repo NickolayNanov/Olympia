@@ -7,17 +7,29 @@
       class="form-group"
       asp-antiforgery="true">
     <div class="">
-        <button class="btn btn-success form-control mb-3" 
-                asp-area="AreaAdministration"
-                asp-controller="Administration"
-                asp-action="UsersAll">Users</button>
         <button class="btn btn-success form-control mb-3"
                 asp-area="AreaAdministration"
                 asp-controller="Administration"
-                asp-action="ArticlesAll">Articles</button>
+                asp-action="UsersAll">
+            Users
+        </button>
         <button class="btn btn-success form-control mb-3"
                 asp-area="AreaAdministration"
                 asp-controller="Administration"
-                asp-action="ItemsAll">Items</button>
+                asp-action="ArticlesAll">
+            Articles
+        </button>
+        <button class="btn btn-success form-control mb-3"
+                asp-area="AreaAdministration"
+                asp-controller="Administration"
+                asp-action="ItemsAll">
+            Items
+        </button>
+        <button class="btn btn-success form-control mb-3"
+                asp-area="AreaAdministration"
+                asp-controller="Administration"
+                asp-action="SuppliersAll">
+            Suppliers
+        </button>
     </div>
 </form>

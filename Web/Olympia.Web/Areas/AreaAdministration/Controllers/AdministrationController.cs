@@ -129,5 +129,12 @@
 
             return this.View("SuppliersAll", suppliers);
         }
+
+        public IActionResult SuppliersAll()
+        {
+            var suppliers = this.shopService.GetAllSuppliers();
+
+            return this.View(suppliers);
+        }
     }
 }

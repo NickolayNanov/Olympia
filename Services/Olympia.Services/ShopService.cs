@@ -86,6 +86,11 @@
             return itemViewModels;
         }
 
+        public IEnumerable<Supplier> GetAllSuppliers()
+        {
+            return this.context.Suppliers.AsEnumerable();
+        }
+
         public async Task<ItemViewModel> GetItemByIdAsync(int itemId)
         {
             var itemDto = this.mapper.Map<ItemViewModel>(await this.context.Items.Include(item => item.Supplier).SingleOrDefaultAsync(item => item.Id == itemId));
