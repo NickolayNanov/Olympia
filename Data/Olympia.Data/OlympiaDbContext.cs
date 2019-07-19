@@ -121,7 +121,14 @@
                 .WithOne(adress => adress.OlympiaUser)
                 .HasForeignKey(fk => fk.UserId);
 
-           
+            modelBuilder.Entity<OlympiaUser>()
+                .HasIndex(x => x.ShoppingCartId)
+                .IsUnique();
+
+            modelBuilder.Entity<OlympiaUser>()
+                .HasOne(user => user.ShoppingCart)
+                .WithOne(shoppingCart => shoppingCart.User)
+                .HasForeignKey<OlympiaUser>(user => user.ShoppingCartId);
         }
 
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)

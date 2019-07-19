@@ -8,8 +8,9 @@
 
     public class ShoppingCart : BaseModel<int>
     {
-        public ShoppingCart()
+        public ShoppingCart(string userId)
         {
+            this.UserId = userId;
             this.Items = new List<Item>();
         }
 

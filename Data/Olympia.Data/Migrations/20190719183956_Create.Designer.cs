@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Olympia.Data;
 
 namespace Olympia.Data.Migrations
 {
     [DbContext(typeof(OlympiaDbContext))]
-    partial class OlympiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190719183956_Create")]
+    partial class Create
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,8 +375,6 @@ namespace Olympia.Data.Migrations
 
                     b.Property<string>("SecurityStamp");
 
-                    b.Property<int>("ShoppingCartId");
-
                     b.Property<string>("TrainerId");
 
                     b.Property<bool>("TwoFactorEnabled");
@@ -395,9 +395,6 @@ namespace Olympia.Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("ShoppingCartId")
-                        .IsUnique();
 
                     b.HasIndex("TrainerId");
 
@@ -541,6 +538,8 @@ namespace Olympia.Data.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -709,11 +708,6 @@ namespace Olympia.Data.Migrations
                         .WithMany()
                         .HasForeignKey("FitnessPlanId");
 
-                    b.HasOne("Olympia.Data.Domain.ShoppingCart", "ShoppingCart")
-                        .WithOne("User")
-                        .HasForeignKey("Olympia.Data.Domain.OlympiaUser", "ShoppingCartId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Olympia.Data.Domain.OlympiaUser", "Trainer")
                         .WithMany("Clients")
                         .HasForeignKey("TrainerId");
@@ -745,6 +739,14 @@ namespace Olympia.Data.Migrations
                     b.HasOne("Olympia.Data.Domain.Item", "Item")
                         .WithMany("Reviews")
                         .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.ShoppingCart", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

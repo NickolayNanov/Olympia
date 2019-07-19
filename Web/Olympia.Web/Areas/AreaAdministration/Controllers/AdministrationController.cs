@@ -101,7 +101,8 @@
 
             var item = await this.shopService.CreateItemAsync(model);
 
-            return this.View();
+            var items = this.shopService.GetAllItems();
+            return this.View("ItemsAll", items);
         }
 
         public IActionResult AddSupplier()

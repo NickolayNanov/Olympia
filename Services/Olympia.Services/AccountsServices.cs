@@ -68,6 +68,7 @@
             }
 
             var user = this.mapper.Map<OlympiaUser>(model);
+            user.ShoppingCart.UserId = user.Id;
 
             var result = await this.userManager.CreateAsync(user, model.Password);
 
@@ -90,8 +91,9 @@
         {
             if (!await this.userManager.Users.AnyAsync())
             {
-                var god = new OlympiaUser { UserName = "God", Email = "God@abv.bg", FullName = "God God" };
+                var god = new OlympiaUser("God", "God@abv.bg", "God God");
                 await this.userManager.CreateAsync(god, password: "imgod123");
+                god.ShoppingCart.UserId = god.Id;
                 await this.userManager.AddToRoleAsync(god, GlobalConstants.AdministratorRoleName);
             }
         }

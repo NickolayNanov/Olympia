@@ -20,6 +20,18 @@ namespace Olympia.Data.Domain
             this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>();
 
             this.FitnessPlan = new FitnessPlan();
+            this.ShoppingCart = new ShoppingCart(this.Id);
+        }
+
+        public OlympiaUser(string username, string email, string fullname)
+        {
+            this.Id = Guid.NewGuid().ToString();
+
+            this.UserName = username;
+            this.Email = email;
+            this.FullName = fullname;
+
+            this.ShoppingCart = new ShoppingCart(this.Id);
         }
 
         public Gender Gender { get; set; }
@@ -67,5 +79,9 @@ namespace Olympia.Data.Domain
         public virtual ICollection<Address> Addresses { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; }
+
+        public int ShoppingCartId { get; set; }
+
+        public ShoppingCart ShoppingCart { get; set; }
     }
 }
