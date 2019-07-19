@@ -122,6 +122,7 @@
             new DataSeeder(context).SeedRoles();
             new DataSeeder(context).SeedExercises();
             new DataSeeder(context).SeedCategories();
+            new DataSeeder(context).SeedExercises();
 
             if (env.IsDevelopment())
             {

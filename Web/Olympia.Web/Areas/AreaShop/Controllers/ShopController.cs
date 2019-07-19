@@ -20,7 +20,7 @@
 
         public IActionResult ShopIndex()
         {
-            var items = this.shopService.GetAllItems();            
+            var items = this.shopService.GetAllItems();
 
             return this.View(items);
         }
@@ -30,6 +30,18 @@
             var items = await this.shopService.GetAllItemsByCategory(categoryName);
 
             return this.View("ItemsAll", items);
+        }
+
+        public async Task<IActionResult> ItemDetails(int itemId)
+        {
+            if (itemId == 0)
+            {
+                return this.Redirect("/Error");
+            }
+
+            var item = await this.shopService.GetItemByIdAsync(itemId);
+
+            return this.View(item);
         }
     }
 }

@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "ItemDetails";
+    @model Olympia.Data.Models.ViewModels.Shop.ItemViewModel
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="row">
+        <div class="leftcolumn col-md-9">
+            <div class="card">
+                <h2 class="text-center">@Model.Name</h2>
+                <img src="@Model.ImgUrl" class="card-img">
+                <p class="mt-4" contenteditable>@Model.Description</p>
+            </div>
+        </div> 
+        <div class="rightcolumn col-md-3">
+            <div class="card">
+                <h2 class="mb-3 text-center">About @Model.Supplier.Name</h2>
+                <div></div>
+                <p class="card-text mt-3">@Model.Supplier.Description</p>
+            </div>
+        </div>
+        <div class="leftcolumn col-md-12 mt-4">
+        <a class="btn btn-danger col-md-12">Add To Cart</a>
+    </div>
+</div>
