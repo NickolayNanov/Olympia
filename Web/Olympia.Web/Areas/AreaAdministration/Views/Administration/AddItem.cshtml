@@ -6,7 +6,7 @@
 }
 
 <div class="container container-fluid">    
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" asp-antiforgery="true">
         <h4>Create a new item.</h4>
         <hr class="w-100" />
         <div asp-validation-summary="All" class="text-danger"></div>

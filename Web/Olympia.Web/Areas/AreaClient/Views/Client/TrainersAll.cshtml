@@ -33,16 +33,17 @@
 </table>
 
 <form method="post"
+      asp-antiforgery="true"
       asp-area="AreaClient"
       asp-controller="Client"
       asp-action="ChooseTrainer"
       asp-route-clientFullName="@Model.TrainerName">
     <div class="position-absolute">
         <div class="form-group">
-            <select class="form-control" 
+            <select class="form-control"
                     asp-for="@Model.TrainerName"
-                    asp-items="@(new SelectList(Model.Trainers.Select(x => x.UserName)))"></select>            
+                    asp-items="@(new SelectList(Model.Trainers.Select(x => x.UserName)))"></select>
         </div>
-         <input class="btn btn-danger form-control" type="submit" />
+        <input class="btn btn-danger form-control" type="submit" />
     </div>
 </form>

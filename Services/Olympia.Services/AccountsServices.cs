@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Services
 {
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using AutoMapper;
@@ -37,10 +38,16 @@
 
         public async Task<OlympiaUser> LoginUserAsync(UserLoginBindingModel model)
         {
+            if (string.IsNullOrEmpty(model.UserName) ||
+                string.IsNullOrEmpty(model.Password))
+            {
+                return null;
+            }
+
             var user = await this.userManager.FindByNameAsync(model.UserName);
 
             if (user == null)
-            {                
+            {
                 return null;
             }
 
@@ -51,6 +58,14 @@
         public async Task<OlympiaUser> RegisterUserAsync(UserRegisterBingingModel model)
         {
             await this.AddRootAdminIfDoesNotExistAsync();
+
+            if (model.Age < 12 || model.Age > 65 ||
+                string.IsNullOrEmpty(model.Username) ||
+                string.IsNullOrEmpty(model.FullName) ||
+                this.userManager.Users.Select(users => users.UserName).Any(name => name == model.Username))
+            {
+                return null;
+            }
 
             var user = this.mapper.Map<OlympiaUser>(model);
 

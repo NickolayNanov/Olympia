@@ -8,10 +8,14 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form enctype="multipart/form-data" method="post">
+        <form enctype="multipart/form-data" method="post" asp-antiforgery="true">
             <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
+            @if(this.ViewData["Errors"] != null)
+            {
+                <h5 class="text-danger">@this.ViewData["Errors"]</h5>
+            }
             <div class="form-group">
                 <label asp-for="@Model.Username"></label>
                 <input type="text" asp-for="@Model.Username" class="form-control" />

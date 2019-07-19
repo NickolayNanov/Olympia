@@ -4,6 +4,7 @@
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.Fitness;
+    using Olympia.Data.Models.ViewModels.Shop;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -15,5 +16,6 @@
         Task<bool> AddSupplierAsync(SupplierBindingModel model);
 
         IEnumerable<Supplier> GetAllSuppliers();
+        IEnumerable<ItemViewModel> GetAllItems();
     }
 }

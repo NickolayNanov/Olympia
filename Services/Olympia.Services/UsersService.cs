@@ -61,6 +61,11 @@
 
         public async Task<IEnumerable<UserViewModel>> GetAllClientsByUserAsync(string trainerUsername)
         {
+            if (string.IsNullOrEmpty(trainerUsername))
+            {
+                return new List<UserViewModel>();
+            }
+
             IEnumerable<UserViewModel> clients = new List<UserViewModel>();
 
             await Task.Run(() =>
@@ -76,6 +81,11 @@
 
         public async Task<OlympiaUser> GetUserByUsernameAsync(string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                return null;
+            }
+
             OlympiaUser userFromDb = null;
 
             await Task.Run(() =>
@@ -88,6 +98,12 @@
 
         public async Task<bool> SetTrainerAsync(string trainerUsername, string clientUsername)
         {
+            if(string.IsNullOrEmpty(trainerUsername) ||
+                string.IsNullOrEmpty(clientUsername))
+            {
+                return false;
+            }
+
             bool done = false;
 
             await Task.Run(async () =>

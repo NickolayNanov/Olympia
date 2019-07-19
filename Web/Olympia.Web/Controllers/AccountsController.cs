@@ -43,12 +43,14 @@
                 return this.View(model);
             }
 
-            if (this.userManager.Users.Select(users => users.UserName).Any(name => name == model.Username))
+            var user = await this.accountsServices.RegisterUserAsync(model);
+
+            if (user == null)
             {
+                this.ViewData["Errors"] = GlobalConstants.InvalidRegisterMessage;
                 return this.View(model);
             }
 
-            var user = await this.accountsServices.RegisterUserAsync(model);
             await this.signInManager.SignInAsync(user, isPersistent: true);
 
             return this.Redirect(GlobalConstants.Index);
@@ -65,19 +67,21 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLoginBindingModel model)
         {
-            if (!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid ||
+                string.IsNullOrEmpty(model.UserName) ||
+                string.IsNullOrEmpty(model.Password))
             {
-                return this.Redirect(GlobalConstants.AccountLogin);
+                return this.View(model);
             }
 
             var user = await this.accountsServices.LoginUserAsync(model);
 
-            if(user == null)
+            if (user == null)
             {
-                this.ViewData["Errors"] = "Invalid username or password";
+                this.ViewData["Errors"] = GlobalConstants.InvalidLoginMessage;
                 return this.View();
             }
-            
+
             return this.Redirect(GlobalConstants.Index);
         }
 

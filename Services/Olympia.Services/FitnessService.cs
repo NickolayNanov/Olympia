@@ -11,6 +11,7 @@
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.Fitness;
+    using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
 
 
@@ -29,7 +30,7 @@
 
         public async Task<bool> AddSupplierAsync(SupplierBindingModel model)
         {
-            if (string.IsNullOrEmpty(model.Name) || 
+            if (string.IsNullOrEmpty(model.Name) ||
                 this.context.Suppliers.FirstOrDefault(sup => sup.Name == model.Name) != null)
             {
                 return false;
@@ -41,6 +42,13 @@
             await this.context.SaveChangesAsync();
 
             return await this.context.Suppliers.ContainsAsync(supplier);
+        }
+
+        public IEnumerable<ItemViewModel> GetAllItems()
+        {
+            var items = this.mapper.ProjectTo<ItemViewModel>(this.context.Items.Include(x => x.Supplier)).AsEnumerable();
+
+            return items;
         }
 
         public IEnumerable<Supplier> GetAllSuppliers()

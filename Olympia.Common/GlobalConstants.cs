@@ -14,6 +14,8 @@
         public const string BlogArea = "AreaBlog";
         public const string ShopArea = "AreaShop";
 
+        public const string AdminUsersAll = "/AreaAdministration/Administration/UsersAll";
+
         #endregion
 
         #region Routes
@@ -41,6 +43,9 @@
         public const string GenderErrorMessage = "Gender is required. If you wish you can choose 'unknown'";
 
         public const string CommentLengthMessage = "The content's lenght must be between {0} and {1} characters long.";
+
+        public const string InvalidRegisterMessage = "Some of the input data is invalid. Please try again!";
+        public const string InvalidLoginMessage = "Invalid username or password";
         #endregion
 
         #region Display names

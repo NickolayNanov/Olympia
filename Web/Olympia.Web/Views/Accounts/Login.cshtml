@@ -14,7 +14,7 @@
             {
                 <h5 class="text-danger">@this.ViewData["Errors"];</h5>
             }
-            <form id="account" method="post">
+            <form id="account" method="post" asp-antiforgery="true">
                 <h4>Use a local account to log in.</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>

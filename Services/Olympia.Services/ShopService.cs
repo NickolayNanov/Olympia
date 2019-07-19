@@ -63,6 +63,11 @@
 
         public async Task<IEnumerable<ItemViewModel>> GetAllItemsByCategory(string categoryName)
         {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return new List<ItemViewModel>();
+            }
+
             IEnumerable<ItemViewModel> itemViewModels = new List<ItemViewModel>();
 
             await Task.Run(async () =>

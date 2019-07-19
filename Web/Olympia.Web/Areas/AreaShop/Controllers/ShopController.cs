@@ -20,7 +20,7 @@
 
         public IActionResult ShopIndex()
         {
-            var items = this.shopService.GetAllItems();
+            var items = this.shopService.GetAllItems();            
 
             return this.View(items);
         }

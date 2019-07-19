@@ -48,21 +48,23 @@
             return this.View(articles);
         }
 
-        // TODO: GetAllItems
         public IActionResult ItemsAll()
         {
-            return this.View();
+            var items = this.fitnessService.GetAllItems();
+            
+            return this.View(items);
         }
-       
+
 
         public async Task<IActionResult> DeleteUser(string username)
         {
             await this.usersService.DeleteUserAsync(username);
+            var users = this.usersService.GetAllUsers();
 
-            return this.Redirect(GlobalConstants.AdministrationUsers);
+            return this.View("UsersAll", users);
         }
 
-        
+
         public async Task<IActionResult> DeleteArticle(int articleId)
         {
             await this.blogService.DeleteArticleByIdAsync(articleId);
@@ -84,11 +86,12 @@
 
         public IActionResult CreateItem()
         {
-            
+
             return this.View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateItem(ItemBindingModel model)
         {
             if (!this.ModelState.IsValid)
