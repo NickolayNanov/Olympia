@@ -79,6 +79,7 @@
             return clients;
         }
 
+
         public async Task<OlympiaUser> GetUserByUsernameAsync(string username)
         {
             if (string.IsNullOrEmpty(username))

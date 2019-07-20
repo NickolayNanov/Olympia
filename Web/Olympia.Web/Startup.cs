@@ -21,6 +21,7 @@
     using Olympia.Services;
     using Olympia.Services.Contracts;
     using Olympia.Services.Data;
+    using Olympia.Web.Chat;
 
     public class Startup
     {
@@ -93,6 +94,7 @@
                 });
 
             services.AddSingleton(this.configuration);
+            services.AddSignalR();
 
             // Identity stores
             services.AddTransient<IUserStore<OlympiaUser>, OlympiaUserStore>();
@@ -110,6 +112,7 @@
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IFitnessService, FitnessService>();
             services.AddTransient<IShopService, ShopService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -145,6 +148,11 @@
             {
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
             });
         }
     }

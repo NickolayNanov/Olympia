@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\Services\Olympia.Services\Olympia.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\signalr\" />
+  </ItemGroup>
+
 </Project>
