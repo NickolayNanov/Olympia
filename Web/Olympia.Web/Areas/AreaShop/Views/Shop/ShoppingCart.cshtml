@@ -1,13 +1,17 @@
 ﻿
 @{
-    ViewData["Title"] = "ShoppingCart";
+    ViewData["Title"] = "ShoppingCart";   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @model Olympia.Data.Domain.ShoppingCart
 }
 
-<h1>ShoppingCart</h1>
+<h1>Shopping Cart</h1>
 
-като се цъкне на shop
--> взимам username-а на user-а. 
--> взимам този user и му бъркам в количката 
--> взимам count на items 
--> при цъкване се взима количката на този user
--> 
+<div class="row">
+    <div class="leftcolumn col-md-8">
+        @foreach (var item in Model.Items)
+        {
+            
+        }
+    </div>
+</div>

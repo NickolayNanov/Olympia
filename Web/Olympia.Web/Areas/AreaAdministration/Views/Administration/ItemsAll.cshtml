@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "ItemsAll";
-    @model IEnumerable<Olympia.Data.Models.ViewModels.Shop.ItemViewModel>
+    @model Olympia.Data.Models.ViewModels.Shop.ShopViewModel
 }
 
 <div class="row">
@@ -15,9 +15,9 @@
 <button class="btn btn-success fas fa-shopping-cart">Cart</button>
 <div class="container">
     <div class="row">
-        @if (Model.Any())
+        @if (Model.Items.Any())
         {
-            @foreach (var item in Model)
+            @foreach (var item in Model.Items)
             {
                 <div class="col-md-3 card mr-5 mb-4">
                     <i><h5 class="card-header text-center">@item.Name</h5></i>

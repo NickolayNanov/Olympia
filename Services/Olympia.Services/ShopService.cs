@@ -16,14 +16,31 @@
     public class ShopService : IShopService
     {
         private readonly IMapper mapper;
+        private readonly IUsersService usersService;
         private readonly OlympiaDbContext context;
 
         public ShopService(
             IMapper mapper,
+            IUsersService usersService,
             OlympiaDbContext context)
         {
             this.mapper = mapper;
+            this.usersService = usersService;
             this.context = context;
+        }
+
+        public async Task<bool> AddItemToUserCart(int itemId, OlympiaUser user)
+        {
+            var item = await this.GetItemByIdAsync(itemId);
+
+            user.ShoppingCart.Items.Add(item);
+
+            item.ShoppingCardId = user.ShoppingCart.Id;
+            this.context.Update(item);
+            this.context.Update(user);
+            await this.context.SaveChangesAsync();            
+
+            return user.ShoppingCart.Items.Contains(item);
         }
 
         public async Task<bool> CreateItemAsync(ItemBindingModel model)
@@ -68,11 +85,11 @@
                 return new List<ItemViewModel>();
             }
 
-            IEnumerable<ItemViewModel> itemViewModels = new List<ItemViewModel>();
+            IEnumerable<ItemViewModel> ShopViewModels = new List<ItemViewModel>();
 
             await Task.Run(async () =>
             {
-                itemViewModels = this.mapper.ProjectTo<ItemViewModel>((await this.context.ChildCategories
+                ShopViewModels = this.mapper.ProjectTo<ItemViewModel>((await this.context.ChildCategories
                 .Include(x => x.ItemCategories)
                 .ThenInclude(ic => ic.Item)
                 .ThenInclude(item => item.Supplier)
@@ -80,10 +97,10 @@
                 .ItemCategories
                 .Select(x => x.Item)
                 .AsQueryable())
-                .AsEnumerable(); 
+                .AsEnumerable();
             });
 
-            return itemViewModels;
+            return ShopViewModels;
         }
 
         public IEnumerable<Supplier> GetAllSuppliers()
@@ -91,11 +108,18 @@
             return this.context.Suppliers.AsEnumerable();
         }
 
-        public async Task<ItemViewModel> GetItemByIdAsync(int itemId)
+        public async Task<ItemViewModel> GetItemDtoByIdAsync(int itemId)
         {
             var itemDto = this.mapper.Map<ItemViewModel>(await this.context.Items.Include(item => item.Supplier).SingleOrDefaultAsync(item => item.Id == itemId));
 
             return itemDto;
+        }
+
+        public async Task<Item> GetItemByIdAsync(int itemId)
+        {
+            var itemFromDb = await this.context.Items.SingleOrDefaultAsync(item => item.Id == itemId);
+
+            return itemFromDb;
         }
     }
 }

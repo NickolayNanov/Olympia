@@ -16,6 +16,7 @@
         Task<bool> AddSupplierAsync(SupplierBindingModel model);
 
         IEnumerable<Supplier> GetAllSuppliers();
-        IEnumerable<ItemViewModel> GetAllItems();
+
+        IEnumerable<ShopViewModel> GetAllItems();
     }
 }

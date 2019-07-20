@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Shop";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    @model IEnumerable<Olympia.Data.Models.ViewModels.Shop.ItemViewModel>
+    @model Olympia.Data.Models.ViewModels.Shop.ShopViewModel
 }
 
 @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))

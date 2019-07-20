@@ -3,17 +3,18 @@
     using Olympia.Data.Domain;
     using System.Collections.Generic;
 
+
     public class ItemViewModel
     {
-
         public ItemViewModel()
         {
-            this.Reviews = new HashSet<Review>();
-            this.ItemCategories = new HashSet<ItemCategory>();
-            this.OrderItems = new HashSet<OrderItem>();
+            Reviews = new HashSet<Review>();
+            OrderItems = new HashSet<OrderItem>();
+            ItemCategories = new HashSet<ItemCategory>();
         }
 
         public int Id { get; set; }
+
         public string Description { get; set; }
 
 

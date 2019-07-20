@@ -90,7 +90,11 @@
 
             await Task.Run(() =>
             {
-                userFromDb = this.context.Users.SingleOrDefault(user => user.UserName == username);
+                userFromDb = this.context
+                .Users
+                .Include(user => user.ShoppingCart)
+                .ThenInclude(shoppingCart => shoppingCart.Items)
+                .SingleOrDefault(user => user.UserName == username);
             });
 
             return userFromDb;
