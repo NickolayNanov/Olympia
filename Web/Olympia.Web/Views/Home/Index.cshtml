@@ -1,7 +1,7 @@
 ﻿@{
     this.ViewData["Title"] = "Home Page";
-    @model IEnumerable<Olympia.Data.Models.ViewModels.BlogPartViewModels.ArticleViewModel>
-    var list = Model.ToList();
+    @model Olympia.Data.Models.ViewModels.Home.IndexModel
+    var list = Model.Articles.ToList();
 }
 
 @if (!User.Identity.IsAuthenticated)
@@ -50,6 +50,68 @@ else
             </div>
         </div>
     </div>
+
+    @if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
+    {
+        <h5>Chat with your Client</h5>
+
+        <div class="container">
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-6">&nbsp;</div>
+                <div class="col-6">
+                    @*<input type="text" id="userInput" placeholder="User.." />*@
+                    <select id="userInput" asp-items="@(new SelectList(Model.ClientNames))"></select>
+                    <br />
+                    <input type="text" id="messageInput" placeholder="Message.." />
+                    <input type="button" id="sendButton" value="Send Message" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <hr />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">&nbsp;</div>
+                <div class="col-6">
+                    <ul id="messagesList"></ul>
+                </div>
+            </div>
+        </div>
+    }
+    else if (this.User.IsInRole(GlobalConstants.ClientRoleName))
+    {
+        <h5>Chat with your Trainer</h5>
+
+        <div class="container">
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-6">&nbsp;</div>
+                <div class="col-6">
+                    <select id="userInput" asp-items="@(new SelectList(new[] { Model.TrainerName }))"></select>
+                    <br />
+                    <input type="text" id="messageInput" placeholder="Message.." />
+                    <input type="button" id="sendButton" value="Send Message" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <hr />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">&nbsp;</div>
+                <div class="col-6">
+                    <ul id="messagesList"></ul>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <script src="~/lib/signalr/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
 
 
 }

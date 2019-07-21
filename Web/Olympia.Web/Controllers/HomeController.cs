@@ -1,24 +1,42 @@
 ﻿namespace Olympia.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-
+    using Olympia.Common;
+    using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class HomeController : Controller
     {
         private readonly IBlogService blogsService;
+        private readonly IUsersService usersService;
 
-        public HomeController(IBlogService blogsService)
+        public HomeController(IBlogService blogsService, IUsersService usersService)
         {
             this.blogsService = blogsService;
+            this.usersService = usersService;
         }
 
         public async Task<IActionResult> Index()
         {
             var articles = await this.blogsService.GetTopFiveArticlesAsync();
 
-            return this.View(articles);
+            IndexModel model = new IndexModel();
+            model.Articles = articles;
+
+            if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
+            {
+                model.ClientNames = (await this.usersService
+                    .GetUserByUsernameAsync(this.User.Identity.Name)).Clients.Select(client => client.UserName);
+            }
+            else if (this.User.IsInRole(GlobalConstants.ClientRoleName))
+            {
+                model.TrainerName = (await this.usersService
+                    .GetUserByUsernameAsync(this.User.Identity.Name)).Trainer?.UserName;
+            }
+
+            return this.View(model);
         }
 
         public IActionResult Privacy()

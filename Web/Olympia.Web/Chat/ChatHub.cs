@@ -14,6 +14,15 @@
             this.usersService = usersService;
         }
 
+        public Task JoinRoom(string roomName)
+        {
+            return this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomName);
+        }
+        public Task Leave(string roomName)
+        {
+            return this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, roomName);
+        }
+
         public async Task SendMessage(string destuser, string message)
         {
             string currentUser = this.Context.GetHttpContext().User.Identity.Name;
@@ -24,8 +33,8 @@
             {
                 throw new System.Exception();
             }
-
-            await this.Clients.User(userFromDb.Id).SendAsync("ReceiveMessage", currentUser, destuser, message);
+            
+            await this.Clients.All.SendAsync("ReceiveMessage", currentUser, destuser, message);
         }
     }
 }

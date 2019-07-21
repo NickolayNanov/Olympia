@@ -24,31 +24,7 @@
         </div>
         <div>
 
-            <div class="container">
-                <div class="row">&nbsp;</div>
-                <div class="row">
-                    <div class="col-6">&nbsp;</div>
-                    <div class="col-6">
-                        User<input type="text" id="userInput" />
-                        <br />
-                        <input type="text" id="messageInput" />
-                        <input type="button" id="sendButton" asp-route-username="@this.User.Identity.Name" value="Send Message" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <hr />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">&nbsp;</div>
-                    <div class="col-6">
-                        <ul id="messagesList"></ul>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
-<script src="~/lib/signalr/signalr.js"></script>
-<script src="~/js/chat.js"></script>

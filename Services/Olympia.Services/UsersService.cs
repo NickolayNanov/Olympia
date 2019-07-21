@@ -93,6 +93,8 @@
             {
                 userFromDb = this.context
                 .Users
+                .Include(x => x.Clients)
+                .Include(x => x.Trainer)
                 .Include(user => user.ShoppingCart)
                 .ThenInclude(shoppingCart => shoppingCart.Items)
                 .SingleOrDefault(user => user.UserName == username);
