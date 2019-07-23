@@ -18,15 +18,18 @@
     {
         private readonly IUsersService usersService;
         private readonly IMapper mapper;
+        private readonly IFitnessService fitnessService;
         private readonly SignInManager<OlympiaUser> signInManager;
 
         public ClientController(
             IUsersService usersService,
             IMapper mapper,
+            IFitnessService fitnessService,
             SignInManager<OlympiaUser> signInManager)
         {
             this.usersService = usersService;
             this.mapper = mapper;
+            this.fitnessService = fitnessService;
             this.signInManager = signInManager;
         }
 
@@ -115,5 +118,11 @@
         }
 
      
+        public IActionResult MyFitnessPlan(string username)
+        {
+            this.fitnessService.GetFitnessPlanByUsername(username);
+
+            return this.View();
+        }
     }
 }

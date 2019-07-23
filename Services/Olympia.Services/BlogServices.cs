@@ -19,18 +19,15 @@
         private readonly OlympiaDbContext context;
         private readonly IMapper mapper;
         private readonly IUsersService usersService;
-        private readonly IConfiguration configuration;
 
         public BlogServices(
             OlympiaDbContext context,
             IMapper mapper,
-            IUsersService usersService,
-            IConfiguration configuration)
+            IUsersService usersService)
         {
             this.context = context;
             this.mapper = mapper;
             this.usersService = usersService;
-            this.configuration = configuration;
         }
 
         public async Task<IEnumerable<ArticleViewModel>> GetAllArticlesAsync()

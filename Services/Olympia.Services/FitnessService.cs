@@ -19,13 +19,16 @@
     {
         private readonly OlympiaDbContext context;
         private readonly IMapper mapper;
+        private readonly IUsersService usersService;
 
         public FitnessService(
             OlympiaDbContext context,
-            IMapper mapper)
+            IMapper mapper,
+            IUsersService usersService)
         {
             this.context = context;
             this.mapper = mapper;
+            this.usersService = usersService;
         }
 
         public async Task<bool> AddSupplierAsync(SupplierBindingModel model)
@@ -59,6 +62,20 @@
                 .AsEnumerable();
 
             return suppliers;
+        }
+
+        public async Task<FitnessPlanViewModel> GetFitnessPlanByUsername(string username)
+        {
+            var user = await this.usersService.GetUserByUsernameAsync(username);
+
+            if(user == null)
+            {
+                return null;
+            }
+
+            //var fitnessPlan = await this.context.FitnessPlans.Include(x => x.Workout).SingleOrDefaultAsync(fitnessPlan => fitnessPlan.)
+
+            return null;
         }
 
         public WorkoutViewModel GetWorkoutById(int workoutId)

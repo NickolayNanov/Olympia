@@ -1,0 +1,53 @@
+﻿
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "ProfileIndex";
+    @model Olympia.Data.Models.ViewModels.Home.UserProfile
+}
+
+<h1 class="text-center text-danger">Profile</h1>
+
+<form method="post" class="form-group"
+      asp-controller="Accounts"
+      asp-action="ProfileIndex"
+      asp-antiforgery="true">
+    <div class="form-group">
+        <div class="form-group">
+            <label asp-for="@Model.UserName"></label>
+            <input type="text" asp-for="@Model.UserName" class="form-control" disabled />
+            <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.FullName"></label>
+            <input type="text" asp-for="@Model.FullName" class="form-control" disabled />
+            <span asp-validation-for="@Model.FullName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Weight"></label>
+            <input type="text" asp-for="@Model.Weight" class="form-control" />
+            <span asp-validation-for="@Model.Weight" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Height"></label>
+            <input type="number" asp-for="@Model.Height" class="form-control" />
+            <span asp-validation-for="@Model.Height" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Age"></label>
+            <input type="number" asp-for="@Model.Age" class="form-control" />
+            <span asp-validation-for="@Model.Age" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Actity"></label>
+            <select asp-for="@Model.Actity" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.ActityLevel>()"></select>
+            <span asp-validation-for="@Model.Actity" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success form-control mt-3"                     
+                    asp-action="ProfileIndex"
+                    asp-controller="Accounts">
+                Update
+            </button>
+        </div>
+    </div>
+</form>

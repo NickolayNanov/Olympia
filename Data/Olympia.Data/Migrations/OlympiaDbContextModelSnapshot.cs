@@ -259,7 +259,11 @@ namespace Olympia.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<string>("OlympiaUserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OlympiaUserId");
 
                     b.ToTable("Interests");
                 });
@@ -676,6 +680,13 @@ namespace Olympia.Data.Migrations
                         .WithMany()
                         .HasForeignKey("WorkoutId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.Interest", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser")
+                        .WithMany("Interests")
+                        .HasForeignKey("OlympiaUserId");
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.Item", b =>

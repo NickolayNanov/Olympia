@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
     using Olympia.Data.Models.BindingModels.Shop;
+    using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
     using System.Linq;
     using System.Threading.Tasks;
@@ -102,7 +103,8 @@
             var item = await this.shopService.CreateItemAsync(model);
 
             var items = this.shopService.GetAllItems();
-            return this.View("ItemsAll", items);
+            var shopViewModel = new ShopViewModel() { Items = items };
+            return this.View("ItemsAll", shopViewModel);
         }
 
         public IActionResult AddSupplier()

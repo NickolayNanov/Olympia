@@ -18,5 +18,7 @@
         IEnumerable<Supplier> GetAllSuppliers();
 
         IEnumerable<ShopViewModel> GetAllItems();
+
+        Task<FitnessPlanViewModel> GetFitnessPlanByUsername(string username);
     }
 }

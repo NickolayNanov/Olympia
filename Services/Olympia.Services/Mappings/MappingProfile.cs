@@ -9,6 +9,7 @@
     using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Data.Models.ViewModels.Fitness;
+    using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Data.Models.ViewModels.Shop;
     using System.Linq;
 
@@ -54,6 +55,8 @@
             this.CreateMap<ItemBindingModel, Item>();
 
             this.CreateMap<SupplierBindingModel, Supplier>();
+
+            this.CreateMap<OlympiaUser, UserProfile>().ReverseMap();
         }
     }
 }

@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Data.Domain", "Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Data.Models", "Data\Olympia.Data.Models\Olympia.Data.Models.csproj", "{87843921-ED58-4C7C-A8A6-6505761A9681}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Olympia.Services.Tests", "Tests\Olympia.Services.Tests\Olympia.Services.Tests.csproj", "{7C7ED1AB-150C-49DD-842D-7AC297E36640}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{87843921-ED58-4C7C-A8A6-6505761A9681}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87843921-ED58-4C7C-A8A6-6505761A9681}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87843921-ED58-4C7C-A8A6-6505761A9681}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C7ED1AB-150C-49DD-842D-7AC297E36640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C7ED1AB-150C-49DD-842D-7AC297E36640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C7ED1AB-150C-49DD-842D-7AC297E36640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C7ED1AB-150C-49DD-842D-7AC297E36640}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{9DF22068-B7A1-465D-9F7A-DB7A806EC197} = {ACBE44C4-E198-45E2-BA02-6655250A0006}
 		{C2630D7E-8390-4390-AB15-627920988C7E} = {ACBE44C4-E198-45E2-BA02-6655250A0006}
 		{87843921-ED58-4C7C-A8A6-6505761A9681} = {ACBE44C4-E198-45E2-BA02-6655250A0006}
+		{7C7ED1AB-150C-49DD-842D-7AC297E36640} = {7A731632-6714-44E2-A9E4-069EBA9E666C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {384484BE-4680-4529-9CC2-AD37BA4D12D1}

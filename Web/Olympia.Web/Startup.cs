@@ -21,7 +21,7 @@
     using Olympia.Services;
     using Olympia.Services.Contracts;
     using Olympia.Services.Data;
-    using Olympia.Web.Chat;
+    using Olympia.Web.Hubs;
 
     public class Startup
     {

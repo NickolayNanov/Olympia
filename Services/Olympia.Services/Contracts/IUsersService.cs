@@ -8,9 +8,12 @@
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
+    using Olympia.Data.Models.ViewModels.Home;
 
     public interface IUsersService
     {
+        Task<UserProfile> GetUserProfileModel(string username);
+
         Task<ClientViewModel> GetFitnessPlanModelAsync(string username);
 
         Task<OlympiaUser> GetUserByUsernameAsync(string username);
@@ -38,5 +41,7 @@
         int CalculateCalories(string username);
 
         bool SetFitnessPlanToUser(ClientViewModel model);
+
+        void UpdateProfile(UserProfile model, string username);
     }
 }

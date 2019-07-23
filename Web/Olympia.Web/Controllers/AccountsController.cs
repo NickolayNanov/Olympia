@@ -9,6 +9,7 @@
     using Olympia.Common;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
+    using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
 
     public class AccountsController : Controller
@@ -16,15 +17,18 @@
         private readonly SignInManager<OlympiaUser> signInManager;
         private readonly UserManager<OlympiaUser> userManager;
         private readonly IAccountsServices accountsServices;
+        private readonly IUsersService usersService;
 
         public AccountsController(
             SignInManager<OlympiaUser> signInManager,
             UserManager<OlympiaUser> userManager,
-            IAccountsServices accountsServices)
+            IAccountsServices accountsServices,
+            IUsersService usersService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.accountsServices = accountsServices;
+            this.usersService = usersService;
         }
 
         [AllowAnonymous]
@@ -94,9 +98,25 @@
         }
 
         [Authorize]
-        public IActionResult Profile()
+        public async Task<IActionResult> ProfileIndex()
         {
-            return this.View();
+            var currentUser = await this.usersService.GetUserProfileModel(this.User.Identity.Name);                
+
+            return this.View(currentUser);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult ProfileIndex(UserProfile model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            this.usersService.UpdateProfile(model, this.User.Identity.Name);
+
+            return this.Redirect(GlobalConstants.Index);
         }
     }
 }

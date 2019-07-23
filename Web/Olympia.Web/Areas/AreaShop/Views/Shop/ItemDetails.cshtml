@@ -12,7 +12,7 @@
                 <img src="@Model.ImgUrl" class="card-img">
                 <p class="mt-4" contenteditable>@Model.Description</p>
             </div>
-        </div> 
+        </div>
         <div class="rightcolumn col-md-3">
             <div class="card">
                 <h2 class="mb-3 text-center">About @Model.Supplier.Name</h2>
@@ -21,6 +21,10 @@
             </div>
         </div>
         <div class="leftcolumn col-md-12 mt-4">
-        <a class="btn btn-danger col-md-12">Add To Cart</a>
+            <a asp-area="AreaShop"
+               asp-controller="Shop"
+               asp-action="AddToCart"
+               asp-route-itemId="@Model.Id"
+               class="btn btn-danger col-md-12">Add To Cart</a>
+        </div>
     </div>
-</div>

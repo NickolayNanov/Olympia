@@ -7,10 +7,12 @@ document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveMessage", function (currentUser, destUser, message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = currentUser + " says " + msg + " to " + destUser;
+    var encodedMsg = currentUser + ": " + msg;
     var li = document.createElement("li");
     li.textContent = encodedMsg;
+    li.classList.add(["list-group-item"])
     document.getElementById("messagesList").appendChild(li);
+
 });
 
 connection.start().then(function () {
@@ -25,5 +27,6 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     connection.invoke("SendMessage", user, message).catch(function (err) {
         return console.error(err.toString());
     });
+
     event.preventDefault();
 });

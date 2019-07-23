@@ -1,4 +1,4 @@
-﻿namespace Olympia.Web.Chat
+﻿namespace Olympia.Web.Hubs
 {
     using Microsoft.AspNetCore.SignalR;
     using Olympia.Services.Contracts;
@@ -14,22 +14,16 @@
             this.usersService = usersService;
         }
 
-        public Task JoinRoom(string roomName)
-        {
-            return this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomName);
-        }
-        public Task Leave(string roomName)
-        {
-            return this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, roomName);
-        }
-
         public async Task SendMessage(string destuser, string message)
         {
             string currentUser = this.Context.GetHttpContext().User.Identity.Name;
-
+            string connection = this.Context.ConnectionId;
             var userFromDb = await this.usersService.GetUserByUsernameAsync(destuser);
 
-            if(userFromDb == null)
+
+            var user = this.Clients.User(userFromDb.Id);
+
+            if (userFromDb == null)
             {
                 throw new System.Exception();
             }

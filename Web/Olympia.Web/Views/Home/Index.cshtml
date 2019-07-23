@@ -60,11 +60,12 @@ else
             <div class="row">
                 <div class="col-6">&nbsp;</div>
                 <div class="col-6">
-                    @*<input type="text" id="userInput" placeholder="User.." />*@
-                    <select id="userInput" asp-items="@(new SelectList(Model.ClientNames))"></select>
-                    <br />
-                    <input type="text" id="messageInput" placeholder="Message.." />
-                    <input type="button" id="sendButton" value="Send Message" />
+                    <form class="form-group">
+                        <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
+                        <br />
+                        <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
+                        <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                    </form>
                 </div>
             </div>
             <div class="row">
@@ -75,7 +76,7 @@ else
             <div class="row">
                 <div class="col-6">&nbsp;</div>
                 <div class="col-6">
-                    <ul id="messagesList"></ul>
+                    <ul id="messagesList" class="list-group list-group-flush"></ul>
                 </div>
             </div>
         </div>
@@ -89,10 +90,12 @@ else
             <div class="row">
                 <div class="col-6">&nbsp;</div>
                 <div class="col-6">
-                    <select id="userInput" asp-items="@(new SelectList(new[] { Model.TrainerName }))"></select>
-                    <br />
-                    <input type="text" id="messageInput" placeholder="Message.." />
-                    <input type="button" id="sendButton" value="Send Message" />
+                    <form class="form-group">
+                        <select id="userInput" class="form-control" asp-items="@(new SelectList(new[] { Model.TrainerName }))"></select>
+                        <br />
+                        <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
+                        <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                    </form>
                 </div>
             </div>
             <div class="row">
@@ -103,7 +106,7 @@ else
             <div class="row">
                 <div class="col-6">&nbsp;</div>
                 <div class="col-6">
-                    <ul id="messagesList"></ul>
+                    <ul id="messagesList" class="list-group list-group-flush"></ul>
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 ﻿namespace Olympia.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -14,6 +15,7 @@
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
+    using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
 
@@ -294,6 +296,29 @@
             this.context.SaveChanges();
 
             return user.FitnessPlan != null;
+        }
+
+        public async Task<UserProfile> GetUserProfileModel(string username)
+        {
+            var userFromDb = this.mapper.Map<UserProfile>
+                (await this.context.Users.FirstOrDefaultAsync(user => user.UserName == username));
+
+            return userFromDb;
+        }
+
+        public void UpdateProfile(UserProfile model, string username)
+        {
+            var userFromDb = this.userManager.Users.FirstOrDefault(user => user.UserName == username);
+
+            if(userFromDb != null)
+            {
+                userFromDb.Weight = model.Weight;
+                userFromDb.Height = model.Height;
+                userFromDb.Activity = model.Actity;
+
+                this.context.Update(userFromDb);
+                this.context.SaveChanges();
+            }
         }
     }
 }

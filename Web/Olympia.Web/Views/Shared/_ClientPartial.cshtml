@@ -18,11 +18,18 @@ else
            asp-action="MyTrainer"
            asp-route-username="@this.User.Identity.Name">My Trainer</a>
     </li>
+    <li class="nav-item active">
+        <a class="nav-link text-light"
+           asp-area="AreaClient"
+           asp-controller="Client"
+           asp-action="MyFitnessPlan"
+           asp-route-username="@this.User.Identity.Name">My Fitness Plan</a>
+    </li>
 }
 <li class="nav-item active">
     <a class="nav-link text-light"
-        asp-controller="Users" 
-       asp-action="Profile"> Profile</a>
+       asp-controller="Accounts"
+       asp-action="ProfileIndex">Profile</a>
 </li>
 <li class="nav-item active">
     <a class="nav-link text-light"

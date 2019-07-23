@@ -61,6 +61,8 @@
 
         public const string DisplayCategoryName = "Category";
 
+        public const string DisplayDuration = "Duration";
+
         #endregion
     }
 }
