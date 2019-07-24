@@ -57,6 +57,11 @@
             this.CreateMap<SupplierBindingModel, Supplier>();
 
             this.CreateMap<OlympiaUser, UserProfile>().ReverseMap();
+            this.CreateMap<FitnessPlan, FitnessPlanViewModel>()
+                .ForMember(x => x.Workout, y => y.MapFrom(z => z.Workout))
+                .ForMember(x => x.Calories, y => y.MapFrom(z => z.CaloriesGoal))
+                .ForMember(x => x.WeekWorkoutDuration, y => y.MapFrom(z => z.WeekWorkoutDuration))
+                .ReverseMap();
         }
     }
 }

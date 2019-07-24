@@ -27,6 +27,8 @@
 
         public Gender Gender { get; set; }
 
+        public WeekWorkoutDuration WeekWorkoutDuration { get; set; }
+
         public int Calories { get; set; }
 
         public WorkoutViewModel WorkoutViewModel { get; set; }

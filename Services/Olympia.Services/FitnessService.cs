@@ -68,14 +68,21 @@
         {
             var user = await this.usersService.GetUserByUsernameAsync(username);
 
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
 
-            //var fitnessPlan = await this.context.FitnessPlans.Include(x => x.Workout).SingleOrDefaultAsync(fitnessPlan => fitnessPlan.)
+            var fitnessPlanFromDb = this.context
+                .FitnessPlans
+                .Include(x => x.Workout)
+                .ThenInclude(x => x.Exercises)
+                .SingleOrDefault(fitnessPlan => fitnessPlan.OwnerId == user.Id);
 
-            return null;
+
+            var dto = this.mapper.Map<FitnessPlanViewModel>(fitnessPlanFromDb);
+
+            return dto;
         }
 
         public WorkoutViewModel GetWorkoutById(int workoutId)

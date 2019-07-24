@@ -110,19 +110,19 @@
             return this.Redirect(GlobalConstants.ClientTrainersAll);
         }
 
-        public async Task<IActionResult> LeaveTrainer()
+        public async Task<IActionResult> LeaveTrainer(string trainerUsername)
         {
-            await this.usersService.UnsetTrainerAsync(this.User.Identity.Name);
+            await this.usersService.UnsetTrainerAsync(this.User.Identity.Name, trainerUsername);
 
             return this.Redirect(GlobalConstants.Index);
         }
 
      
-        public IActionResult MyFitnessPlan(string username)
+        public async Task<IActionResult> MyFitnessPlan(string username)
         {
-            this.fitnessService.GetFitnessPlanByUsername(username);
+            var fitnessPlan = await this.fitnessService.GetFitnessPlanByUsername(username);
 
-            return this.View();
+            return this.View(fitnessPlan);
         }
     }
 }

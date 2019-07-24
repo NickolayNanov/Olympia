@@ -22,5 +22,9 @@
 
         [Required]
         public WeekWorkoutDuration WeekWorkoutDuration { get; set; }
+
+        public OlympiaUser Owner { get; set; }
+
+        public string OwnerId { get; set; }
     }
 }

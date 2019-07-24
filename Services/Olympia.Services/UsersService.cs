@@ -55,7 +55,8 @@
                 trainers = this.context
                     .Users
                     .Include(x => x.Articles)
-                    .Where(id => trainerIds.Any(x => x == id.Id));
+                    .Where(id => trainerIds.Any(x => x == id.Id))
+                    .OrderByDescending(trainer => trainer.Rating);
             });
 
             return trainers;
@@ -122,6 +123,8 @@
 
                 trainer.Clients.Add(client);
                 client.TrainerId = trainer.Id;
+
+                trainer.Rating = trainer.Clients.Count * 0.4;
 
                 this.context.Update(trainer);
                 this.context.Update(client);
@@ -207,12 +210,6 @@
 
             return !this.userManager.Users.Contains(userToDelete);
         }
-
-        public Task<FitnessPlan> CreateFitnessPlanAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public IEnumerable<ListedUserViewModel> GetAllUsers()
         {
             var users = this.userManager.Users;
@@ -221,7 +218,7 @@
             return userDtos;
         }
 
-        public async Task<bool> UnsetTrainerAsync(string username)
+        public async Task<bool> UnsetTrainerAsync(string username, string trainerUsername)
         {
             var user = await this.GetUserByUsernameAsync(username);
 
@@ -276,7 +273,7 @@
             return (int)result;
         }
 
-        public async Task<ClientViewModel> GetFitnessPlanModelAsync(string username)
+        public async Task<ClientViewModel> GetUserWithFitnessPlanModelAsync(string username)
         {
             var user = await this.GetUserByUsernameAsync(username);
 
@@ -287,11 +284,13 @@
         public bool SetFitnessPlanToUser(ClientViewModel model)
         {
             var user = this.GetUserByUsernameAsync(model.UserName).Result;
+
             var exercises = model.WorkoutViewModel.Exercises;
             var fitnessPlan = this.mapper.Map<FitnessPlan>(model);
             fitnessPlan.Workout.Exercises = exercises;
-
+            fitnessPlan.WeekWorkoutDuration = model.WorkoutInputModel.Duration;
             user.FitnessPlan = fitnessPlan;
+
             this.context.Update(user);
             this.context.SaveChanges();
 

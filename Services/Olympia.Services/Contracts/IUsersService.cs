@@ -14,7 +14,7 @@
     {
         Task<UserProfile> GetUserProfileModel(string username);
 
-        Task<ClientViewModel> GetFitnessPlanModelAsync(string username);
+        Task<ClientViewModel> GetUserWithFitnessPlanModelAsync(string username);
 
         Task<OlympiaUser> GetUserByUsernameAsync(string username);
 
@@ -28,7 +28,6 @@
 
         Task<OlympiaUser> GetUsersTrainerAsync(string username);
 
-        Task<FitnessPlan> CreateFitnessPlanAsync();
 
         Task<bool> UpdateUserHeightAndWeightAsync(ClientViewModel user, string username);
 
@@ -36,7 +35,7 @@
 
         Task<bool> DeleteUserAsync(string username);
 
-        Task<bool> UnsetTrainerAsync(string username);
+        Task<bool> UnsetTrainerAsync(string username, string trainerUsername);
 
         int CalculateCalories(string username);
 

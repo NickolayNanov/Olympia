@@ -28,7 +28,8 @@
                 <select asp-for="@Model.WorkoutInputModel.Duration" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.WeekWorkoutDuration>()"></select>
                 <span asp-validation-for="@Model.WorkoutInputModel.Duration" class="text-danger"></span>
             </div>
-            <button class="btn btn-primary" r asp-area="AreaTrainer"
+            <button class="btn btn-primary" 
+                    asp-area="AreaTrainer"
                     asp-controller="Trainer"
                     asp-action="FileterWorkouts"
                     asp-route-fullname="@Model.FullName"
@@ -41,7 +42,7 @@
                     asp-route-calories="@Model.Calories"
                     asp-route-workoutdifficulty="@Model.WorkoutViewModel.WorkoutDifficulty"
                     asp-route-workout="@Model.WorkoutViewModel.WorkoutType"
-                    asp-route-duration="@Model.WorkoutInputModel.Duration"
+                    asp-route-weekworkoutduration="@Model.WorkoutInputModel.Duration"
                     >
                 Fileter Workouts
             </button>

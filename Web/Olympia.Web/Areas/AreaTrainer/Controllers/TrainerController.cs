@@ -82,7 +82,7 @@
 
         public async Task<IActionResult> CreateFitnessPlan(string username)
         {
-            var model = await this.usersService.GetFitnessPlanModelAsync(username);
+            var model = await this.usersService.GetUserWithFitnessPlanModelAsync(username);
 
             return this.View(model);
         }
@@ -101,6 +101,7 @@
             }
 
             model.Workouts = this.fitnessService.GetWorkouts(model.WorkoutInputModel);
+            model.WeekWorkoutDuration = model.WorkoutInputModel.Duration;
             return this.View("Workouts", model);
         }
 
