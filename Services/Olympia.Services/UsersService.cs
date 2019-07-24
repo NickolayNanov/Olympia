@@ -288,7 +288,7 @@
             var exercises = model.WorkoutViewModel.Exercises;
             var fitnessPlan = this.mapper.Map<FitnessPlan>(model);
             fitnessPlan.Workout.Exercises = exercises;
-            fitnessPlan.WeekWorkoutDuration = model.WorkoutInputModel.Duration;
+            fitnessPlan.WeekWorkoutDuration = model.WeekWorkoutDuration;
             user.FitnessPlan = fitnessPlan;
 
             this.context.Update(user);

@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Web.Hubs
 {
     using Microsoft.AspNetCore.SignalR;
+    using Olympia.Common;
     using Olympia.Services.Contracts;
     using System.Threading.Tasks;
 
@@ -17,18 +18,17 @@
         public async Task SendMessage(string destuser, string message)
         {
             string currentUser = this.Context.GetHttpContext().User.Identity.Name;
-            string connection = this.Context.ConnectionId;
+
             var userFromDb = await this.usersService.GetUserByUsernameAsync(destuser);
-
-
-            var user = this.Clients.User(userFromDb.Id);
+            var currentUserFormDb = await this.usersService.GetUserByUsernameAsync(currentUser);
 
             if (userFromDb == null)
             {
                 throw new System.Exception();
             }
-            
-            await this.Clients.All.SendAsync("ReceiveMessage", currentUser, destuser, message);
+
+            await this.Clients.User(userFromDb.Id).SendAsync("ReceiveMessage", currentUser, message);
+            await this.Clients.User(currentUserFormDb.Id).SendAsync("ReceiveMessage", currentUser, message);
         }
     }
 }
