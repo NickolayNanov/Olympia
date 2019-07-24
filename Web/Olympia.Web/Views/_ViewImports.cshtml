@@ -1,6 +1,8 @@
 ﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
-@using Olympia.Common
 @using Microsoft.AspNetCore.Identity;
 @using Olympia.Data.Domain;
+@using Olympia.Common;
 @using Olympia.Data;
 @using Microsoft.EntityFrameworkCore;
+@inject UserManager<OlympiaUser> UserManager
+@inject OlympiaDbContext context

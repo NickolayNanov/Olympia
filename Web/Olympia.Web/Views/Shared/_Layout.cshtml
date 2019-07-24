@@ -1,16 +1,12 @@
-﻿@using Olympia.Data.Domain
-@using Microsoft.AspNetCore.Identity
-@inject UserManager<OlympiaUser> UserManager
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Olympia</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" /> 
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
     <environment exclude="Development">
@@ -20,7 +16,7 @@
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-    <link rel="stylesheet" href="~/css/site.css" />
+
 </head>
 <body>
     <header>
@@ -33,6 +29,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_NavBarPartial" />
+
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -44,9 +41,9 @@
                             <a class="nav-link text-light" asp-controller="Home" asp-action="Chat">Chat Room</a>
                         </li>
                         @if (this.User.IsInRole(GlobalConstants.ClientRoleName) &&
-                           this.UserManager.Users
-                               .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
-                               !this.User.IsInRole(GlobalConstants.TrainerRoleName))
+                        this.UserManager.Users
+                            .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
+                            !this.User.IsInRole(GlobalConstants.TrainerRoleName))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light"
@@ -61,6 +58,7 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
@@ -75,19 +73,17 @@
     </footer>
 
     <script src="~/js/site.js"></script>
-    <script src="~/lib/util-js/util.js"></script>
-    <script src="~/lib/util-js/util.pack.js"></script>
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-        <script src="https://kit.fontawesome.com/ac2988e355.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="https://kit.fontawesome.com/ac2988e355.js"></script>
 
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
 
-    </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
     <environment exclude="Development">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
@@ -102,7 +98,6 @@
                 integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
         </script>
     </environment>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

@@ -102,10 +102,8 @@
             optionsBuilder.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection"));
             OlympiaDbContext context = new OlympiaDbContext(optionsBuilder.Options);
 
-            new DataSeeder(context).SeedRoles();
-            new DataSeeder(context).SeedExercises();
-            new DataSeeder(context).SeedCategories();
-            new DataSeeder(context).SeedExercises();
+            //Seed
+            new DataSeeder(context);
 
             if (env.IsDevelopment())
             {

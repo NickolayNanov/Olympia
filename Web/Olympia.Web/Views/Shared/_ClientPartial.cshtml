@@ -1,6 +1,4 @@
-﻿@inject OlympiaDbContext context
-
-@if (this.context.Users.Include(x => x.Trainer).FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null)
+﻿@if (this.context.Users.Include(x => x.Trainer).FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null)
 {
     <li class="nav-item active">
         <a class="nav-link text-light"
