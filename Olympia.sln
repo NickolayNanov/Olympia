@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "Tests\Sandbox\Sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Services", "Services\Olympia.Services\Olympia.Services.csproj", "{00343E84-6A1B-4AB1-9CCE-66D56AA60A1E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Services.Data", "Services\Olympia.Services.Data\Olympia.Services.Data.csproj", "{317211E0-378B-40B5-9152-A762EAC1ADF1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Common", "Olympia.Common\Olympia.Common.csproj", "{19350879-6270-499F-88BC-EF39EFD57EFB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Web", "Web\Olympia.Web\Olympia.Web.csproj", "{5170ADA1-E062-48CC-AF30-69949E39A7ED}"
@@ -29,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Data.Domain", "Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Data.Models", "Data\Olympia.Data.Models\Olympia.Data.Models.csproj", "{87843921-ED58-4C7C-A8A6-6505761A9681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Olympia.Services.Tests", "Tests\Olympia.Services.Tests\Olympia.Services.Tests.csproj", "{7C7ED1AB-150C-49DD-842D-7AC297E36640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Services.Tests", "Tests\Olympia.Services.Tests\Olympia.Services.Tests.csproj", "{7C7ED1AB-150C-49DD-842D-7AC297E36640}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +43,6 @@ Global
 		{00343E84-6A1B-4AB1-9CCE-66D56AA60A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00343E84-6A1B-4AB1-9CCE-66D56AA60A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00343E84-6A1B-4AB1-9CCE-66D56AA60A1E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{317211E0-378B-40B5-9152-A762EAC1ADF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{317211E0-378B-40B5-9152-A762EAC1ADF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{317211E0-378B-40B5-9152-A762EAC1ADF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{317211E0-378B-40B5-9152-A762EAC1ADF1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19350879-6270-499F-88BC-EF39EFD57EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{19350879-6270-499F-88BC-EF39EFD57EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19350879-6270-499F-88BC-EF39EFD57EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -84,7 +78,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8AB6B92A-0837-4BDE-B950-10BE3FF2B6A8} = {7A731632-6714-44E2-A9E4-069EBA9E666C}
 		{00343E84-6A1B-4AB1-9CCE-66D56AA60A1E} = {516E002B-9E6E-4456-B7F6-EAA353966DE6}
-		{317211E0-378B-40B5-9152-A762EAC1ADF1} = {516E002B-9E6E-4456-B7F6-EAA353966DE6}
 		{5170ADA1-E062-48CC-AF30-69949E39A7ED} = {E389DEB6-5F90-444B-A054-12A10D39C76F}
 		{C9C7A500-E620-43CE-95A8-AB488E56D784} = {ACBE44C4-E198-45E2-BA02-6655250A0006}
 		{9DF22068-B7A1-465D-9F7A-DB7A806EC197} = {ACBE44C4-E198-45E2-BA02-6655250A0006}

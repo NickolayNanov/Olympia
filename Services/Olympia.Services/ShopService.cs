@@ -38,7 +38,7 @@
             item.ShoppingCardId = user.ShoppingCart.Id;
             this.context.Update(item);
             this.context.Update(user);
-            await this.context.SaveChangesAsync();            
+            await this.context.SaveChangesAsync();
 
             return user.ShoppingCart.Items.Contains(item);
         }
@@ -120,6 +120,24 @@
             var itemFromDb = await this.context.Items.SingleOrDefaultAsync(item => item.Id == itemId);
 
             return itemFromDb;
+        }
+
+        public async Task<IEnumerable<ItemViewModel>> GetTopFiveItemsAsync()
+        {
+            IEnumerable<ItemViewModel> items = new List<ItemViewModel>();
+
+            await Task.Run(() =>
+            {
+                items = this.mapper
+                            .ProjectTo<ItemViewModel>(this.context
+                                .Items
+                                .Include(item => item.Supplier)
+                                .OrderByDescending(x => x.TimesBought)
+                                .Take(5))
+                            .AsEnumerable();
+            });
+
+            return items;
         }
     }
 }

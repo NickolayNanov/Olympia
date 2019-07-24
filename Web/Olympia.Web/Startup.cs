@@ -13,14 +13,10 @@
     using Microsoft.Extensions.Logging;
     
     using Olympia.Data;
-    using Olympia.Data.Common;
-    using Olympia.Data.Common.Repositories;
     using Olympia.Data.Domain;
-    using Olympia.Data.Repositories;
     using Olympia.Data.Seeding;
     using Olympia.Services;
     using Olympia.Services.Contracts;
-    using Olympia.Services.Data;
     using Olympia.Web.Hubs;
 
     public class Startup
@@ -32,11 +28,8 @@
             this.configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Framework services
-            // TODO: Add pooling when this bug is fixed: https://github.com/aspnet/EntityFrameworkCore/issues/9741
             services.AddDbContext<OlympiaDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
@@ -50,8 +43,6 @@
                     options.Password.RequiredLength = 6;
                 })
                 .AddEntityFrameworkStores<OlympiaDbContext>()
-                .AddUserStore<OlympiaUserStore>()
-                .AddRoleStore<OlympiaRoleStore>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
 
@@ -96,23 +87,12 @@
             services.AddSingleton(this.configuration);
             services.AddSignalR();
 
-            // Identity stores
-            services.AddTransient<IUserStore<OlympiaUser>, OlympiaUserStore>();
-            services.AddTransient<IRoleStore<OlympiaUserRole>, OlympiaRoleStore>();
-
-            // Data repositories
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped<IDbQueryRunner, DbQueryRunner>();
-
             // Application services            
-            services.AddTransient<ISettingsService, SettingsService>();
-
             services.AddTransient<IBlogService, BlogServices>();
             services.AddTransient<IAccountsServices, AccountsServices>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IFitnessService, FitnessService>();
-            services.AddTransient<IShopService, ShopService>();
-            
+            services.AddTransient<IShopService, ShopService>();           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -152,7 +132,7 @@
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chatHub");
+                routes.MapHub<ChatHub>("/chat");
             });
         }
     }

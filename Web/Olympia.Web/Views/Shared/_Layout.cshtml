@@ -10,15 +10,9 @@
     <title>@ViewData["Title"] - Olympia</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <script src="~/js/site.js"></script>
-
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" /> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <script src="~/js/site.js"></script>
-    </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
@@ -46,18 +40,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        @if (this.User.IsInRole(GlobalConstants.ClientRoleName) && 
-                            this.UserManager.Users
-                                .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
-                                !this.User.IsInRole(GlobalConstants.TrainerRoleName))
-                        {
                         <li class="nav-item">
-                            <a class="nav-link text-light" 
-                               asp-area="AreaClient"
-                               asp-controller="Client" 
-                               asp-action="BecomeTrainer"
-                               asp-route-username="@this.User.Identity.Name">Become a trainer</a>
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Chat">Chat Room</a>
                         </li>
+                        @if (this.User.IsInRole(GlobalConstants.ClientRoleName) &&
+                           this.UserManager.Users
+                               .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
+                               !this.User.IsInRole(GlobalConstants.TrainerRoleName))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light"
+                                   asp-area="AreaClient"
+                                   asp-controller="Client"
+                                   asp-action="BecomeTrainer"
+                                   asp-route-username="@this.User.Identity.Name">Become a trainer</a>
+                            </li>
                         }
                     </ul>
                 </div>
@@ -77,6 +74,9 @@
         </div>
     </footer>
 
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/util-js/util.js"></script>
+    <script src="~/lib/util-js/util.pack.js"></script>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>

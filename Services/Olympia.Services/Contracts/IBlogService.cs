@@ -12,7 +12,7 @@
 
         Task<IEnumerable<ArticleViewModel>> GetAllByUserIdAsync(string authorName);
 
-        Task<IEnumerable<ArticleViewModel>> GetTopFiveArticlesAsync();
+        Task<IEnumerable<ArticleViewModel>> GetTopThreeArticlesAsync();
 
         Task<int> CreateArticleAsync(CreateArticleBindingModel model, string usersName);
 

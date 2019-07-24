@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewData["Title"] = "Chat";
+    @model Olympia.Data.Models.ViewModels.Home.IndexModel
+}
+
+
+@if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
+{
+    <h5>Chat with your Client</h5>
+
+    <div class="container">
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                <form class="form-group">
+                    <br />
+                    <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
+                    <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
+                    <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                <ul id="messagesList" class="list-group list-group-flush"></ul>
+            </div>
+        </div>
+    </div>
+}
+else if (this.User.IsInRole(GlobalConstants.ClientRoleName))
+{
+    <h5>Chat with your Trainer</h5>
+
+    <div class="container">
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                <form class="form-group">
+                    <select id="userInput" class="form-control" asp-items="@(new SelectList(new[] { Model.TrainerName }))"></select>
+                    <br />
+                    <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
+                    <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                <ul id="messagesList" class="list-group list-group-flush"></ul>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="~/lib/signalr/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+

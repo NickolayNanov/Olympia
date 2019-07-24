@@ -32,6 +32,7 @@
 
         public int TimesBought { get; set; }
 
+
         public ShoppingCart ShoppingCart { get; set; }
 
 

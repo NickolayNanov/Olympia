@@ -11,19 +11,23 @@
     {
         private readonly IBlogService blogsService;
         private readonly IUsersService usersService;
+        private readonly IShopService shopService;
 
-        public HomeController(IBlogService blogsService, IUsersService usersService)
+        public HomeController(IBlogService blogsService, IUsersService usersService, IShopService shopService)
         {
             this.blogsService = blogsService;
             this.usersService = usersService;
+            this.shopService = shopService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var articles = await this.blogsService.GetTopFiveArticlesAsync();
+            var articles = await this.blogsService.GetTopThreeArticlesAsync();
+            var items = await this.shopService.GetTopFiveItemsAsync();
 
             IndexModel model = new IndexModel();
             model.Articles = articles;
+            model.Items = items;
 
             if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
             {
@@ -48,6 +52,24 @@
         public IActionResult Error()
         {
             return this.View();
+        }
+
+        public async Task<IActionResult> Chat()
+        {
+            IndexModel model = new IndexModel();
+
+            if(this.User.IsInRole(GlobalConstants.TrainerRoleName))
+            {
+                model.ClientNames = (await this.usersService
+                    .GetUserByUsernameAsync(this.User.Identity.Name)).Clients.Select(client => client.UserName);
+            }
+            else if (this.User.IsInRole(GlobalConstants.ClientRoleName))
+            {
+                model.TrainerName = (await this.usersService
+                    .GetUserByUsernameAsync(this.User.Identity.Name)).Trainer?.UserName;
+            }
+
+            return this.View(model);
         }
     }
 }

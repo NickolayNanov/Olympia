@@ -13,8 +13,13 @@
         Task<bool> CreateItemAsync(ItemBindingModel model);
 
         Task<IEnumerable<ItemViewModel>> GetAllItemsByCategory(string categoryName);
+
         Task<ItemViewModel> GetItemDtoByIdAsync(int itemId);
+
         IEnumerable<Supplier> GetAllSuppliers();
+
         Task<bool> AddItemToUserCart(int itemId, OlympiaUser name);
+
+        Task<IEnumerable<ItemViewModel>> GetTopFiveItemsAsync();
     }
 }

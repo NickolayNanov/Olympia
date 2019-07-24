@@ -6,7 +6,6 @@
 
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Blogs;
@@ -59,7 +58,7 @@
             return articlesFromDb;
         }
 
-        public async Task<IEnumerable<ArticleViewModel>> GetTopFiveArticlesAsync()
+        public async Task<IEnumerable<ArticleViewModel>> GetTopThreeArticlesAsync()
         {
             IEnumerable<ArticleViewModel> mostPopularArticles = new List<ArticleViewModel>();
 
@@ -68,7 +67,7 @@
                 mostPopularArticles = this.mapper
                 .ProjectTo<ArticleViewModel>(this.context.Articles
                 .OrderByDescending(article => article.TimesRead)
-                .Take(5))
+                .Take(3))
                 .ToList();
             });
 
