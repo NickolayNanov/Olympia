@@ -11,6 +11,7 @@
     public interface IFitnessService
     {
         IEnumerable<WorkoutViewModel> GetWorkouts(WorkoutBindingModel model);
+
         WorkoutViewModel GetWorkoutById(int workoutId);
         
         Task<bool> AddSupplierAsync(SupplierBindingModel model);

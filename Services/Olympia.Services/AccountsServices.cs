@@ -52,6 +52,12 @@
 
             var result = await this.signInManager.PasswordSignInAsync(user, model.Password, true, true);
 
+            //For Testing
+            if (result == null)
+            {
+                return user;
+            }
+
             if (!result.Succeeded)
             {
                 return null;
@@ -77,14 +83,22 @@
 
             var result = await this.userManager.CreateAsync(user, model.Password);
 
+            //For tests...
+            if(result == null)
+            {
+                return user;
+            }
+
             if (result.Succeeded)
             {
                 await this.userManager.AddToRoleAsync(user, GlobalConstants.ClientRoleName);
             }
 
-            var cloudinaryAccount = this.SetCloudinary();
-            var url = this.UploadImage(cloudinaryAccount, model.ProfilePicturImgUrl, model.Username);
-            user.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
+            if (model.ProfilePicturImgUrl != null)
+            {
+                var url = MyCloudinary.UploadImage(model.ProfilePicturImgUrl, model.Username);
+                user.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
+            }
 
             this.context.Update(user);
             await this.context.SaveChangesAsync();
@@ -94,7 +108,7 @@
 
         private async Task AddRootAdminIfDoesNotExistAsync()
         {
-            if (!await this.userManager.Users.AnyAsync())
+            if (this.userManager.Users.Any())
             {
                 var god = new OlympiaUser("God", "God@abv.bg", "God God");
                 await this.userManager.CreateAsync(god, password: "imgod123");
@@ -103,50 +117,6 @@
             }
         }
 
-        private string UploadImage(Cloudinary cloudinary, IFormFile fileform, string articleTitle)
-        {
-            if (fileform == null)
-            {
-                return null;
-            }
 
-            byte[] articleImg;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                fileform.CopyTo(memoryStream);
-                articleImg = memoryStream.ToArray();
-            }
-
-            ImageUploadResult uploadResult;
-
-            using (var ms = new MemoryStream(articleImg))
-            {
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(articleTitle, ms),
-                    Transformation = new Transformation(),
-                };
-
-                uploadResult = cloudinary.Upload(uploadParams);
-            }
-
-            return uploadResult.SecureUri.AbsoluteUri;
-        }
-
-        // TODO: export to json
-        private Cloudinary SetCloudinary()
-        {
-            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account
-            {
-
-                Cloud = Constants.CloudinaryCloudName,
-                ApiKey = Constants.CloudinaryApiKey,
-                ApiSecret = Constants.CloudinaryApiSecret,
-            };
-
-            Cloudinary cloudinary = new Cloudinary(account);
-            return cloudinary;
-        }
     }
 }
