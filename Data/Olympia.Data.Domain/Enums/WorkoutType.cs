@@ -2,10 +2,10 @@
 {
     public enum WorkoutType
     {
-        Strength = 2,
-        Circuit = 4,
-        CrossFit = 5,
-        Cardio = 6,
-        HIIT = 7,
+        Strength = 1,
+        Circuit = 2,
+        CrossFit = 3,
+        Cardio = 4,
+        HIIT = 5,
     }
 }

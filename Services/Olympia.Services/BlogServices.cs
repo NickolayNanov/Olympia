@@ -35,7 +35,7 @@
 
             await Task.Run(() =>
             {
-                var articles = this.context.Articles;
+                var articles = this.context.Articles.Include(article => article.Author);
                 articlesFromDb = this.mapper.ProjectTo<ArticleViewModel>(articles).ToList();
             });
 
@@ -74,7 +74,7 @@
             return mostPopularArticles;
         }
 
-        public async Task<int> CreateArticleAsync(CreateArticleBindingModel model, string usersName)
+        public async Task<ArticleViewModel> CreateArticleAsync(CreateArticleBindingModel model, string usersName)
         {
             Article articleForDb = null;
 
@@ -93,7 +93,7 @@
 
             var articleToReturn = this.mapper.Map<ArticleViewModel>(articleForDb);
 
-            return articleToReturn.Id;
+            return articleToReturn;
         }
 
         public async Task<ArticleViewModel> GetArticleByIdAsync(int articleId)

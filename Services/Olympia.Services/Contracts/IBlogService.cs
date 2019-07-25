@@ -14,7 +14,7 @@
 
         Task<IEnumerable<ArticleViewModel>> GetTopThreeArticlesAsync();
 
-        Task<int> CreateArticleAsync(CreateArticleBindingModel model, string usersName);
+        Task<ArticleViewModel> CreateArticleAsync(CreateArticleBindingModel model, string usersName);
 
         Task<ArticleViewModel> GetArticleByIdAsync(int articleId);
 

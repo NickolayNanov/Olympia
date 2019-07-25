@@ -44,14 +44,19 @@
                 return null;
             }
 
-            var user = await this.userManager.FindByNameAsync(model.UserName);
+            var user = await
+                this.context
+                .Users
+                .SingleOrDefaultAsync(x =>
+                x.UserName == model.UserName);
 
-            if (user == null)
+            var result = await this.signInManager.PasswordSignInAsync(user, model.Password, true, true);
+
+            if (!result.Succeeded)
             {
                 return null;
             }
 
-            await this.signInManager.SignInAsync(user, true);
             return user;
         }
 

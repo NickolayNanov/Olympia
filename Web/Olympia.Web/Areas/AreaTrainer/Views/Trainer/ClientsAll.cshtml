@@ -22,16 +22,16 @@
     </thead>
     <tbody>
         @foreach (var client in Model)
-        {//TODO: Make userViewModel
-        <tr data-href="/AreaTrainer/Trainer/ClientDetails?username=@client.Username">
-            <td scope="row">@(index++)</td>
-            <td>@client.FullName</td>
-            <td>@client.Username</td>
-            <td>@client.Age</td>
-            <td>@(string.IsNullOrEmpty(client.Weight) ? "-" : client.Height)</td>
-            <td>@(string.IsNullOrEmpty(client.Height) ? "-" : client.Height)</td>
-            <td>@client.Gender.ToString()</td>
-        </tr>
+        {
+            <tr data-href="/AreaTrainer/Trainer/ClientDetails?username=@client.Username">
+                <td scope="row">@(index++)</td>
+                <td>@client.FullName</td>
+                <td>@client.Username</td>
+                <td>@client.Age</td>
+                <td>@(string.IsNullOrEmpty(client.Weight) ? "-" : client.Height)</td>
+                <td>@(string.IsNullOrEmpty(client.Height) ? "-" : client.Height)</td>
+                <td>@client.Gender.ToString()</td>
+            </tr>
         }
     </tbody>
 </table>

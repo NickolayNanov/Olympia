@@ -43,12 +43,18 @@
             <h3>Popular Posts</h3>
             @foreach (var article in popularArticle.Where(article => article.Id != Model.Id))
             {
-                <h5>
-                    <a asp-area="AreaBlog"
-                       asp-controller="Blog"
-                       asp-action="ArticleDetails"
-                       asp-route-articleId="@article.Id">@article.Title</a>
-                </h5>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>
+                            <a asp-area="AreaBlog"
+                               asp-controller="Blog"
+                               asp-action="ArticleDetails"
+                               asp-route-articleId="@article.Id">@article.Title</a>
+                        </h5>
+                        <hr class="bg-danger w-100"/>
+                    </div>
+                </div>
+                
             }
         </div>
     </div>

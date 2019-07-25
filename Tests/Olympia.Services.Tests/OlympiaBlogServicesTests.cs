@@ -1,37 +1,38 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using Olympia.Data;
-using Olympia.Data.Domain;
-using Olympia.Services.Contracts;
-using Xunit;
-
-namespace Olympia.Services.Tests
+﻿namespace Olympia.Services.Tests
 {
+    using AutoMapper;
+    using Microsoft.EntityFrameworkCore;
+    using Moq;
+    using Olympia.Data;
+    using Olympia.Data.Models.BindingModels.Blogs;
+    using Olympia.Data.Seeding;
+    using System.Threading.Tasks;
+    using Xunit;
+
     public class OlympiaBlogServicesTests
     {
-        private OlympiaDbContext olympiaDbContext;
-
-        private void Seed()
+        private void InitiateInMemmoryDb()
         {
             DbContextOptionsBuilder<OlympiaDbContext> optionsBuilder = new DbContextOptionsBuilder<OlympiaDbContext>();
             optionsBuilder.UseInMemoryDatabase("test");
 
-            this.olympiaDbContext = new OlympiaDbContext(optionsBuilder.Options);
+            OlympiaDbContext olympiaDbContext = new OlympiaDbContext(optionsBuilder.Options);
 
-            Article article = new Article();
-
-
-            olympiaDbContext.Articles.AddRange(new[] { new Article(), new Article(), new Article(), new Article() });
+            new DataSeeder(olympiaDbContext);
         }
 
+
         [Fact]
-        public async void ClientsAllShouldReturnFourArticles()
+        public async Task CreateArticleShouldCreateObject()
         {
-            var mock = new Mock<IUsersService>();
+            InitiateInMemmoryDb();
+            ;
+            var mockMapper = new Mock<IMapper>();
+            var mockedService = new Mock<BlogServices>().Object;
 
-            var result = mock.Setup(x => x.CalculateCalories("asd")).Returns(2014);
+            var aricle = await mockedService.CreateArticleAsync(new CreateArticleBindingModel() { Title = "asd", Content = "asd", ImgUrl = null }, "Pesho");
 
+            Assert.NotNull(aricle);
         }
     }
 }
