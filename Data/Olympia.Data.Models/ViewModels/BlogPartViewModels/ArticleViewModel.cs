@@ -11,8 +11,6 @@
         public ArticleViewModel()
         {
             this.CreatedOn = DateTime.UtcNow;
-
-            this.Comments = new HashSet<Comment>();
         }
 
         public string Content { get; set; }
@@ -27,6 +25,5 @@
 
         public int TimesRead { get; set; }
 
-        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Olympia.Data;
 
 namespace Olympia.Data.Migrations
 {
     [DbContext(typeof(OlympiaDbContext))]
-    partial class OlympiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190726173417_RemovedInterests")]
+    partial class RemovedInterests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,6 +178,33 @@ namespace Olympia.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ChildCategories");
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ArticleId");
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired();
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.Exercise", b =>
@@ -593,6 +622,19 @@ namespace Olympia.Data.Migrations
                     b.HasOne("Olympia.Data.Domain.OlympiaUser", "Author")
                         .WithMany("Articles")
                         .HasForeignKey("AuthorId");
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.Comment", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.Article", "Article")
+                        .WithMany("Comments")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.Exercise", b =>

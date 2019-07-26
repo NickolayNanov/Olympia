@@ -10,7 +10,6 @@
     {
         public Article()
         {
-            this.Comments = new HashSet<Comment>();
             this.CreatedOn = DateTime.UtcNow;
         }
 
@@ -26,7 +25,5 @@
         public OlympiaUser Author { get; set; }
 
         public string AuthorId { get; set; }
-
-        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

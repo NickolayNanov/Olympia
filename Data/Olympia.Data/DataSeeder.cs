@@ -22,7 +22,7 @@
 
         }
 
-        public void SeedRoles()
+        private void SeedRoles()
         {
             if (!this.context.Roles.Any())
             {
@@ -62,7 +62,7 @@
             }
         }
 
-        public void SeedWorkoutAndExercises()
+        private void SeedWorkoutAndExercises()
         {
             if (!this.context.Exercises.Any())
             {
@@ -1229,7 +1229,7 @@
             }
         }
 
-        public void SeedCategories()
+        private void SeedCategories()
         {
             if (!this.context.ChildCategories.Any())
             {
@@ -1244,7 +1244,7 @@
             }
         }
 
-        public void SeedArticles()
+        private void SeedArticles()
         {
             if (!this.context.Articles.Any())
             {
@@ -1311,7 +1311,7 @@
             }
         }
 
-        public void SeedSuppliers()
+        private void SeedSuppliers()
         {
             if (!this.context.Suppliers.Any())
             {
@@ -1354,7 +1354,7 @@
             }
         }
 
-        public void SeedItems()
+        private void SeedItems()
         {
             if (!this.context.Items.Any())
             {

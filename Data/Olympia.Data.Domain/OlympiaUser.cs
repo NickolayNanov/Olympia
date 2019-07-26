@@ -13,12 +13,12 @@ namespace Olympia.Data.Domain
         public OlympiaUser()
         {
             this.Id = Guid.NewGuid().ToString();
+
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.Addresses = new HashSet<Address>();
             this.Clients = new HashSet<OlympiaUser>();
-            this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>();
-            this.Interests = new HashSet<Interest>();            
+            this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>(); 
 
             this.FitnessPlan = new FitnessPlan();
             this.ShoppingCart = new ShoppingCart(this.Id);
@@ -70,8 +70,6 @@ namespace Olympia.Data.Domain
         public ActityLevel Activity { get; set; }
 
         public virtual ICollection<OlympiaUser> Clients { get; set; }
-
-        public virtual ICollection<Interest> Interests { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> OlympiaUserRole { get; set; }
 

@@ -31,13 +31,9 @@
 
         public DbSet<ChildCategory> ChildCategories { get; set; }
 
-        public DbSet<Comment> Comments { get; set; }
-
         public DbSet<Exercise> Exercises { get; set; }
 
         public DbSet<FitnessPlan> FitnessPlans { get; set; }
-
-        public DbSet<Interest> Interests { get; set; }
 
         public DbSet<Item> Items { get; set; }
 

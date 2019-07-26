@@ -17,7 +17,6 @@
 
             this.OrderItems = new HashSet<OrderItem>();
         }
-
         [Required]
         public string UserId { get; set; }
 
