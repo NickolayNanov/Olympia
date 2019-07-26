@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     @model Olympia.Data.Models.ViewModels.BlogPartViewModels.ArticleViewModel
     var popularArticle = Model.Author.Articles.OrderByDescending(x => x.TimesRead);
+    var user = this.context.Users.Include(x => x.Articles).SingleOrDefault(x => x.UserName == this.User.Identity.Name);
 }
 
 <div class="row">
@@ -14,7 +15,7 @@
         </div>
     </div>
     <div class="rightcolumn">
-        @if (this.User.IsInRole("Trainer") || this.User.IsInRole("Admin"))
+        @if ((this.User.IsInRole("Trainer") || this.User.IsInRole("Admin")) && user.Articles.Select(x => x.Id).Contains(Model.Id))
         {
             <div>
                 <a class="btn btn-danger"
@@ -51,10 +52,10 @@
                                asp-action="ArticleDetails"
                                asp-route-articleId="@article.Id">@article.Title</a>
                         </h5>
-                        <hr class="bg-danger w-100"/>
+                        <hr class="bg-danger w-100" />
                     </div>
                 </div>
-                
+
             }
         </div>
     </div>
