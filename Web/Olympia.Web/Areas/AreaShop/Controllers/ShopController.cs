@@ -5,7 +5,6 @@
     using Olympia.Common;
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
-    using System.Linq;
     using System.Threading.Tasks;
 
     [Area(GlobalConstants.ShopArea)]
@@ -13,14 +12,10 @@
     public class ShopController : Controller
     {
         private readonly IShopService shopService;
-        private readonly IUsersService usersService;
 
-        public ShopController(
-            IShopService shopService,
-            IUsersService usersService)
+        public ShopController(IShopService shopService)
         {
             this.shopService = shopService;
-            this.usersService = usersService;
         }
 
         public IActionResult ShopIndex()
@@ -34,7 +29,9 @@
         public async Task<IActionResult> Items(string categoryName)
         {
             var items = await this.shopService.GetAllItemsByCategory(categoryName);
-            var shopViewModel = new ShopViewModel() { Items = items };
+            var shoppingCart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
+
+            var shopViewModel = new ShopViewModel() { Items = items, ShoppingCart = shoppingCart };
 
             return this.View("ItemsAll", shopViewModel);
         }
@@ -53,12 +50,41 @@
 
         public async Task<IActionResult> AddToCart(int itemId)
         {
-            var item = await this.shopService.GetItemDtoByIdAsync(itemId);
-            var user = await this.usersService.GetUserByUsernameAsync(this.User.Identity.Name);
+            var result = await 
+                this.shopService
+                .AddItemToUserCart(itemId, this.User.Identity.Name);
 
-            await this.shopService.AddItemToUserCart(itemId, user);
+            if (!result)
+            {
+                this.ViewData["Errors"] = GlobalConstants.AlreadyAddedThisItem;
+            }
 
-            return this.View("ShoppingCart", user.ShoppingCart);
+            var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
+
+            var items = this.shopService.GetAllItems();
+
+            ShopViewModel shopViewModel = new ShopViewModel
+            {
+                Items = items,
+                ShoppingCart = cart
+            };
+
+            return this.View("ItemsAll", shopViewModel);
+        }
+
+        public async Task<IActionResult> ShoppingCart(int cartId)
+        {
+            var cart = await this.shopService.GetShoppingCartByCartIdAsync(cartId);
+
+            return this.View(cart);
+        }
+
+        public async Task<IActionResult> RemoveFromCart(int cartId, int itemId)
+        {
+            await this.shopService.RemoveFromCartAsync(cartId, itemId);
+            var cart = await this.shopService.GetShoppingCartByCartIdAsync(cartId);
+
+            return this.View("ShoppingCart", cart);
         }
     }
 }

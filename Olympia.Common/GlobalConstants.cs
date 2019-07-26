@@ -62,6 +62,7 @@
         public const string DisplayCategoryName = "Category";
 
         public const string DisplayDuration = "Duration";
+        public const string AlreadyAddedThisItem = "This item has already been added in the cart";
 
         #endregion
     }

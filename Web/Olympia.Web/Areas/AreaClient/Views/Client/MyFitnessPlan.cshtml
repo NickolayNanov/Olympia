@@ -5,33 +5,41 @@
     @model Olympia.Data.Models.ViewModels.Fitness.FitnessPlanViewModel
 }
 
-<h2 class="text-center">@User.Identity.Name's fitness plan</h2>
-<hr class="bg-danger w-100" />
+@if (Model == null)
+{
+    <h3 class="text-danger">You do not have a fitness plan yet, but feel free to ask your trainer to make you one!</h3>
+}
+else
+{
 
-<h3 class="text-center">Ideal Calories: @Model.Calories</h3>
-<hr class="bg-danger w-75" />
+    <h2 class="text-center">@User.Identity.Name's fitness plan</h2>
+    <hr class="bg-danger w-100" />
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12 card mb-5">
-            <div class="d-inline-flex justify-content-xl-between">
-                <h3>@Model.Workout.Name</h3>
-                <h3>@Model.WeekWorkoutDuration weeks</h3>
-            </div>
-            
-            <hr class="w-100" />
-            <div class="card-body">
-                <img class="card-img-top mb-4" src="@Model.Workout.ImgUrl" alt="Unavailabe" />
-                @foreach (var exerciese in @Model.Workout.Exercises)
-                {
-                    <h5>@exerciese.Name - @exerciese.Sets Sets</h5>
-                    <p>Targeting body part: @exerciese.TargetBodyPart</p>
-                }
-            </div>
-            <div class="d-inline-flex justify-content-xl-between">
-                <h5 class="">This workout is for people who are <strong>@Model.Workout.WorkoutDifficulty</strong></h5>
-                <h5 class="">Workout type: <strong>@Model.Workout.WorkoutType</strong></h5>
+    <h3 class="text-center">Ideal Calories: @Model.Calories</h3>
+    <hr class="bg-danger w-75" />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 card mb-5">
+                <div class="d-inline-flex justify-content-xl-between">
+                    <h3>@Model.Workout.Name</h3>
+                    <h3>@Model.WeekWorkoutDuration weeks</h3>
+                </div>
+
+                <hr class="w-100" />
+                <div class="card-body">
+                    <img class="card-img-top mb-4" src="@Model.Workout.ImgUrl" alt="Unavailabe" />
+                    @foreach (var exerciese in @Model.Workout.Exercises)
+                    {
+                        <h5>@exerciese.Name - @exerciese.Sets Sets</h5>
+                        <p>Targeting body part: @exerciese.TargetBodyPart</p>
+                    }
+                </div>
+                <div class="d-inline-flex justify-content-xl-between">
+                    <h5 class="">This workout is for people who are <strong>@Model.Workout.WorkoutDifficulty</strong></h5>
+                    <h5 class="">Workout type: <strong>@Model.Workout.WorkoutType</strong></h5>
+                </div>
             </div>
         </div>
     </div>
-</div>
+}

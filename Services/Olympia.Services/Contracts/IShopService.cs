@@ -8,6 +8,8 @@
 
     public interface IShopService 
     {
+        Task<Item> GetItemByIdAsync(int itemId);
+
         IEnumerable<ItemViewModel> GetAllItems();
 
         Task<bool> CreateItemAsync(ItemBindingModel model);
@@ -18,8 +20,14 @@
 
         IEnumerable<Supplier> GetAllSuppliers();
 
-        Task<bool> AddItemToUserCart(int itemId, OlympiaUser name);
+        Task<bool> AddItemToUserCart(int itemId, string username);
 
         Task<IEnumerable<ItemViewModel>> GetTopFiveItemsAsync();
+
+        Task<ShoppingCart> GetShoppingCartByUserNameAsync(string name);
+
+        Task<ShoppingCart> GetShoppingCartByCartIdAsync(int cartId);
+
+        Task<bool> RemoveFromCartAsync(int cartId, int itemId);
     }
 }

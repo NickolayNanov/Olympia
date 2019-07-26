@@ -108,7 +108,7 @@
 
         private async Task AddRootAdminIfDoesNotExistAsync()
         {
-            if (this.userManager.Users.Any())
+            if (!this.userManager.Users.Any())
             {
                 var god = new OlympiaUser("God", "God@abv.bg", "God God");
                 await this.userManager.CreateAsync(god, password: "imgod123");

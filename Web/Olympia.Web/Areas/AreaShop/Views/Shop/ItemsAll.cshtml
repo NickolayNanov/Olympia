@@ -7,10 +7,19 @@
 
 <div class="row">
     <div class="col-md-10"></div>
-    <button class="btn btn-danger col-md-2" asp-area="AreaShop" asp-action="ShoppingCart" asp-controller="Shop">
-        <i class="fas fa-shopping-cart">    Purchase(@Model.Items.Count())</i>
-    </button>
+    <a class="btn btn-danger col-md-2" 
+            asp-area="AreaShop"  
+            asp-controller="Shop"
+            asp-action="ShoppingCart"
+            asp-route-cartId="@Model.ShoppingCart.Id">
+        <i class="fas fa-shopping-cart">    Purchase(@Model.ShoppingCart.Items.Count())</i>
+    </a>
 </div>
+
+@if(this.ViewData["Errors"] != null)
+{
+    <h4 class="text-danger">@this.ViewData["Errors"]</h4>
+}
 
 <div class="container">
     <div class="row">

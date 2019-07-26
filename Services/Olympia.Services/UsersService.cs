@@ -98,8 +98,7 @@
                 .Users
                 .Include(x => x.Clients)
                 .Include(x => x.Trainer)
-                .Include(user => user.ShoppingCart)
-                .ThenInclude(shoppingCart => shoppingCart.Items)
+                .Include(x => x.ShoppingCart)
                 .SingleOrDefault(user => user.UserName == username);
             });
 

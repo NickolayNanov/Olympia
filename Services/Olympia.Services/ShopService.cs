@@ -2,7 +2,6 @@
 {
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
-    using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Shop;
@@ -16,31 +15,35 @@
     public class ShopService : IShopService
     {
         private readonly IMapper mapper;
-        private readonly IUsersService usersService;
         private readonly OlympiaDbContext context;
 
         public ShopService(
             IMapper mapper,
-            IUsersService usersService,
             OlympiaDbContext context)
         {
             this.mapper = mapper;
-            this.usersService = usersService;
             this.context = context;
         }
 
-        public async Task<bool> AddItemToUserCart(int itemId, OlympiaUser user)
+        public async Task<bool> AddItemToUserCart(int itemId, string username)
         {
             var item = await this.GetItemByIdAsync(itemId);
+            var cart = await this.GetShoppingCartByUserNameAsync(username);
 
-            user.ShoppingCart.Items.Add(item);
 
-            item.ShoppingCardId = user.ShoppingCart.Id;
+            if (cart.Items.Contains(item))
+            {
+                return false;
+            }
+
+            cart.Items.Add(item);
+            item.ShoppingCardId = cart.Id;
+
             this.context.Update(item);
-            this.context.Update(user);
+            this.context.Update(cart);
             await this.context.SaveChangesAsync();
 
-            return user.ShoppingCart.Items.Contains(item);
+            return cart.Items.Contains(item);
         }
 
         public async Task<bool> CreateItemAsync(ItemBindingModel model)
@@ -138,6 +141,46 @@
             });
 
             return items;
+        }
+
+        public async Task<ShoppingCart> GetShoppingCartByUserNameAsync(string name)
+        {
+            var shoppingCart = (await this.context
+                .Users
+                .Include(user => user.ShoppingCart)
+                .SingleOrDefaultAsync(u => u.UserName == name)).ShoppingCart;
+
+            shoppingCart.Items = this.context.Items.Where(i => i.ShoppingCardId == shoppingCart.Id).ToList();
+
+            return shoppingCart;
+        }
+
+        public async Task<ShoppingCart> GetShoppingCartByCartIdAsync(int cartId)
+        {
+            var cart = await
+                this.context
+                .ShoppingCarts
+                .Include(x => x.Items)
+                .Include(shc => shc.User)
+                .SingleOrDefaultAsync(shc => shc.Id == cartId);
+
+            return cart;
+        }
+
+        public async Task<bool> RemoveFromCartAsync(int cartId, int itemId)
+        {
+            var cart = await this.GetShoppingCartByCartIdAsync(cartId);
+            var item = await this.GetItemByIdAsync(itemId);
+
+            cart.Items.Remove(item);
+            item.ShoppingCardId = 0;
+
+            this.context.Update(cart);
+            this.context.Update(item);
+
+            await this.context.SaveChangesAsync();
+
+            return (await this.GetShoppingCartByCartIdAsync(cartId)).Items.Contains(item);
         }
     }
 }

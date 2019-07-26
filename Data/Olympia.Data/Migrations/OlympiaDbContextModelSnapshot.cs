@@ -510,29 +510,6 @@ namespace Olympia.Data.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Olympia.Data.Domain.Setting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settings");
-                });
-
             modelBuilder.Entity("Olympia.Data.Domain.ShoppingCart", b =>
                 {
                     b.Property<int>("Id")

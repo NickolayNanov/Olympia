@@ -1,7 +1,9 @@
 ﻿namespace Olympia.Data.Domain
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
     using Olympia.Data.Common.Models;
@@ -11,7 +13,7 @@
         public ShoppingCart(string userId)
         {
             this.UserId = userId;
-            this.Items = new List<Item>();
+            this.Items = new HashSet<Item>();
         }
 
         [Required]
@@ -25,7 +27,7 @@
 
         private decimal GetEndPrice()
         {
-            return this.Items.Sum(item => item.Price);
+            return this.Items.Sum(x => x.Price);
         }
     }
 }

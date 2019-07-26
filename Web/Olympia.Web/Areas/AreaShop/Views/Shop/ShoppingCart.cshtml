@@ -1,17 +1,59 @@
 ﻿
 @{
-    ViewData["Title"] = "ShoppingCart";   
+    ViewData["Title"] = "ShoppingCart";
     Layout = "~/Views/Shared/_Layout.cshtml";
     @model Olympia.Data.Domain.ShoppingCart
 }
 
-<h1>Shopping Cart</h1>
+<h1 class="text-center text-danger mb-5">Shopping Cart</h1>
 
-<div class="row">
-    <div class="leftcolumn col-md-8">
-        @foreach (var item in Model.Items)
-        {
-            
-        }
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="row">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="col-xl-12" card">
+                        <div class="row">
+                            <div class="d-flex justify-content-around">
+                                <h5 class="card-body col-md-1">@item.Name</h5>
+                                <img src="@item.ImgUrl" class="card-img col-md-3" alt="Loading..." />
+                                <strong><p class="col-md-3">@item.Price$</p></strong>
+                                <a class="text-center btn col-xs-4"
+                                   asp-area="AreaShop"
+                                   asp-controller="Shop"
+                                   asp-action="RemoveFromCart"
+                                   asp-route-cartId="@Model.Id"
+                                   asp-route-itemId="@item.Id">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="bg-danger w-100"/>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="background-color:lightgray">
+                <p class="text-sm-center">
+                    For orders over 65 $ you get free shipping!
+                </p>
+                <hr class="bg-danger" />
+                <h5 class="text-center mb-3">Order Summary</h5>
+                <div class="d-flex justify-content-between">
+                    <p>Subtotal (@Model.Items.Count items) : </p>
+                    <p>@Model.EndPrice $</p>
+                </div>
+                <hr class="bg-danger" />
+                <form class="form-group">
+                    <label>Coupon Code</label>
+                    <input type="text" class="form-control" placeholder="Have a cupon?" />
+                    <a class="btn btn-secondary form-control">Apply</a>
+                </form>
+                <hr class="bg-danger" />
+                <a class="btn btn-danger">Finish Pruchase</a>
+            </div>
+
+        </div>
     </div>
 </div>
