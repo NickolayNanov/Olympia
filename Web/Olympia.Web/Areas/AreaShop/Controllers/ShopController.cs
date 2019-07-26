@@ -84,7 +84,7 @@
         public async Task<IActionResult> RemoveFromCart(int itemId)
         {
             await this.shopService.RemoveFromCartAsync(this.User.Identity.Name, itemId);
-            var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
+            var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View("ShoppingCart", cart);
         }

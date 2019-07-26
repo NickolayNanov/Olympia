@@ -1,13 +1,9 @@
 ﻿namespace Olympia.Services
 {
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
     using AutoMapper;
-    using CloudinaryDotNet;
-    using CloudinaryDotNet.Actions;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Olympia.Common;
@@ -121,7 +117,5 @@
                 await this.userManager.AddToRoleAsync(god, GlobalConstants.AdministratorRoleName);
             }
         }
-
-
     }
 }

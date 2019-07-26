@@ -99,6 +99,7 @@
                 .Include(x => x.Clients)
                 .Include(x => x.Trainer)
                 .Include(x => x.ShoppingCart)
+                .Include(x => x.FitnessPlan)
                 .SingleOrDefault(user => user.UserName == username);
             });
 
@@ -323,6 +324,7 @@
                 userFromDb.Height = model.Height;
                 userFromDb.Activity = model.Actity;
                 userFromDb.Description = model.Description;
+                userFromDb.Age = model.Age;
 
                 this.context.Update(userFromDb);
                 this.context.SaveChanges();

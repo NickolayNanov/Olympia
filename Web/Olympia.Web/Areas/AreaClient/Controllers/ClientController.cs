@@ -79,14 +79,14 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect($"Client/Client/BecomeTrainer?username={model.Username}");
+                return this.Redirect($"AreaClient/Client/BecomeTrainer?username={model.Username}");
             }
 
             var result = await this.usersService.BecomeTrainerAsync(model, this.User.Identity.Name);
 
             if (!result)
             {
-                return this.Redirect($"Client/Client/BecomeTrainer?username={model.Username}");
+                return this.Redirect($"AreaClient/Client/BecomeTrainer?username={model.Username}");
             }
 
             await this.signInManager.SignOutAsync();
