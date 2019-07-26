@@ -16,6 +16,7 @@
             this.Reviews = new HashSet<Review>();
             this.OrderItems = new HashSet<OrderItem>();
             this.ItemCategories = new HashSet<ItemCategory>();
+            this.ShoppingCartItems = new HashSet<ShoppingCartItem>();
 
             this.CreatedOn = DateTime.UtcNow;
         }
@@ -30,12 +31,7 @@
 
         public decimal Price { get; set; }
 
-        [Required]
-        public int ShoppingCardId { get; set; }
-
         public int TimesBought { get; set; }
-
-        public ShoppingCart ShoppingCart { get; set; }
 
         [Required]
         public Supplier Supplier { get; set; }
@@ -45,5 +41,7 @@
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 
         public virtual ICollection<ItemCategory> ItemCategories { get; set; }
+
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
     }
 }

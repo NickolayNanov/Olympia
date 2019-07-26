@@ -74,15 +74,17 @@
 
         public async Task<IActionResult> ShoppingCart(int cartId)
         {
-            var cart = await this.shopService.GetShoppingCartByCartIdAsync(cartId);
+            var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View(cart);
         }
 
-        public async Task<IActionResult> RemoveFromCart(int cartId, int itemId)
+        
+
+        public async Task<IActionResult> RemoveFromCart(int itemId)
         {
-            await this.shopService.RemoveFromCartAsync(cartId, itemId);
-            var cart = await this.shopService.GetShoppingCartByCartIdAsync(cartId);
+            await this.shopService.RemoveFromCartAsync(this.User.Identity.Name, itemId);
+            var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
 
             return this.View("ShoppingCart", cart);
         }

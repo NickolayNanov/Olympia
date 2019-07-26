@@ -201,11 +201,20 @@
         {
             var userToDelete = await this.GetUserByUsernameAsync(username);
 
-            this.context.Articles.RemoveRange(this.context.Articles.Where(x => x.AuthorId == userToDelete.Id));
-            this.context.UserRoles.Remove(this.context.UserRoles.FirstOrDefault(x => x.UserId == userToDelete.Id));
-            this.context.Users.Remove(userToDelete);
+            if(userToDelete != null)
+            {
+                this.context.Articles.RemoveRange(this.context.Articles.Where(x => x.AuthorId == userToDelete.Id));
+                if (this.context.UserRoles.Any(x => x.UserId == userToDelete.Id))
+                {
+                    this.context.UserRoles.Remove(this.context.UserRoles.FirstOrDefault(x => x.UserId == userToDelete.Id));
+                    await this.context.SaveChangesAsync();
+                }
+                this.context.FitnessPlans.Remove(this.context.FitnessPlans.SingleOrDefault(x => x.OwnerId == userToDelete.Id));
 
-            await this.context.SaveChangesAsync();
+                this.context.Users.Remove(userToDelete);
+
+                await this.context.SaveChangesAsync();
+            }
 
             return !this.userManager.Users.Contains(userToDelete);
         }
@@ -313,6 +322,7 @@
                 userFromDb.Weight = model.Weight;
                 userFromDb.Height = model.Height;
                 userFromDb.Activity = model.Actity;
+                userFromDb.Description = model.Description;
 
                 this.context.Update(userFromDb);
                 this.context.SaveChanges();

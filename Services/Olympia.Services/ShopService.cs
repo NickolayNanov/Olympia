@@ -27,23 +27,19 @@
 
         public async Task<bool> AddItemToUserCart(int itemId, string username)
         {
-            var item = await this.GetItemByIdAsync(itemId);
             var cart = await this.GetShoppingCartByUserNameAsync(username);
-
-
-            if (cart.Items.Contains(item))
+            
+            if(cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId))
             {
                 return false;
             }
 
-            cart.Items.Add(item);
-            item.ShoppingCardId = cart.Id;
+            cart.ShoppingCartItems.Add(new ShoppingCartItem() { ItemId = itemId, ShoppingCartId = cart.Id });
 
-            this.context.Update(item);
             this.context.Update(cart);
             await this.context.SaveChangesAsync();
-
-            return cart.Items.Contains(item);
+            
+            return cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId);
         }
 
         public async Task<bool> CreateItemAsync(ItemBindingModel model)
@@ -108,7 +104,7 @@
 
         public IEnumerable<Supplier> GetAllSuppliers()
         {
-            return this.context.Suppliers.AsEnumerable();
+            return this.context.Suppliers.Include(x => x.Items).AsEnumerable();
         }
 
         public async Task<ItemViewModel> GetItemDtoByIdAsync(int itemId)
@@ -143,14 +139,33 @@
             return items;
         }
 
+        public async Task<ShoppingCartViewModel> GetShoppingCartDtoByUserNameAsync(string name)
+        {
+            var shoppingCart = (await this.context
+                .Users
+                .Include(user => user.ShoppingCart)
+                .ThenInclude(shc => shc.ShoppingCartItems)
+                .ThenInclude(sh => sh.Item)
+                .SingleOrDefaultAsync(u => u.UserName == name)).ShoppingCart;
+
+            var cartViewModel = this.mapper.Map<ShoppingCartViewModel>(shoppingCart);
+
+            cartViewModel.Items = this.mapper.ProjectTo<ItemViewModel>
+                (shoppingCart.ShoppingCartItems.Select(x => x.Item).AsQueryable()).ToList();
+
+            return cartViewModel;
+        }
+
         public async Task<ShoppingCart> GetShoppingCartByUserNameAsync(string name)
         {
             var shoppingCart = (await this.context
                 .Users
                 .Include(user => user.ShoppingCart)
+                .ThenInclude(shc => shc.ShoppingCartItems)
+                .ThenInclude(sh => sh.Item)
+                .ThenInclude(sh => sh.ShoppingCartItems)
+                .ThenInclude(sh => sh.ShoppingCart)
                 .SingleOrDefaultAsync(u => u.UserName == name)).ShoppingCart;
-
-            shoppingCart.Items = this.context.Items.Where(i => i.ShoppingCardId == shoppingCart.Id).ToList();
 
             return shoppingCart;
         }
@@ -160,27 +175,49 @@
             var cart = await
                 this.context
                 .ShoppingCarts
-                .Include(x => x.Items)
-                .Include(shc => shc.User)
+                .Include(shc => shc.ShoppingCartItems)
+                .ThenInclude(shci => shci.Item)
+                .Include(shc => shc.ShoppingCartItems)
+                .ThenInclude(shci => shci.ShoppingCart)
                 .SingleOrDefaultAsync(shc => shc.Id == cartId);
 
             return cart;
         }
 
-        public async Task<bool> RemoveFromCartAsync(int cartId, int itemId)
+        public async Task<bool> RemoveFromCartAsync(string username, int itemId)
         {
-            var cart = await this.GetShoppingCartByCartIdAsync(cartId);
-            var item = await this.GetItemByIdAsync(itemId);
+            var cart = await this.GetShoppingCartByUserNameAsync(username);
 
-            cart.Items.Remove(item);
-            item.ShoppingCardId = 0;
+            var cartItemsIds = cart.ShoppingCartItems.Select(x => x.ItemId);
+
+            if (cartItemsIds.Contains(itemId))
+            {
+                var cartItem = cart.ShoppingCartItems
+                    .SingleOrDefault(shc => 
+                                    shc.ShoppingCartId == cart.Id && 
+                                    shc.ItemId == itemId);
+
+                cart.ShoppingCartItems.Remove(cartItem);
+            }
 
             this.context.Update(cart);
-            this.context.Update(item);
+            await this.context.SaveChangesAsync();
+
+            return (await this.GetShoppingCartByUserNameAsync(username))
+                .ShoppingCartItems.Select(x => x.ItemId).Contains(itemId);
+        }
+
+        public async Task<bool> DeleteItemAsync(int itemId)
+        {
+            var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
+
+            this.context.ShoppingCartItems.RemoveRange(this.context.ShoppingCartItems.Where(x => x.ItemId == item.Id));
+            this.context.ItemCategories.RemoveRange(this.context.ItemCategories.Where(x => x.ItemId == item.Id));
+            this.context.Items.Remove(item);
 
             await this.context.SaveChangesAsync();
 
-            return (await this.GetShoppingCartByCartIdAsync(cartId)).Items.Contains(item);
+            return this.context.Items.Contains(item);
         }
     }
 }

@@ -33,15 +33,18 @@
 
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Chat">FAQ</a>
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="FAQ">FAQ</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Chat">Chat Room</a>
-                        </li>
+                        @if (this.User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Home" asp-action="Chat">Chat Room</a>
+                            </li>
+                        }
                         @if (this.User.IsInRole(GlobalConstants.ClientRoleName) &&
-                       this.UserManager.Users
-                           .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
-                           !this.User.IsInRole(GlobalConstants.TrainerRoleName))
+                     this.UserManager.Users
+                         .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
+                         !this.User.IsInRole(GlobalConstants.TrainerRoleName))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light"

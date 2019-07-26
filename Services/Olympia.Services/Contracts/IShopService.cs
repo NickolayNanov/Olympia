@@ -8,6 +8,8 @@
 
     public interface IShopService 
     {
+        Task<ShoppingCartViewModel> GetShoppingCartDtoByUserNameAsync(string username);
+
         Task<Item> GetItemByIdAsync(int itemId);
 
         IEnumerable<ItemViewModel> GetAllItems();
@@ -28,6 +30,8 @@
 
         Task<ShoppingCart> GetShoppingCartByCartIdAsync(int cartId);
 
-        Task<bool> RemoveFromCartAsync(int cartId, int itemId);
+        Task<bool> RemoveFromCartAsync(string username, int itemId);
+
+        Task<bool> DeleteItemAsync(int itemId);
     }
 }

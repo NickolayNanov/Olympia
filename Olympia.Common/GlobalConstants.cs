@@ -14,7 +14,6 @@
         public const string BlogArea = "AreaBlog";
         public const string ShopArea = "AreaShop";
 
-        public const string AdminUsersAll = "/AreaAdministration/Administration/UsersAll";
 
         #endregion
 
@@ -28,6 +27,8 @@
         public const string Shop = "/AreaShop/Shop/";
         public const string ChooseExercisesRoute = "/AreaTrainer/Trainer/ChooseWorkout";
 
+        public const string AdminUsersAll = "/AreaAdministration/Administration/UsersAll";
+        public const string AdminArticlesAll = "/AreaAdministration/Administration/ArticlesAll";
         public const string AccountRegister = "/Accounts/Register";
         public const string AccountLogin = "/Accounts/Login";
         public const string Index = "/";

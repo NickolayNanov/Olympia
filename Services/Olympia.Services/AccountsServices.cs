@@ -50,6 +50,11 @@
                 .SingleOrDefaultAsync(x =>
                 x.UserName == model.UserName);
 
+            if(user == null)
+            {
+                return null;
+            }
+
             var result = await this.signInManager.PasswordSignInAsync(user, model.Password, true, true);
 
             //For Testing
@@ -108,7 +113,7 @@
 
         private async Task AddRootAdminIfDoesNotExistAsync()
         {
-            if (!this.userManager.Users.Any())
+            if (!this.userManager.Users.Any(user => user.UserName == "God"))
             {
                 var god = new OlympiaUser("God", "God@abv.bg", "God God");
                 await this.userManager.CreateAsync(god, password: "imgod123");

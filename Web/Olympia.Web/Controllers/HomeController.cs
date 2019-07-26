@@ -43,7 +43,7 @@
             return this.View(model);
         }
 
-        public IActionResult Privacy()
+        public IActionResult FAQ()
         {
             return this.View();
         }
@@ -67,6 +67,10 @@
             {
                 model.TrainerName = (await this.usersService
                     .GetUserByUsernameAsync(this.User.Identity.Name)).Trainer?.UserName;
+            }
+            else if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+            {
+                model.ClientNames = this.usersService.GetAllUsers().Select(x => x.UserName);
             }
 
             return this.View(model);

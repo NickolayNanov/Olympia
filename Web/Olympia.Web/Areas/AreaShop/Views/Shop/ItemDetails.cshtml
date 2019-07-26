@@ -4,6 +4,12 @@
     @model Olympia.Data.Models.ViewModels.Shop.ItemViewModel
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+@if (this.ViewData["Errors"] != null)
+{
+   <h2 class="text-danger">@this.ViewData["Errors"]</h2>
+}
+
 <div>
     <div class="row">
         <div class="leftcolumn col-md-9">

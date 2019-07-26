@@ -22,5 +22,8 @@ namespace Olympia.Data.Models.ViewModels.Home
         public int Age { get; set; }
 
         public ActityLevel Actity { get; set; }
+
+        [StringLength(9999, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = 5)]
+        public string Description { get; set; }
     }
 }

@@ -47,11 +47,12 @@
             return await this.context.Suppliers.ContainsAsync(supplier);
         }
 
-        public IEnumerable<ShopViewModel> GetAllItems()
+        public ShopViewModel GetAllItems()
         {
-            var items = this.mapper.ProjectTo<ShopViewModel>(this.context.Items.Include(x => x.Supplier)).AsEnumerable();
+            ShopViewModel model = new ShopViewModel();
+            model.Items = this.mapper.ProjectTo<ItemViewModel>(this.context.Items.Include(x => x.Supplier)).AsEnumerable();
 
-            return items;
+            return model;
         }
 
         public IEnumerable<Supplier> GetAllSuppliers()

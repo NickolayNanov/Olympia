@@ -4,25 +4,29 @@
     @model IEnumerable<Olympia.Data.Models.ViewModels.AdminViewModels.ListedUserViewModel>
 }
 
-@foreach (var user in Model.OrderByDescending(x => x.Role))
-{
-    <div class="container">
-        <div class="row card">
-            <h3 class="mb-4 position-relative">@user.UserName - @user.FullName</h3>
-            <img src="@user.ProfilePicturImgUrl" alt="Unavailabe" class="col-md" style="height:50%;width:50%" />
-            @if (user.Role == "Trainer")
-            {
-                <p class="card-title col-md" style="height:50%;width:50%">@user.Description</p>
-            }
+<div class="container">
+    <div class="row">
+        @foreach (var user in Model.OrderByDescending(x => x.Role))
+        {
+            <div class="card col-md-4 mb-4">
+                <h3 class="mb-4 position-relative">@user.UserName - @user.FullName</h3>
+                <img src="@user.ProfilePicturImgUrl" alt="Unavailabe" class="col-md" style="height:50%;width:50%" />
+                @if (user.Role == "Trainer")
+                {
+                    <p class="card-title col-md" style="height:50%;width:50%">@user.Description</p>
+                }
 
-            <a asp-area="AreaAdministration"
-               asp-controller="Administration"
-               asp-action="DeleteUser"
-               asp-route-username="@user.UserName"
-               class="btn btn-danger mt-4">
-                Delete
-            </a>
-        </div>
+                <a asp-area="AreaAdministration"
+                   asp-controller="Administration"
+                   asp-action="DeleteUser"
+                   asp-route-username="@user.UserName"
+                   class="btn btn-danger mt-4">
+                    Delete
+                </a>
+            </div>
+        }
+
+
     </div>
-}
 
+</div>

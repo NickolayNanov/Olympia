@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "CreateArticle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @model Olympia.Data.Models.BindingModels.Blogs.CreateArticleBindingModel
+}
+
+
+<h1>CreateArticle</h1>
+<form class="form-group" method="post" enctype="multipart/form-data" 
+      asp-antiforgery="true"      
+      asp-area="AreaAdministration"
+      asp-controller="Administration"
+      asp-action="CreateArticle">
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="@Model.Title"></label>
+        <input asp-for="@Model.Title" class="form-control" />
+        <span asp-validation-for="@Model.Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Content"></label>
+        <textarea asp-for="@Model.Content" class="form-control" rows="5" cols="60">
+            Enter details here...
+         </textarea>        
+        <span asp-validation-for="@Model.Content" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.ImgUrl"></label>
+        <input type="file" asp-for="@Model.ImgUrl" class="form-control-file" multiple>
+        <span asp-validation-for="@Model.ImgUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>

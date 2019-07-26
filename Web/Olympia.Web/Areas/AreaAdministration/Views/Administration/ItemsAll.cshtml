@@ -12,7 +12,6 @@
     </div>
 
 </div>
-<button class="btn btn-success fas fa-shopping-cart">Cart</button>
 <div class="container">
     <div class="row">
         @if (Model.Items.Any())
@@ -36,6 +35,11 @@
                            asp-controller="Shop"
                            asp-action="ItemDetails"
                            asp-route-itemId="@item.Id">Details</a>
+                        <a class="btn btn-primary col-lg-5 mb-2"
+                           asp-area="AreaAdministration"
+                           asp-controller="Administration"
+                           asp-action="DeleteItem"
+                           asp-route-itemId="@item.Id">Delete</a>
                     </div>
                 </div>
             }

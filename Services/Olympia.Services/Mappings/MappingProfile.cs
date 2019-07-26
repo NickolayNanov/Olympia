@@ -65,6 +65,8 @@
                 .ForMember(x => x.Calories, y => y.MapFrom(z => z.CaloriesGoal))
                 .ForMember(x => x.WeekWorkoutDuration, y => y.MapFrom(z => z.WeekWorkoutDuration))
                 .ReverseMap();
+
+            this.CreateMap<ShoppingCart, ShoppingCartViewModel>().ReverseMap();
         }
     }
 }

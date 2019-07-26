@@ -57,6 +57,8 @@
 
         public DbSet<Workout> Workouts { get; set; }
 
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -127,6 +129,9 @@
                 .HasOne(user => user.ShoppingCart)
                 .WithOne(shoppingCart => shoppingCart.User)
                 .HasForeignKey<OlympiaUser>(user => user.ShoppingCartId);
+
+            modelBuilder.Entity<ShoppingCartItem>()
+                .HasKey(pk => new { pk.ItemId, pk.ShoppingCartId });
         }
 
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)

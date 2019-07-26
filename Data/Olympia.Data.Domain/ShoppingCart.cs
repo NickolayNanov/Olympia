@@ -13,7 +13,7 @@
         public ShoppingCart(string userId)
         {
             this.UserId = userId;
-            this.Items = new HashSet<Item>();
+            this.ShoppingCartItems = new HashSet<ShoppingCartItem>();
         }
 
         [Required]
@@ -23,11 +23,11 @@
 
         public decimal EndPrice => this.GetEndPrice();
 
-        public virtual ICollection<Item> Items { get; set; }
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
 
         private decimal GetEndPrice()
         {
-            return this.Items.Sum(x => x.Price);
+            return this.ShoppingCartItems.Select(x => x.Item).Sum(x => x.Price);
         }
     }
 }

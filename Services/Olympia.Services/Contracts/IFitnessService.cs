@@ -13,12 +13,12 @@
         IEnumerable<WorkoutViewModel> GetWorkouts(WorkoutBindingModel model);
 
         WorkoutViewModel GetWorkoutById(int workoutId);
-        
+
         Task<bool> AddSupplierAsync(SupplierBindingModel model);
 
         IEnumerable<Supplier> GetAllSuppliers();
 
-        IEnumerable<ShopViewModel> GetAllItems();
+        ShopViewModel GetAllItems();
 
         Task<FitnessPlanViewModel> GetFitnessPlanByUsername(string username);
     }
