@@ -128,10 +128,24 @@
 
             if (!orders.Any())
             {
-                this.ViewData["Errors"] = "You do not have any orders yet";
+                this.ViewData["Errors"] = "You do not have any orders";
             }
 
             return this.View(orders);
+        }
+
+        public async Task<IActionResult> CompleteOrder(int orderId)
+        {
+            await this.shopService.CompleteOrderAsync(orderId);
+
+            var orders = await this.shopService.GetAllOrdersByUsernameAsync(this.User.Identity.Name);
+
+            if (!orders.Any())
+            {
+                this.ViewData["Errors"] = "You do not have any orders";
+            }
+
+            return this.View("MyOrders", orders);
         }
     }
 }

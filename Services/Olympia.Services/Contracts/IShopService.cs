@@ -41,5 +41,7 @@
         Task<bool> FinishOrderAsync(string name);
 
         Task<IEnumerable<Order>> GetAllOrdersByUsernameAsync(string name);
+
+        Task<bool> CompleteOrderAsync(int orderId);
     }
 }

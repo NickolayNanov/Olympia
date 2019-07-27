@@ -85,7 +85,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect($"AreaClient/Client/BecomeTrainer?username={model.Username}");
+                return this.View(model);
             }
 
             var result = await this.usersService.BecomeTrainerAsync(model, this.User.Identity.Name);

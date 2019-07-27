@@ -47,8 +47,6 @@
                 .AddDefaultUI(UIFramework.Bootstrap4);
 
 
-            services.AddSingleton<RoleManager<IdentityRole<string>>>();
-
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -86,7 +84,6 @@
                     options.ConsentCookie.Name = ".AspNetCore.ConsentCookie";
                 });
 
-            services.AddSingleton(this.configuration);
             services.AddSignalR();
 
             // Application services            
@@ -122,7 +119,6 @@
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
-            app.UseIdentity();
 
             app.UseMvc(routes =>
             {

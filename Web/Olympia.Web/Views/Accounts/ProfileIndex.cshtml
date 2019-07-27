@@ -24,13 +24,13 @@
         </div>
         <div class="form-group">
             <label asp-for="@Model.Weight"></label>
-            <input type="number" asp-for="@Model.Weight" class="form-control" />
+            <input type="number" asp-for="@Model.Weight" class="form-control" step="0.1"/>
             <span asp-validation-for="@Model.Weight" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="@Model.Height"></label>
-            <input type="number" asp-for="@Model.Height" class="form-control" />
-            <span asp-validation-for="@Model.Height" class="text-danger"></span>
+            <input type="number" asp-for="@Model.Height" class="form-control" step="0.1"/>
+            <span asp-validation-for="@Model.Height" class="text-danger" ></span>
         </div>
         <div class="form-group">
             <label asp-for="@Model.Age"></label>

@@ -314,5 +314,17 @@
 
             return orders;
         }
+
+        public async Task<bool> CompleteOrderAsync(int orderId)
+        {
+            var orderFromDb = await this.context.Orders.Include(ord => ord.OrderItems).SingleOrDefaultAsync(order => order.Id == orderId);
+
+            this.context.OrderItems.RemoveRange(orderFromDb.OrderItems);
+            this.context.Orders.Remove(orderFromDb);
+
+            await this.context.SaveChangesAsync();
+
+            return this.context.Orders.Contains(orderFromDb);
+        }
     }
 }

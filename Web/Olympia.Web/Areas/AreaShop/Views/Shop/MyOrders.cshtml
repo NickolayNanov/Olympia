@@ -30,7 +30,11 @@
                     <th scope="row">@order.OrderItems.Count()</th>
                     <th scope="row">@order.EndPrice$</th>
                     <th scope="row">@order.DeliveryAddress</th>
-                    <th scope="row"><a class="btn btn-danger">Complete</a></th>
+                    <th scope="row"><a class="btn btn-danger"
+                                       asp-area="AreaShop"
+                                       asp-controller="Shop"
+                                       asp-action="CompleteOrder"
+                                       asp-route-orderId="@order.Id">Complete</a></th>
                 </tr>
                 }
             </tbody>
