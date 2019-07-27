@@ -28,7 +28,7 @@
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = GlobalConstants.AgeErrorMessage)]
         [Range(minimum: AgeMinNumber, maximum: AgeMaxNumber, ErrorMessage = GlobalConstants.AgeErrorMessage)]
         public int Age { get; set; }
 

@@ -35,7 +35,7 @@
 
             await Task.Run(() =>
             {
-                var articles = this.context.Articles.Include(article => article.Author);
+                var articles = this.context.Articles.Include(article => article.Author).OrderByDescending(x => x.TimesRead);
                 articlesFromDb = this.mapper.ProjectTo<ArticleViewModel>(articles).ToList();
             });
 
@@ -52,6 +52,7 @@
                 .ProjectTo<ArticleViewModel>(this.context.Articles
                                             .Include(article => article.Author)
                                             .Where(article => article.Author.UserName == authorName))
+                                            .OrderByDescending(x => x.CreatedOn)
                                             .ToList();
             });
 
