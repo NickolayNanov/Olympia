@@ -36,8 +36,12 @@
         public string ConfirmPassword { get; set; }
 
         [Required]
-        [EmailAddress]
+        [StringLength(FullnameMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = FullnameMinLength)]
         public string Email { get; set; }
+
+        [Required]
+        [StringLength(300, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = FullnameMinLength)]
+        public string Address { get; set; }
 
         [Required]
         [Range(minimum: AgeMinNumber, maximum: AgeMaxNumber, ErrorMessage = GlobalConstants.AgeErrorMessage)]

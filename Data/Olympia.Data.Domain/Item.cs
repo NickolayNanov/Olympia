@@ -13,7 +13,6 @@
             this.Name = name;
             this.Price = price;
 
-            this.Reviews = new HashSet<Review>();
             this.OrderItems = new HashSet<OrderItem>();
             this.ItemCategories = new HashSet<ItemCategory>();
             this.ShoppingCartItems = new HashSet<ShoppingCartItem>();
@@ -31,12 +30,12 @@
 
         public decimal Price { get; set; }
 
+        public int TimesEverBought { get; set; }
+
         public int TimesBought { get; set; }
 
         [Required]
         public Supplier Supplier { get; set; }
-
-        public virtual ICollection<Review> Reviews { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 

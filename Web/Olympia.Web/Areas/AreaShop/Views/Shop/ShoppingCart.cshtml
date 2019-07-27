@@ -17,16 +17,27 @@
                         <div class="col-xl-12" card">
                             <div class="row">
                                 <div class="d-flex justify-content-around">
-                                    <h5 class="card-body col-md-1">@item.Name</h5>
+                                    <h5 class="card-body col-md-4">@item.Name (@item.TimesBought)</h5>
                                     <img src="@item.ImgUrl" class="card-img col-md-3" alt="Loading..." />
-                                    <strong><p class="col-md-3">@item.Price$</p></strong>
-
-                                    <a class="text-center btn col-xs-3"
-                                       asp-area="AreaShop"
-                                       asp-controller="Shop"
-                                       asp-action="RemoveFromCart"
-                                       asp-route-cartId="@Model.Id"
-                                       asp-route-itemId="@item.Id">Remove</a>
+                                    <strong><p class="col-md-3">@item.Price$</p></strong>                                   
+                                    <div class="form-group">
+                                        <a class="form-control text-center btn btn-primary col-xs-3"
+                                           asp-area="AreaShop"
+                                           asp-controller="Shop"
+                                           asp-action="IncreaseCount"
+                                           asp-route-itemId="@item.Id">Increase</a>
+                                        <a class="form-control text-center btn btn-danger col-xs-3"
+                                           asp-area="AreaShop"
+                                           asp-controller="Shop"
+                                           asp-action="DecreaseCount"
+                                           asp-route-itemId="@item.Id">Decrease</a>
+                                        <a class="form-control text-center btn col-xs-3"
+                                           asp-area="AreaShop"
+                                           asp-controller="Shop"
+                                           asp-action="RemoveFromCart"
+                                           asp-route-cartId="@Model.Id"
+                                           asp-route-itemId="@item.Id">Remove</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -52,9 +63,15 @@
                         <a class="btn btn-secondary form-control">Apply</a>
                     </form>
                     <hr class="bg-danger" />
-                    <a class="btn btn-danger">Finish Pruchase</a>
+                    <a class="btn btn-danger"
+                       asp-area="AreaShop"
+                       asp-controller="Shop"
+                       asp-action="FinishOrder">Finish Pruchase</a>
                 </div>
-
+                @if(this.ViewData["Messages"] != null)
+                {
+                    <h5 class="text-primary">@this.ViewData["Messages"]</h5>
+                }
             </div>
         </div>
     </div>

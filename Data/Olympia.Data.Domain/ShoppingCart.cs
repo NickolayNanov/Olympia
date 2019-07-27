@@ -27,7 +27,7 @@
 
         private decimal GetEndPrice()
         {
-            return this.ShoppingCartItems.Select(x => x.Item).Sum(x => x.Price);
+            return this.ShoppingCartItems.Select(x => x.Item).Sum(x => x.Price * x.TimesBought);
         }
     }
 }

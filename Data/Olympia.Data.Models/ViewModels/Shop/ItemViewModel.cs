@@ -8,7 +8,6 @@
     {
         public ItemViewModel()
         {
-            Reviews = new HashSet<Review>();
             OrderItems = new HashSet<OrderItem>();
             ItemCategories = new HashSet<ItemCategory>();
         }
@@ -37,9 +36,6 @@
 
 
         public Supplier Supplier { get; set; }
-
-
-        public virtual ICollection<Review> Reviews { get; set; }
 
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }

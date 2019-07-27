@@ -5,45 +5,51 @@
 }
 
 <h1 class="text-center">Trainers</h1>
-
-<table class="table table-hover">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Username</th>
-            <th scope="col">Rating</th>
-            <th scope="col">Count of trainees</th>
-            <th scope="col">Count of articles</th>
-            <th scope="col">Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var client in Model.Trainers)
-        {
+@if (Model.Trainers.Any())
+{
+    <table class="table table-hover">
+        <thead class="thead-dark">
             <tr>
-                <th scope="row">@(Model.Trainers.ToList().IndexOf(client) + 1)</th>
-                <td>@client.UserName</td>
-                <td>@client.Rating</td>
-                <td>@client.Clients.Count</td>
-                <td>@client.Articles.Count</td>
-                <td>@client.Email</td>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Count of trainees</th>
+                <th scope="col">Count of articles</th>
+                <th scope="col">Email</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var client in Model.Trainers)
+            {
+                <tr>
+                    <th scope="row">@(Model.Trainers.ToList().IndexOf(client) + 1)</th>
+                    <td>@client.UserName</td>
+                    <td>@client.Rating</td>
+                    <td>@client.Clients.Count</td>
+                    <td>@client.Articles.Count</td>
+                    <td>@client.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<form method="post"
-      asp-antiforgery="true"
-      asp-area="AreaClient"
-      asp-controller="Client"
-      asp-action="ChooseTrainer"
-      asp-route-clientFullName="@Model.TrainerName">
-    <div class="position-absolute">
-        <div class="form-group">
-            <select class="form-control"
-                    asp-for="@Model.TrainerName"
-                    asp-items="@(new SelectList(Model.Trainers.Select(x => x.UserName)))"></select>
+    <form method="post"
+          asp-antiforgery="true"
+          asp-area="AreaClient"
+          asp-controller="Client"
+          asp-action="ChooseTrainer"
+          asp-route-clientFullName="@Model.TrainerName">
+        <div class="position-absolute">
+            <div class="form-group">
+                <select class="form-control"
+                        asp-for="@Model.TrainerName"
+                        asp-items="@(new SelectList(Model.Trainers.Select(x => x.UserName)))"></select>
+            </div>
+            <input class="btn btn-danger form-control" type="submit" />
         </div>
-        <input class="btn btn-danger form-control" type="submit" />
-    </div>
-</form>
+    </form>
+}
+else
+{
+    <h4 class="text-center text-danger">@this.ViewData["Errors"]</h4>
+}

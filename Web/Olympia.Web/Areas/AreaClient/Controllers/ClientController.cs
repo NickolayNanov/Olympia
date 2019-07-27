@@ -10,6 +10,7 @@
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Services.Contracts;
     using Olympia.Web.Areas.Client.Models;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Area(GlobalConstants.ClientArea)]
@@ -42,6 +43,11 @@
                 Trainers = trainers,
                 TrainerName = string.Empty,
             };
+
+            if(trainers.Count() == 0)
+            {
+                this.ViewData["Errors"] = "There are no trainers yet";
+            }
 
             return this.View(model);
         }

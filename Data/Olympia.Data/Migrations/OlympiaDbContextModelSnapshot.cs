@@ -116,14 +116,11 @@ namespace Olympia.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Location")
-                        .IsRequired();
+                    b.Property<string>("Location");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Addresses");
                 });
@@ -253,6 +250,8 @@ namespace Olympia.Data.Migrations
 
                     b.Property<int>("TimesBought");
 
+                    b.Property<int>("TimesEverBought");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SupplierId");
@@ -281,6 +280,8 @@ namespace Olympia.Data.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<int>("Activity");
+
+                    b.Property<int>("AddressId");
 
                     b.Property<int>("Age");
 
@@ -343,6 +344,9 @@ namespace Olympia.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -402,6 +406,8 @@ namespace Olympia.Data.Migrations
                     b.Property<string>("DeliveryAddress")
                         .IsRequired();
 
+                    b.Property<decimal>("EndPrice");
+
                     b.Property<DateTime>("ExpectedDeliveryDate");
 
                     b.Property<DateTime?>("ModifiedOn");
@@ -433,30 +439,6 @@ namespace Olympia.Data.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("Olympia.Data.Domain.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<int>("ItemId");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<double>("Rating");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.ShoppingCart", b =>
@@ -581,13 +563,6 @@ namespace Olympia.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Olympia.Data.Domain.Address", b =>
-                {
-                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "OlympiaUser")
-                        .WithMany("Addresses")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Olympia.Data.Domain.Article", b =>
                 {
                     b.HasOne("Olympia.Data.Domain.OlympiaUser", "Author")
@@ -637,6 +612,11 @@ namespace Olympia.Data.Migrations
 
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>
                 {
+                    b.HasOne("Olympia.Data.Domain.Address", "Addresses")
+                        .WithOne("OlympiaUser")
+                        .HasForeignKey("Olympia.Data.Domain.OlympiaUser", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Olympia.Data.Domain.ShoppingCart", "ShoppingCart")
                         .WithOne("User")
                         .HasForeignKey("Olympia.Data.Domain.OlympiaUser", "ShoppingCartId")
@@ -666,14 +646,6 @@ namespace Olympia.Data.Migrations
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Olympia.Data.Domain.Review", b =>
-                {
-                    b.HasOne("Olympia.Data.Domain.Item", "Item")
-                        .WithMany("Reviews")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.ShoppingCartItem", b =>

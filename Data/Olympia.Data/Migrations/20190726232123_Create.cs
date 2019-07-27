@@ -4,10 +4,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Olympia.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Location = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -40,24 +54,6 @@ namespace Olympia.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ChildCategories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Settings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Settings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,6 +125,65 @@ namespace Olympia.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Gender = table.Column<int>(nullable: false),
+                    FullName = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    TrainerId = table.Column<string>(nullable: true),
+                    Age = table.Column<int>(nullable: false),
+                    Rating = table.Column<double>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    ProfilePicturImgUrl = table.Column<string>(nullable: true),
+                    Weight = table.Column<double>(nullable: true),
+                    Height = table.Column<double>(nullable: true),
+                    Activity = table.Column<int>(nullable: false),
+                    AddressId = table.Column<int>(nullable: false),
+                    ShoppingCartId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_ShoppingCarts_ShoppingCartId",
+                        column: x => x.ShoppingCartId,
+                        principalTable: "ShoppingCarts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AspNetUsers_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
@@ -140,20 +195,13 @@ namespace Olympia.Data.Migrations
                     ImgUrl = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: false),
                     Price = table.Column<decimal>(nullable: false),
-                    ShoppingCardId = table.Column<int>(nullable: false),
+                    TimesEverBought = table.Column<int>(nullable: false),
                     TimesBought = table.Column<int>(nullable: false),
-                    ShoppingCartId = table.Column<int>(nullable: true),
                     SupplierId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Items", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Items_ShoppingCarts_ShoppingCartId",
-                        column: x => x.ShoppingCartId,
-                        principalTable: "ShoppingCarts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Items_Suppliers_SupplierId",
                         column: x => x.SupplierId,
@@ -182,153 +230,6 @@ namespace Olympia.Data.Migrations
                         name: "FK_Exercises_Workouts_WorkoutId",
                         column: x => x.WorkoutId,
                         principalTable: "Workouts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FitnessPlans",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CaloriesGoal = table.Column<int>(nullable: false),
-                    WorkoutId = table.Column<int>(nullable: false),
-                    WeekWorkoutDuration = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FitnessPlans", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FitnessPlans_Workouts_WorkoutId",
-                        column: x => x.WorkoutId,
-                        principalTable: "Workouts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ItemCategories",
-                columns: table => new
-                {
-                    ItemId = table.Column<int>(nullable: false),
-                    ChildCategoryId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ItemCategories", x => new { x.ItemId, x.ChildCategoryId });
-                    table.ForeignKey(
-                        name: "FK_ItemCategories_ChildCategories_ChildCategoryId",
-                        column: x => x.ChildCategoryId,
-                        principalTable: "ChildCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ItemCategories_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Rating = table.Column<double>(nullable: false),
-                    Content = table.Column<string>(nullable: false),
-                    ItemId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reviews_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    Gender = table.Column<int>(nullable: false),
-                    FullName = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
-                    TrainerId = table.Column<string>(nullable: true),
-                    Age = table.Column<int>(nullable: false),
-                    FitnessPlanId = table.Column<int>(nullable: true),
-                    Rating = table.Column<double>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    ProfilePicturImgUrl = table.Column<string>(nullable: true),
-                    Weight = table.Column<double>(nullable: true),
-                    Height = table.Column<double>(nullable: true),
-                    Activity = table.Column<int>(nullable: false),
-                    ShoppingCartId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_FitnessPlans_FitnessPlanId",
-                        column: x => x.FitnessPlanId,
-                        principalTable: "FitnessPlans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_ShoppingCarts_ShoppingCartId",
-                        column: x => x.ShoppingCartId,
-                        principalTable: "ShoppingCarts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetUsers_TrainerId",
-                        column: x => x.TrainerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Addresses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Location = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Addresses_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -453,23 +354,31 @@ namespace Olympia.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Interests",
+                name: "FitnessPlans",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    OlympiaUserId = table.Column<string>(nullable: true)
+                    CaloriesGoal = table.Column<int>(nullable: false),
+                    WorkoutId = table.Column<int>(nullable: false),
+                    WeekWorkoutDuration = table.Column<int>(nullable: false),
+                    OwnerId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Interests", x => x.Id);
+                    table.PrimaryKey("PK_FitnessPlans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Interests_AspNetUsers_OlympiaUserId",
-                        column: x => x.OlympiaUserId,
+                        name: "FK_FitnessPlans_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FitnessPlans_Workouts_WorkoutId",
+                        column: x => x.WorkoutId,
+                        principalTable: "Workouts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -482,6 +391,7 @@ namespace Olympia.Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     UserId = table.Column<string>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
+                    EndPrice = table.Column<decimal>(nullable: false),
                     ExpectedDeliveryDate = table.Column<DateTime>(nullable: false),
                     DeliveryAddress = table.Column<string>(nullable: false)
                 },
@@ -497,30 +407,49 @@ namespace Olympia.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
+                name: "ItemCategories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Content = table.Column<string>(nullable: false),
-                    ArticleId = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<string>(nullable: false)
+                    ItemId = table.Column<int>(nullable: false),
+                    ChildCategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.PrimaryKey("PK_ItemCategories", x => new { x.ItemId, x.ChildCategoryId });
                     table.ForeignKey(
-                        name: "FK_Comments_Articles_ArticleId",
-                        column: x => x.ArticleId,
-                        principalTable: "Articles",
+                        name: "FK_ItemCategories_ChildCategories_ChildCategoryId",
+                        column: x => x.ChildCategoryId,
+                        principalTable: "ChildCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ItemCategories_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShoppingCartItems",
+                columns: table => new
+                {
+                    ShoppingCartId = table.Column<int>(nullable: false),
+                    ItemId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShoppingCartItems", x => new { x.ItemId, x.ShoppingCartId });
+                    table.ForeignKey(
+                        name: "FK_ShoppingCartItems_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_ShoppingCartItems_ShoppingCarts_ShoppingCartId",
+                        column: x => x.ShoppingCartId,
+                        principalTable: "ShoppingCarts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -550,11 +479,6 @@ namespace Olympia.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Addresses_UserId",
-                table: "Addresses",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_AuthorId",
@@ -589,9 +513,10 @@ namespace Olympia.Data.Migrations
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_FitnessPlanId",
+                name: "IX_AspNetUsers_AddressId",
                 table: "AspNetUsers",
-                column: "FitnessPlanId");
+                column: "AddressId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -617,19 +542,16 @@ namespace Olympia.Data.Migrations
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_ArticleId",
-                table: "Comments",
-                column: "ArticleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_AuthorId",
-                table: "Comments",
-                column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Exercises_WorkoutId",
                 table: "Exercises",
                 column: "WorkoutId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FitnessPlans_OwnerId",
+                table: "FitnessPlans",
+                column: "OwnerId",
+                unique: true,
+                filter: "[OwnerId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FitnessPlans_WorkoutId",
@@ -637,19 +559,9 @@ namespace Olympia.Data.Migrations
                 column: "WorkoutId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Interests_OlympiaUserId",
-                table: "Interests",
-                column: "OlympiaUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ItemCategories_ChildCategoryId",
                 table: "ItemCategories",
                 column: "ChildCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Items_ShoppingCartId",
-                table: "Items",
-                column: "ShoppingCartId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_SupplierId",
@@ -667,15 +579,15 @@ namespace Olympia.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ItemId",
-                table: "Reviews",
-                column: "ItemId");
+                name: "IX_ShoppingCartItems_ShoppingCartId",
+                table: "ShoppingCartItems",
+                column: "ShoppingCartId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Addresses");
+                name: "Articles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -693,13 +605,10 @@ namespace Olympia.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comments");
-
-            migrationBuilder.DropTable(
                 name: "Exercises");
 
             migrationBuilder.DropTable(
-                name: "Interests");
+                name: "FitnessPlans");
 
             migrationBuilder.DropTable(
                 name: "ItemCategories");
@@ -708,16 +617,13 @@ namespace Olympia.Data.Migrations
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
-
-            migrationBuilder.DropTable(
-                name: "Settings");
+                name: "ShoppingCartItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Articles");
+                name: "Workouts");
 
             migrationBuilder.DropTable(
                 name: "ChildCategories");
@@ -735,13 +641,10 @@ namespace Olympia.Data.Migrations
                 name: "Suppliers");
 
             migrationBuilder.DropTable(
-                name: "FitnessPlans");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "ShoppingCarts");
-
-            migrationBuilder.DropTable(
-                name: "Workouts");
         }
     }
 }

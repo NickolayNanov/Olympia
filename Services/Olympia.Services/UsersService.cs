@@ -100,6 +100,8 @@
                 .Include(x => x.Trainer)
                 .Include(x => x.ShoppingCart)
                 .Include(x => x.FitnessPlan)
+                .Include(x => x.Articles)
+                .Include(x => x.Address)
                 .SingleOrDefault(user => user.UserName == username);
             });
 

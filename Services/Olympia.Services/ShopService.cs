@@ -15,13 +15,16 @@
     public class ShopService : IShopService
     {
         private readonly IMapper mapper;
+        private readonly IUsersService usersService;
         private readonly OlympiaDbContext context;
 
         public ShopService(
             IMapper mapper,
+            IUsersService usersService,
             OlympiaDbContext context)
         {
             this.mapper = mapper;
+            this.usersService = usersService;
             this.context = context;
         }
 
@@ -34,9 +37,13 @@
                 return false;
             }
 
+            var item = await this.GetItemByIdAsync(itemId);
+            item.TimesBought = 1;
+
             cart.ShoppingCartItems.Add(new ShoppingCartItem() { ItemId = itemId, ShoppingCartId = cart.Id });
 
             this.context.Update(cart);
+            this.context.Update(item);
             await this.context.SaveChangesAsync();
             
             return cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId);
@@ -150,8 +157,10 @@
 
             var cartViewModel = this.mapper.Map<ShoppingCartViewModel>(shoppingCart);
 
-            cartViewModel.Items = this.mapper.ProjectTo<ItemViewModel>
+            var items = this.mapper.ProjectTo<ItemViewModel>
                 (shoppingCart.ShoppingCartItems.Select(x => x.Item).AsQueryable()).ToList();
+
+            cartViewModel.Items = items;
 
             return cartViewModel;
         }
@@ -218,6 +227,92 @@
             await this.context.SaveChangesAsync();
 
             return this.context.Items.Contains(item);
+        }
+
+        public async Task<bool> IncreaseTimesItemIsBought(int itemId)
+        {
+            var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
+            int initialValue = item.TimesBought;
+
+            item.TimesBought++;
+
+            this.context.Update(item);
+            await this.context.SaveChangesAsync();
+
+            return initialValue != item.TimesBought;
+        }
+
+        public async Task<bool> DecreaseTimesItemIsBought(int itemId)
+        {
+            var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
+            int initialValue = item.TimesBought;
+
+            if(initialValue <= 1)
+            {
+                return true;
+            }
+
+            item.TimesBought--;
+
+            this.context.Update(item);
+            await this.context.SaveChangesAsync();
+
+            return initialValue != item.TimesBought;
+        }
+
+        public async Task<bool> FinishOrderAsync(string name)
+        {
+            var cart = await this.GetShoppingCartByUserNameAsync(name);
+
+            if (cart.ShoppingCartItems.Count == 0)
+            {
+                return false;
+            }
+
+            var user = await this.usersService.GetUserByUsernameAsync(name);
+            var order = new Order
+            {
+                UserId = user.Id
+            };
+
+            order.EndPrice = cart.EndPrice;
+            order.DeliveryAddress = user.Address.Location;
+
+            foreach (var item in cart.ShoppingCartItems.Select(x => x.Item))
+            {
+                order.OrderItems.Add(new OrderItem()
+                {
+                    ItemId = item.Id,
+                    OrderId = order.Id
+                });
+
+                item.TimesEverBought += item.TimesBought;
+                item.TimesBought = 0;
+            }
+
+            cart.ShoppingCartItems = new HashSet<ShoppingCartItem>();
+
+            this.context.Orders.Add(order);
+            this.context.Update(cart);
+            await this.context.SaveChangesAsync();
+
+            return order.UserId == user.Id;
+        }
+
+        public async Task<IEnumerable<Order>> GetAllOrdersByUsernameAsync(string name)
+        {
+            var user = await this.usersService.GetUserByUsernameAsync(name);
+
+            var orders = await this.context
+                .Orders
+                .Include(x => x.OrderItems)
+                .ThenInclude(x => x.Item)
+                .Include(x => x.OrderItems)
+                .ThenInclude(x => x.Order)
+                .Where(x => x.UserId == user.Id)
+                .ToListAsync();
+
+            return orders;
         }
     }
 }

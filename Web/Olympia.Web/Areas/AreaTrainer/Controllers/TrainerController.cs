@@ -1,5 +1,6 @@
 ﻿namespace Olympia.Web.Areas.Trainer.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,11 @@
         {
             var clients = await this.usersService
                 .GetAllClientsByUserAsync(this.User.Identity.Name);
+
+            if(clients.Count() == 0)
+            {
+                this.ViewData["Errors"] = "You do not have any clients yet";
+            }
 
             return this.View(clients);
         }

@@ -80,6 +80,7 @@
             }
 
             var user = this.mapper.Map<OlympiaUser>(model);
+            user.Address.Location = model.Address;
             user.ShoppingCart.UserId = user.Id;
 
             var result = await this.userManager.CreateAsync(user, model.Password);

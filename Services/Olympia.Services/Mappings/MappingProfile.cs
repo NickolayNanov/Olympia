@@ -23,7 +23,8 @@
 
             this.CreateMap<CreateArticleBindingModel, Article>();
 
-            this.CreateMap<UserRegisterBingingModel, OlympiaUser>();
+            this.CreateMap<UserRegisterBingingModel, OlympiaUser>()
+                .ForMember(x => x.Address, y => y.Ignore());
 
             this.CreateMap<OlympiaUser, UserViewModel>()
                 .ForMember(x => x.Weight, y => y.MapFrom(z => z.Weight.ToString()))

@@ -3,7 +3,7 @@ namespace Olympia.Data.Domain
 {
     using System;
     using System.Collections.Generic;
-
+    using System.ComponentModel.DataAnnotations.Schema;
     using Microsoft.AspNetCore.Identity;
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain.Enums;
@@ -16,12 +16,12 @@ namespace Olympia.Data.Domain
 
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
-            this.Addresses = new HashSet<Address>();
             this.Clients = new HashSet<OlympiaUser>();
             this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>(); 
 
             this.FitnessPlan = new FitnessPlan() { OwnerId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);
+            this.Address = new Address() { UserId = this.Id };
         }
 
         public OlympiaUser(string username, string email, string fullname)
@@ -32,6 +32,7 @@ namespace Olympia.Data.Domain
             this.Email = email;
             this.FullName = fullname;
 
+            this.Address = new Address() { UserId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);
         }
 
@@ -69,6 +70,10 @@ namespace Olympia.Data.Domain
 
         public ActityLevel Activity { get; set; }
 
+        public int AddressId { get; set; }
+
+        public virtual Address Address { get; set; }
+
         public virtual ICollection<OlympiaUser> Clients { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> OlympiaUserRole { get; set; }
@@ -77,7 +82,6 @@ namespace Olympia.Data.Domain
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
 
-        public virtual ICollection<Address> Addresses { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; }
 

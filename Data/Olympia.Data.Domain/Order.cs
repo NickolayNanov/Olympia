@@ -24,6 +24,8 @@
 
         public DateTime OrderDate { get; set; }
 
+        public decimal EndPrice { get; set; }
+
         public DateTime ExpectedDeliveryDate { get; set; }
 
         [Required]

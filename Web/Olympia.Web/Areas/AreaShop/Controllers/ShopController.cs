@@ -5,6 +5,7 @@
     using Olympia.Common;
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Area(GlobalConstants.ShopArea)]
@@ -72,14 +73,12 @@
             return this.View("ItemsAll", shopViewModel);
         }
 
-        public async Task<IActionResult> ShoppingCart(int cartId)
+        public async Task<IActionResult> ShoppingCart()
         {
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View(cart);
         }
-
-        
 
         public async Task<IActionResult> RemoveFromCart(int itemId)
         {
@@ -87,6 +86,52 @@
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View("ShoppingCart", cart);
+        }
+
+        public async Task<IActionResult> IncreaseCount(int itemId)
+        {
+            await this.shopService.IncreaseTimesItemIsBought(itemId);
+
+            var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
+
+            return this.View("ShoppingCart", cart);
+        }
+
+        public async Task<IActionResult> DecreaseCount(int itemId)
+        {
+            await this.shopService.DecreaseTimesItemIsBought(itemId);
+
+            var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
+
+            return this.View("ShoppingCart", cart);
+        }
+
+        public async Task<IActionResult> FinishOrder()
+        {
+            var result = await this.shopService.FinishOrderAsync(this.User.Identity.Name);
+
+            this.ViewData["Messages"] = "Your order was successfully created.";
+
+            if (!result)
+            {
+                this.ViewData["Messages"] = "Your must have at least one item in your cart.";
+            }
+
+
+            var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
+            return this.View("ShoppingCart", cart);
+        }
+
+        public async Task<IActionResult> MyOrders()
+        {
+            var orders = await this.shopService.GetAllOrdersByUsernameAsync(this.User.Identity.Name);
+
+            if (!orders.Any())
+            {
+                this.ViewData["Errors"] = "You do not have any orders yet";
+            }
+
+            return this.View(orders);
         }
     }
 }

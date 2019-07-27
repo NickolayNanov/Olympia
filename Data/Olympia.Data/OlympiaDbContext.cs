@@ -43,8 +43,6 @@
 
         public DbSet<OrderItem> OrderItems { get; set; }
 
-        public DbSet<Review> Reviews { get; set; }
-
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         public DbSet<Supplier> Suppliers { get; set; }
@@ -113,9 +111,8 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OlympiaUser>()
-                .HasMany(user => user.Addresses)
-                .WithOne(adress => adress.OlympiaUser)
-                .HasForeignKey(fk => fk.UserId);
+               .HasIndex(x => x.AddressId)
+               .IsUnique();
 
             modelBuilder.Entity<OlympiaUser>()
                 .HasIndex(x => x.ShoppingCartId)

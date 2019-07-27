@@ -33,5 +33,13 @@
         Task<bool> RemoveFromCartAsync(string username, int itemId);
 
         Task<bool> DeleteItemAsync(int itemId);
+
+        Task<bool> IncreaseTimesItemIsBought(int itemId);
+
+        Task<bool> DecreaseTimesItemIsBought(int itemId);
+
+        Task<bool> FinishOrderAsync(string name);
+
+        Task<IEnumerable<Order>> GetAllOrdersByUsernameAsync(string name);
     }
 }
