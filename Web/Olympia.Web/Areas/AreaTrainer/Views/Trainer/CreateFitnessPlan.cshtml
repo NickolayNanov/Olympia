@@ -9,7 +9,10 @@
 
 <form method="post" asp-antiforgery="true">
     <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
+    @if (this.ViewData["Errors"] != null)
+    {
+        <h4 class="text-danger">@this.ViewData["Errors"]</h4>
+    }
     <div class="form-group">
         <label asp-for="@Model.Weight"></label>
         <input disabled type="number" asp-for="@Model.Weight" class="form-control" />

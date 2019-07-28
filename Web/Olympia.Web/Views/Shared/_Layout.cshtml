@@ -43,9 +43,9 @@
                             </li>
                         }
                         @if (this.User.IsInRole(GlobalConstants.ClientRoleName) &&
-              this.UserManager.Users
-                  .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
-                  !this.User.IsInRole(GlobalConstants.TrainerRoleName))
+             this.UserManager.Users
+                 .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
+                 !this.User.IsInRole(GlobalConstants.TrainerRoleName))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light"

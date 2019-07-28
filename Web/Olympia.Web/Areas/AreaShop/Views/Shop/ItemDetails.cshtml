@@ -14,9 +14,19 @@
     <div class="row">
         <div class="leftcolumn col-md-9">
             <div class="card">
-                <h2 class="text-center">@Model.Name</h2>
+                <div class="d-flex justify-content-between">
+                    <h2>@Model.Name</h2>
+                    <h2>@Model.Price $</h2>
+                </div>
                 <img src="@Model.ImgUrl" class="card-img">
                 <p class="mt-4" contenteditable>@Model.Description</p>
+            </div>
+            <div class="leftcolumn col-md-9 mt-4">
+                <a asp-area="AreaShop"
+                   asp-controller="Shop"
+                   asp-action="AddToCart"
+                   asp-route-itemId="@Model.Id"
+                   class="btn btn-danger col-md-12">Add To Cart</a>
             </div>
         </div>
         <div class="rightcolumn col-md-3">
@@ -26,11 +36,5 @@
                 <p class="card-text mt-3">@Model.Supplier.Description</p>
             </div>
         </div>
-        <div class="leftcolumn col-md-12 mt-4">
-            <a asp-area="AreaShop"
-               asp-controller="Shop"
-               asp-action="AddToCart"
-               asp-route-itemId="@Model.Id"
-               class="btn btn-danger col-md-12">Add To Cart</a>
-        </div>
+        
     </div>

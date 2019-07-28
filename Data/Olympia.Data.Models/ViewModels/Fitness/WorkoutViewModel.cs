@@ -3,6 +3,7 @@
     using Olympia.Data.Domain;
     using Olympia.Data.Domain.Enums;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class WorkoutViewModel
     {
@@ -14,6 +15,7 @@
 
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public string ImgUrl { get; set; }

@@ -108,6 +108,14 @@
             return userFromDb;
         }
 
+        public async Task<ClientViewModel> GetUserWithFitnessPlanModelAsync(string username)
+        {
+            var user = await this.GetUserByUsernameAsync(username);
+
+            var dto = this.mapper.Map<ClientViewModel>(user);
+            return dto;
+        }
+
         public async Task<bool> SetTrainerAsync(string trainerUsername, string clientUsername)
         {
             if(string.IsNullOrEmpty(trainerUsername) ||
@@ -284,13 +292,7 @@
             return (int)result;
         }
 
-        public async Task<ClientViewModel> GetUserWithFitnessPlanModelAsync(string username)
-        {
-            var user = await this.GetUserByUsernameAsync(username);
-
-            var dto = this.mapper.Map<ClientViewModel>(user);
-            return dto;
-        }
+        
 
         public bool SetFitnessPlanToUser(ClientViewModel model)
         {

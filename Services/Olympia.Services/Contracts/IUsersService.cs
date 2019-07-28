@@ -12,9 +12,9 @@
 
     public interface IUsersService
     {
-        Task<UserProfile> GetUserProfileModel(string username);
-
         Task<ClientViewModel> GetUserWithFitnessPlanModelAsync(string username);
+
+        Task<UserProfile> GetUserProfileModel(string username);
 
         Task<OlympiaUser> GetUserByUsernameAsync(string username);
 

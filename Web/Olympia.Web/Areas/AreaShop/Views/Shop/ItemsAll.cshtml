@@ -7,16 +7,16 @@
 
 <div class="row">
     <div class="col-md-10"></div>
-    <a class="btn btn-danger col-md-2" 
-            asp-area="AreaShop"  
-            asp-controller="Shop"
-            asp-action="ShoppingCart"
-            asp-route-cartId="@Model.ShoppingCart.Id">
+    <a class="btn btn-danger col-md-2"
+       asp-area="AreaShop"
+       asp-controller="Shop"
+       asp-action="ShoppingCart"
+       asp-route-cartId="@Model.ShoppingCart.Id">
         <i class="fas fa-shopping-cart">    Purchase(@Model.ShoppingCart.ShoppingCartItems.Count())</i>
     </a>
 </div>
 
-@if(this.ViewData["Errors"] != null)
+@if (this.ViewData["Errors"] != null)
 {
     <h4 class="text-danger">@this.ViewData["Errors"]</h4>
 }
@@ -32,6 +32,9 @@
                     <img class="card-img" src="@item.ImgUrl" alt="Loading..." />
                     <div class="d-flex justify-content-center">
                         <strong><p class="text-center">@item.Supplier.Name</p></strong>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <p><strong>@item.Price $</strong></p>
                     </div>
                     <div class="d-flex justify-content-center row">
                         <a class="btn btn-danger col-lg-5 mb-2 mr-2"

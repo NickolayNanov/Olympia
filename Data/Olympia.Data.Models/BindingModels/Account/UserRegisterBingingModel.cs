@@ -43,7 +43,7 @@
         [StringLength(300, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = FullnameMinLength)]
         public string Address { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The Age field is required!")]
         [Range(minimum: AgeMinNumber, maximum: AgeMaxNumber, ErrorMessage = GlobalConstants.AgeErrorMessage)]
         public int Age { get; set; }
 

@@ -101,7 +101,9 @@
         [HttpPost]
         public IActionResult FileterWorkouts(ClientViewModel model)
         {
-            if (!this.ModelState.IsValid)
+            if (model.WorkoutInputModel.Duration == 0 ||
+                model.WorkoutInputModel.WorkoutDifficulty == 0 ||
+                model.WorkoutInputModel.WorkoutType == 0)
             {
                 return this.View("ChooseWorkout", model);
             }
@@ -130,8 +132,16 @@
 
         [HttpPost]
         public async Task<IActionResult> SetFitnessPlan(ClientViewModel model, int workoutId)
-        {
+        {          
             model.WorkoutViewModel = this.fitnessService.GetWorkoutById(workoutId);
+
+            if (model.Calories == 0 || model.WorkoutViewModel == null)
+            {
+                model.WorkoutViewModel = new WorkoutViewModel() { Name = "", ImgUrl = "" };
+                this.ViewData["Errors"] = "In order to assign a fitness plan both calories and workout must be filled!";
+                return this.View("CreateFitnessPlan", model);
+            }
+
             this.usersService.SetFitnessPlanToUser(model);
 
             var clients = await this.usersService.GetAllClientsByUserAsync(this.User.Identity.Name);

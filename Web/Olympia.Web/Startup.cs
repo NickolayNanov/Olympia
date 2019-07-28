@@ -46,7 +46,6 @@
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
 
-
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -63,17 +62,7 @@
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
-
-          
-
-            services
-                .ConfigureApplicationCookie(options =>
-                {
-                    options.LoginPath = "/Identity/Account/Login";
-                    options.LogoutPath = "/Identity/Account/Logout";
-                    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                });
+            services.AddSingleton(mapper);                   
 
             services
                 .Configure<CookiePolicyOptions>(options =>

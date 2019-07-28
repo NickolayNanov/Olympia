@@ -119,20 +119,27 @@
         {
             ArticleViewModel articleViewModel = null;
 
-            await Task.Run(() =>
+            if(!this.context.Articles.Select(x => x.Id).Contains(articleId))
             {
-                var articleFromDb = this.context
-                .Articles
-                .Include(article => article.Author)
-                .ThenInclude(author => author.Articles)
-                .SingleOrDefault(article => article.Id == articleId);
+                return null;
+            }
 
-                articleFromDb.TimesRead++;
-                this.context.Update(articleFromDb);
-                this.context.SaveChanges();
-                articleViewModel = this.mapper.Map<ArticleViewModel>(articleFromDb);
-            });
+            if (articleId > -1)
+            {
+                await Task.Run(() =>
+                {
+                    var articleFromDb = this.context
+                    .Articles
+                    .Include(article => article.Author)
+                    .ThenInclude(author => author.Articles)
+                    .SingleOrDefault(article => article.Id == articleId);
 
+                    articleFromDb.TimesRead++;
+                    this.context.Update(articleFromDb);
+                    this.context.SaveChanges();
+                    articleViewModel = this.mapper.Map<ArticleViewModel>(articleFromDb);
+                });
+            }
             return articleViewModel;
         }
 

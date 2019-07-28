@@ -4,12 +4,15 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Moq;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Domain.Enums;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.BindingModels.Client;
+    using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Data.Seeding;
@@ -28,9 +31,11 @@
         private IAccountsServices accountService;
         private IFitnessService fitnessService;
 
+        private UserManager<OlympiaUser> userManager;
+        private RoleManager<OlympiaUserRole> roleManager;
+
         public OlympiaServicesTests()
         {
-
         }
 
         private void InitiateInMemmoryDbForBlog()
@@ -54,8 +59,7 @@
             this.context = new OlympiaDbContext(optionsBuilder.Options);
             this.mockMapper = new Mock<IMapper>().Object;
 
-            UserManager<OlympiaUser> usermanager = this.GetMockUserManager();
-
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var _contextAccessor = new Mock<IHttpContextAccessor>();
             var _userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<OlympiaUser>>();
@@ -84,13 +88,51 @@
             new DataSeeder(this.context);
         }
 
-        private UserManager<OlympiaUser> GetMockUserManager()
+        private void InitiateInMemmoryDbForUsers()
         {
-            var userStoreMock = new Mock<IUserStore<OlympiaUser>>();
-            return new Mock<UserManager<OlympiaUser>>(
-                userStoreMock.Object, null, null, null, null, null, null, null, null).Object;
+            DbContextOptionsBuilder<OlympiaDbContext> optionsBuilder = new DbContextOptionsBuilder<OlympiaDbContext>();
+            optionsBuilder.UseInMemoryDatabase("testDb");
+
+            this.context = new OlympiaDbContext(optionsBuilder.Options);
+            this.mockMapper = new Mock<IMapper>().Object;
+
+            this.userManager = this.TestUserManager<OlympiaUser>();
+            this.roleManager = this.MockRoleManager<OlympiaUserRole>();
+
+            this.mockUserService = new Mock<UsersService>(this.context, this.mockMapper, this.userManager, this.roleManager).Object;
+
+        }
+        private RoleManager<TRole> MockRoleManager<TRole>(IRoleStore<TRole> store = null) where TRole : class
+        {
+            store = store ?? new Mock<IRoleStore<TRole>>().Object;
+            var roles = new List<IRoleValidator<TRole>>();
+            roles.Add(new RoleValidator<TRole>());
+            return new Mock<RoleManager<TRole>>(store, roles, new UpperInvariantLookupNormalizer(),
+                new IdentityErrorDescriber(), null).Object;
         }
 
+        private UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
+        {
+            store = store ?? new Mock<IUserStore<TUser>>().Object;
+            var options = new Mock<IOptions<IdentityOptions>>();
+            var idOptions = new IdentityOptions();
+            idOptions.Lockout.AllowedForNewUsers = false;
+            options.Setup(o => o.Value).Returns(idOptions);
+            var userValidators = new List<IUserValidator<TUser>>();
+            var validator = new Mock<IUserValidator<TUser>>();
+            userValidators.Add(validator.Object);
+            var pwdValidators = new List<PasswordValidator<TUser>>();
+            pwdValidators.Add(new PasswordValidator<TUser>());
+            var userManager = new UserManager<TUser>(store, options.Object, new PasswordHasher<TUser>(),
+                userValidators, pwdValidators, new UpperInvariantLookupNormalizer(),
+                new IdentityErrorDescriber(), null,
+                new Mock<ILogger<UserManager<TUser>>>().Object);
+            validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
+                .Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
+            return userManager;
+        }
+
+        #region Blog Service Tests
         [Fact]
         public async Task ArticleShouldBeDeleted()
         {
@@ -104,8 +146,8 @@
         public async Task GetAllArticlesShouldReturnAllArticles()
         {
             this.InitiateInMemmoryDbForBlog();
-
             var user = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+
             var expected = this.mockMapper.ProjectTo<ArticleViewModel>(new List<Article>()
                 {
                     new Article
@@ -164,17 +206,21 @@
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public async Task GetAllArticleByUserNameShuouldReturnAll()
+        [Theory]
+        [InlineData("Pesho")]
+        [InlineData("asd")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task GetAllArticleByUserNameShuouldReturnAll(string username)
         {
             this.InitiateInMemmoryDbForBlog();
 
-            var user = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+            var user = this.context.Users.SingleOrDefault(x => x.UserName == username);
             var expected = this.mockMapper.ProjectTo<ArticleViewModel>(new List<Article>()
                 {
                     new Article
                     {
-                        Author = this.context.Users.SingleOrDefault(x => x.UserName == "God"),
+                        Author = this.context.Users.SingleOrDefault(x => x.UserName == username),
                         Title = "How to get stronger today",
                         Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                         ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg"
@@ -223,13 +269,16 @@
                     }
 
                 }.AsQueryable()).AsEnumerable();
-            var actual = await this.mockedBlogService.GetAllByUserIdAsync("Pesho");
+            var actual = await this.mockedBlogService.GetAllByUserIdAsync(username);
 
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public async Task IncrementCountShouldIncreaseTimesRead()
+        [Theory]
+        [InlineData(2)]
+        [InlineData(-1)]
+        [InlineData(int.MaxValue)]
+        public async Task IncrementCountShouldIncreaseTimesRead(int id)
         {
             this.InitiateInMemmoryDbForBlog();
 
@@ -242,7 +291,13 @@
             this.mockedBlogService = new Mock<BlogServices>(this.context, mockedMapper, mockUserService).Object;
 
             int expected = 1;
-            var article = await this.mockedBlogService.GetArticleAndIncrementTimesReadAsync(2);
+            var article = await this.mockedBlogService.GetArticleAndIncrementTimesReadAsync(id);
+
+            if (article == null)
+            {
+                Assert.Null(article);
+                return;
+            }
 
             Assert.True(expected == article.TimesRead);
         }
@@ -268,6 +323,7 @@
                 Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                 ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg"
             };
+
             var actual = await this.mockedBlogService.GetArticleByIdAsync(1);
 
             Assert.Equal(expected.Id, actual.Id);
@@ -324,8 +380,9 @@
 
             Assert.Equal(expected, actual);
         }
+        #endregion
 
-        //TODO: Fix the tests...
+        #region Accounts Service Tests
         [Fact]
         public async Task LoginUserAsyncShouldReturnRealUser()
         {
@@ -342,49 +399,12 @@
             Assert.Equal(model.UserName, user.UserName);
         }
 
+
+        #endregion
+
+        #region Fitness Service Tests
         [Fact]
-        public async Task RegisterUserAsyncShouldReturnRealUser()
-        {
-            this.InitiateInMemmoryDbForAccount();
-
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
-            });
-
-            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            UserManager<OlympiaUser> usermanager = this.GetMockUserManager();
-
-            var _contextAccessor = new Mock<IHttpContextAccessor>();
-            var _userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<OlympiaUser>>();
-            var signInManager = new Mock<SignInManager<OlympiaUser>>(usermanager,
-                           _contextAccessor.Object, _userPrincipalFactory.Object, null, null, null).Object;
-
-            var accountsServices = new Mock<AccountsServices>(
-                mockedMapper,
-                usermanager,
-                signInManager,
-                this.context).Object;
-
-            UserRegisterBingingModel model = new UserRegisterBingingModel
-            {
-                Username = "grisho",
-                Age = 16,
-                FullName = "Nikola",
-                Email = "ala@asdas.bg",
-                Gender = Gender.Male,
-                Password = "123123",
-                ConfirmPassword = "123123",
-            };
-
-            var expected = model.Username;
-            var actual = await accountsServices.RegisterUserAsync(model);
-
-            Assert.Equal(expected, actual.UserName);
-        }
-
-        [Fact]
-        public async Task GetWorkoutsShouldReturnAllWorkouts()
+        public void GetWorkoutsShouldReturnAllWorkouts()
         {
             this.InitiateInMemmoryDbForFitness();
 
@@ -407,5 +427,243 @@
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void GetWorkoutByIdShouldReturnTheCorrectOne()
+        {
+            this.InitiateInMemmoryDbForFitness();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
+
+            var expected = 1;
+            var article = fitnessService.GetWorkoutById(1).Id;
+
+            Assert.Equal(expected, article);
+        }
+
+        [Fact]
+        public async Task AddSupplierAsyncShouldWorkCorrect()
+        {
+            this.InitiateInMemmoryDbForFitness();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
+
+
+            SupplierBindingModel supplier = new SupplierBindingModel
+            {
+                Name = "TestSupplier",
+                Description = "sad"
+            };
+
+            var result = await fitnessService.AddSupplierAsync(supplier);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void GetAllSuppliersShouldReturnAllSuppliers()
+        {
+            this.InitiateInMemmoryDbForFitness();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
+
+            var suppliers = new List<Supplier>()
+                {
+                    new Supplier
+                    {
+                        Name = "GymBeam",
+                        Description = "The best supplier ever."
+                    },
+                    new Supplier
+                    {
+                        Name = "Bodybuilding",
+                        Description = "The best supplier ever."
+                    },
+                    new Supplier
+                    {
+                        Name = "MaxPower",
+                        Description = "The best supplier ever."
+                    },
+                    new Supplier
+                    {
+                        Name = "Olympia",
+                        Description = "The best supplier ever."
+                    },
+                    new Supplier
+                    {
+                        Name = "IronIide",
+                        Description = "The best supplier ever."
+                    },
+                    new Supplier
+                    {
+                        Name = "Thunder",
+                        Description = "The best supplier ever."
+                    }
+                }.Select(x => x.Name);
+            var actual = fitnessService.GetAllSuppliers().Select(x => x.Name).ToList();
+
+            int index = 0;
+
+            foreach (var supplierName in suppliers)
+            {
+                Assert.Equal(supplierName, actual[index++]);
+            }
+        }
+
+        [Fact]
+        public void GetAllItemsShouldReturnAllItems()
+        {
+            this.InitiateInMemmoryDbForFitness();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
+
+            var items = new List<Item>()
+                {
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
+                }.Select(x => x.Name);
+            var actual = fitnessService.GetAllItems().Items.Select(x => x.Name).ToList();
+
+            int index = 0;
+
+            foreach (var supplierName in items)
+            {
+                Assert.Equal(supplierName, actual[index++]);
+            }
+        }
+
+        [Fact]
+        public async Task GetFitnessPlanByUsernameShouldReturntCorrectOne()
+        {
+            this.InitiateInMemmoryDbForFitness();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockedUserService = new Mock<UsersService>(context, mockedMapper, null, null).Object;
+            var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
+
+            var user = this.context.Users.Add(new OlympiaUser("Niki", "asd@asd.bg", "NikiNiki")).Entity;
+            var fitnessPlan = this.context.FitnessPlans.Add(new FitnessPlan() { OwnerId = user.Id, Owner = user }).Entity;
+            this.context.SaveChanges();
+
+            var actual = await fitnessService.GetFitnessPlanByUsername("Niki");
+
+            Assert.Equal(fitnessPlan.Id, actual.Id);
+        }
+        #endregion
+
+        [Theory]
+        [InlineData("Pesho")]
+        [InlineData(null)]
+        #region User Service Tests
+        public async Task GetUserProfileModelShouldReturnCorrectOne(string username)
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, this.userManager, this.roleManager).Object;
+
+            var result = await mockUserService.GetUserProfileModel(username);
+
+            Assert.True(result?.UserName == username);
+        }
+
+        [Fact]
+        public async Task GetUserByUsernameAsyncShouldReturnCorrectOne()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                this.userManager,
+                this.roleManager).Object;
+
+            var user = await mockUserService.GetUserByUsernameAsync("Pesho");
+
+            Assert.NotNull(user);
+        }
+
+        [Fact]
+        public async Task GetAllTrainersAsyncShouldReturnAll()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+             var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                this.userManager,
+                this.roleManager).Object;
+
+            var user = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+            await this.userManager.AddToRoleAsync(user, "TRAINER");
+            
+            var trainers = await mockUserService.GetAllTrainersAsync();
+
+            Assert.Contains(user, trainers);
+        }
+        #endregion
+
     }
 }
+
+
+

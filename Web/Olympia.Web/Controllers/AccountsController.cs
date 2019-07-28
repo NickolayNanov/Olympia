@@ -12,21 +12,19 @@
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
 
+    [AllowAnonymous]
     public class AccountsController : Controller
     {
         private readonly SignInManager<OlympiaUser> signInManager;
-        private readonly UserManager<OlympiaUser> userManager;
         private readonly IAccountsServices accountsServices;
         private readonly IUsersService usersService;
 
         public AccountsController(
             SignInManager<OlympiaUser> signInManager,
-            UserManager<OlympiaUser> userManager,
             IAccountsServices accountsServices,
             IUsersService usersService)
         {
             this.signInManager = signInManager;
-            this.userManager = userManager;
             this.accountsServices = accountsServices;
             this.usersService = usersService;
         }
@@ -34,6 +32,11 @@
         [AllowAnonymous]
         public IActionResult Register()
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             return this.View();
         }
 
@@ -63,6 +66,11 @@
         [AllowAnonymous]
         public IActionResult Login()
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             return this.View();
         }
 

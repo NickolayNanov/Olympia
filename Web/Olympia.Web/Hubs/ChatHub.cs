@@ -17,6 +17,11 @@
 
         public async Task SendMessage(string destuser, string message)
         {
+            if(string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message))
+            {
+                return;
+            }
+
             string currentUser = this.Context.GetHttpContext().User.Identity.Name;
 
             var userFromDb = await this.usersService.GetUserByUsernameAsync(destuser);

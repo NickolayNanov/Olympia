@@ -3,6 +3,7 @@
     using Olympia.Data.Domain.Enums;
     using Olympia.Data.Models.ViewModels.Fitness;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class ClientViewModel
     {
@@ -29,7 +30,9 @@
 
         public WeekWorkoutDuration WeekWorkoutDuration { get; set; }
 
+        [Required]
         public int Calories { get; set; }
+
 
         public WorkoutViewModel WorkoutViewModel { get; set; }
 
