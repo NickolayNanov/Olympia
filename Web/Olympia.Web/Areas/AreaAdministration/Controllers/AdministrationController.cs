@@ -1,6 +1,5 @@
 ﻿namespace Olympia.Web.Areas.Administration.Controllers
 {
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
@@ -71,7 +70,7 @@
         public IActionResult ItemsAll()
         {
             var items = this.fitnessService.GetAllItems();
-            
+
             return this.View(items);
         }
 

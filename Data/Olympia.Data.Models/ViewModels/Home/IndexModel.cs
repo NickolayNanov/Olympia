@@ -12,7 +12,7 @@
             this.Articles = new HashSet<ArticleViewModel>();
             this.Items = new HashSet<ItemViewModel>();
         }
-        
+
         public IEnumerable<ArticleViewModel> Articles { get; set; }
 
         public IEnumerable<ItemViewModel> Items { get; set; }

@@ -1,14 +1,14 @@
 ﻿namespace Olympia.Data
 {
-    using System;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain;
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class OlympiaDbContext : IdentityDbContext<OlympiaUser, OlympiaUserRole, string>
     {

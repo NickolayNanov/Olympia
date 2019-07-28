@@ -1,10 +1,9 @@
 ﻿namespace Olympia.Data.Domain
 {
+    using Olympia.Data.Common.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
-    using Olympia.Data.Common.Models;
 
     public class Item : BaseModel<int>
     {

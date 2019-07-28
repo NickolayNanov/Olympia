@@ -1,9 +1,8 @@
 ﻿namespace Olympia.Services.Contracts
 {
-    using System.Threading.Tasks;
-
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
+    using System.Threading.Tasks;
 
     public interface IAccountsServices
     {

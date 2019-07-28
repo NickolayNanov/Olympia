@@ -1,12 +1,11 @@
 ﻿// ReSharper disable VirtualMemberCallInConstructor
 namespace Olympia.Data.Domain
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
     using Microsoft.AspNetCore.Identity;
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain.Enums;
+    using System;
+    using System.Collections.Generic;
 
     public class OlympiaUser : IdentityUser, IAuditInfo, IDeletableEntity
     {
@@ -17,7 +16,7 @@ namespace Olympia.Data.Domain
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.Clients = new HashSet<OlympiaUser>();
-            this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>(); 
+            this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>();
 
             this.FitnessPlan = new FitnessPlan() { OwnerId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);

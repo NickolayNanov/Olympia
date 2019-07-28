@@ -1,14 +1,13 @@
 ﻿namespace Olympia.Services.Contracts
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Data.Models.ViewModels.Home;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IUsersService
     {
@@ -27,7 +26,6 @@
         Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username);
 
         Task<OlympiaUser> GetUsersTrainerAsync(string username);
-
 
         Task<bool> UpdateUserHeightAndWeightAsync(ClientViewModel user, string username);
 

@@ -1,10 +1,9 @@
 ﻿namespace Olympia.Data.Domain
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain.Enums;
+    using System;
+    using System.ComponentModel.DataAnnotations;
 
     public class Exercise : BaseModel<int>
     {

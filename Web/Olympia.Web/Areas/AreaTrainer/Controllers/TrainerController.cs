@@ -1,7 +1,5 @@
 ﻿namespace Olympia.Web.Areas.Trainer.Controllers
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
@@ -9,6 +7,8 @@
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Services.Contracts;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     [Area(GlobalConstants.TrainerArea)]
     [Authorize(Roles = GlobalConstants.TrainerAdministratorRoleName)]
@@ -35,7 +35,7 @@
             var clients = await this.usersService
                 .GetAllClientsByUserAsync(this.User.Identity.Name);
 
-            if(clients.Count() == 0)
+            if (clients.Count() == 0)
             {
                 this.ViewData["Errors"] = "You do not have any clients yet";
             }
@@ -132,7 +132,7 @@
 
         [HttpPost]
         public async Task<IActionResult> SetFitnessPlan(ClientViewModel model, int workoutId)
-        {          
+        {
             model.WorkoutViewModel = this.fitnessService.GetWorkoutById(workoutId);
 
             if (model.Calories == 0 || model.WorkoutViewModel == null)

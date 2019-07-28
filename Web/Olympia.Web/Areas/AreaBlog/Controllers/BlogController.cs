@@ -1,12 +1,11 @@
 ﻿namespace Olympia.Web.Areas.Blog.Controllers
 {
-    using System.Threading.Tasks;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Services.Contracts;
+    using System.Threading.Tasks;
 
     [Area(GlobalConstants.BlogArea)]
     [Authorize]

@@ -44,7 +44,7 @@
                 TrainerName = string.Empty,
             };
 
-            if(trainers.Count() == 0)
+            if (trainers.Count() == 0)
             {
                 this.ViewData["Errors"] = "There are no trainers yet";
             }
@@ -110,7 +110,7 @@
         [HttpPost]
         public async Task<IActionResult> UpdateWeightHeight(ClientViewModel model)
         {
-          
+
             await this.usersService.UpdateUserHeightAndWeightAsync(model, this.User.Identity.Name);
 
             return this.Redirect(GlobalConstants.ClientTrainersAll);
@@ -123,7 +123,6 @@
             return this.Redirect(GlobalConstants.Index);
         }
 
-     
         public async Task<IActionResult> MyFitnessPlan(string username)
         {
             var fitnessPlan = await this.fitnessService.GetFitnessPlanByUsername(username);

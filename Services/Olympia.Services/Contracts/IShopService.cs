@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IShopService 
+    public interface IShopService
     {
         Task<ShoppingCartViewModel> GetShoppingCartDtoByUserNameAsync(string username);
 

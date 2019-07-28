@@ -13,7 +13,7 @@ namespace Olympia.Data.Models.ViewModels.Home
         [Range(0.0, 500.0, ErrorMessage = GlobalConstants.ErrorInputMessage)]
         public double? Weight { get; set; }
 
-        [Range(0.0, 300.0 , ErrorMessage = GlobalConstants.ErrorInputMessage)]
+        [Range(0.0, 300.0, ErrorMessage = GlobalConstants.ErrorInputMessage)]
         public double? Height { get; set; }
 
         public string Interests { get; set; }

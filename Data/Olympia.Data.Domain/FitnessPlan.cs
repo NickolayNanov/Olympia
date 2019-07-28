@@ -1,8 +1,7 @@
 ﻿namespace Olympia.Data.Domain
 {
-    using System.ComponentModel.DataAnnotations;
-
     using Olympia.Data.Domain.Enums;
+    using System.ComponentModel.DataAnnotations;
 
     public class FitnessPlan
     {

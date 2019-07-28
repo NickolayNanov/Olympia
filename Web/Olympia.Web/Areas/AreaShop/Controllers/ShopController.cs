@@ -23,7 +23,7 @@
         {
             var items = this.shopService.GetAllItems();
 
-            ShopViewModel shopViewModel = new ShopViewModel { Items = items};
+            ShopViewModel shopViewModel = new ShopViewModel { Items = items };
             return this.View(shopViewModel);
         }
 
@@ -51,7 +51,7 @@
 
         public async Task<IActionResult> AddToCart(int itemId)
         {
-            var result = await 
+            var result = await
                 this.shopService
                 .AddItemToUserCart(itemId, this.User.Identity.Name);
 

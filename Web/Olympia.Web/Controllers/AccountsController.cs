@@ -1,8 +1,5 @@
 ﻿namespace Olympia.Web.Controllers
 {
-    using System.Linq;
-    using System.Threading.Tasks;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -11,6 +8,7 @@
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class AccountsController : Controller
@@ -108,7 +106,7 @@
         [Authorize]
         public async Task<IActionResult> ProfileIndex()
         {
-            var currentUser = await this.usersService.GetUserProfileModel(this.User.Identity.Name);                
+            var currentUser = await this.usersService.GetUserProfileModel(this.User.Identity.Name);
 
             return this.View(currentUser);
         }

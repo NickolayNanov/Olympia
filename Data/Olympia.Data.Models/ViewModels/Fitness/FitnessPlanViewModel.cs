@@ -1,9 +1,6 @@
 ﻿using Olympia.Common;
 using Olympia.Data.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Olympia.Data.Models.ViewModels.Fitness
 {

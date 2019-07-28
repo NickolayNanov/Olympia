@@ -58,7 +58,7 @@
         {
             IndexModel model = new IndexModel();
 
-            if(this.User.IsInRole(GlobalConstants.TrainerRoleName))
+            if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
             {
                 model.ClientNames = (await this.usersService
                     .GetUserByUsernameAsync(this.User.Identity.Name)).Clients.Select(client => client.UserName);

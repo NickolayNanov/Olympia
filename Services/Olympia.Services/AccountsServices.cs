@@ -1,8 +1,5 @@
 ﻿namespace Olympia.Services
 {
-    using System.Linq;
-    using System.Threading.Tasks;
-
     using AutoMapper;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -12,6 +9,8 @@
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class AccountsServices : IAccountsServices
     {
@@ -46,7 +45,7 @@
                 .SingleOrDefaultAsync(x =>
                 x.UserName == model.UserName);
 
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
@@ -86,7 +85,7 @@
             var result = await this.userManager.CreateAsync(user, model.Password);
 
             //For tests...
-            if(result == null)
+            if (result == null)
             {
                 return user;
             }

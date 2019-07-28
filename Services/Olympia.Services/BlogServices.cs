@@ -1,9 +1,5 @@
 ﻿namespace Olympia.Services
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using Olympia.Data;
@@ -12,6 +8,9 @@
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class BlogServices : IBlogService
     {
@@ -119,7 +118,7 @@
         {
             ArticleViewModel articleViewModel = null;
 
-            if(!this.context.Articles.Select(x => x.Id).Contains(articleId))
+            if (!this.context.Articles.Select(x => x.Id).Contains(articleId))
             {
                 return null;
             }

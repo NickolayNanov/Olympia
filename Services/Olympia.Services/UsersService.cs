@@ -1,9 +1,5 @@
 ﻿namespace Olympia.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -18,45 +14,46 @@
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class UsersService : IUsersService
     {
         private readonly OlympiaDbContext context;
         private readonly IMapper mapper;
         private readonly UserManager<OlympiaUser> userManager;
-        private readonly RoleManager<OlympiaUserRole> roleManager;
 
         public UsersService(
             OlympiaDbContext context,
             IMapper mapper,
-            UserManager<OlympiaUser> userManager,
-            RoleManager<OlympiaUserRole> roleManager)
+            UserManager<OlympiaUser> userManager)
         {
             this.context = context;
             this.mapper = mapper;
             this.userManager = userManager;
-            this.roleManager = roleManager;
         }
+
 
         public async Task<IEnumerable<OlympiaUser>> GetAllTrainersAsync()
         {
             IEnumerable<OlympiaUser> trainers = new List<OlympiaUser>();
 
-            // var trainers = await this.userManager.GetUsersInRoleAsync(GlobalConstants.TrainerRoleName);
-            // cannot include articles when using user manager
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
-                var adminRole = await this.roleManager.GetRoleIdAsync(await this.roleManager.FindByNameAsync(GlobalConstants.TrainerRoleName));
-                var trainerIds = this.context.UserRoles
-                    .Where(ur => ur.RoleId == adminRole)
-                    .Select(x => x.UserId)
-                    .ToList();
+                var users = this.context
+                .Users
+                .Where(x => this.userManager.IsInRoleAsync(x, GlobalConstants.TrainerRoleName)
+                .GetAwaiter()
+                .GetResult());
 
-                trainers = this.context
-                    .Users
-                    .Include(x => x.Articles)
-                    .Where(id => trainerIds.Any(x => x == id.Id))
-                    .OrderByDescending(trainer => trainer.Rating);
+                foreach (var user in users)
+                {
+                    user.Articles = this.context.Articles.Where(x => x.AuthorId == user.Id).OrderByDescending(x => x.TimesRead).ToList();
+                }
+
+                trainers = users;
             });
 
             return trainers;
@@ -118,7 +115,7 @@
 
         public async Task<bool> SetTrainerAsync(string trainerUsername, string clientUsername)
         {
-            if(string.IsNullOrEmpty(trainerUsername) ||
+            if (string.IsNullOrEmpty(trainerUsername) ||
                 string.IsNullOrEmpty(clientUsername))
             {
                 return false;
@@ -159,7 +156,7 @@
             realUser.Height = model.Height;
 
             if (model.ProfilePictureUrl != null)
-            {                
+            {
                 var url = MyCloudinary.UploadImage(model.ProfilePictureUrl, model.Username);
                 realUser.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
             }
@@ -181,6 +178,11 @@
 
         public async Task<OlympiaUser> GetUsersTrainerAsync(string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                return null;
+            }
+
             OlympiaUser trainer = null;
 
             await Task.Run(async () =>
@@ -196,6 +198,11 @@
 
         public async Task<bool> UpdateUserHeightAndWeightAsync(ClientViewModel model, string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
             var user = await this.GetUserByUsernameAsync(username);
 
             user.Activity = model.Activity;
@@ -210,9 +217,14 @@
 
         public async Task<bool> DeleteUserAsync(string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
             var userToDelete = await this.GetUserByUsernameAsync(username);
 
-            if(userToDelete != null)
+            if (userToDelete != null)
             {
                 this.context.Articles.RemoveRange(this.context.Articles.Where(x => x.AuthorId == userToDelete.Id));
                 if (this.context.UserRoles.Any(x => x.UserId == userToDelete.Id))
@@ -227,11 +239,11 @@
                 await this.context.SaveChangesAsync();
             }
 
-            return !this.userManager.Users.Contains(userToDelete);
+            return !this.context.Users.Contains(userToDelete);
         }
         public IEnumerable<ListedUserViewModel> GetAllUsers()
         {
-            var users = this.userManager.Users;
+            var users = this.context.Users;
             var userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
 
             return userDtos;
@@ -239,6 +251,11 @@
 
         public async Task<bool> UnsetTrainerAsync(string username, string trainerUsername)
         {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(trainerUsername))
+            {
+                return false;
+            }
+
             var user = await this.GetUserByUsernameAsync(username);
 
             user.Trainer = null;
@@ -259,11 +276,11 @@
                 .Include(user => user.FitnessPlan)
                 .SingleOrDefault(user => user.UserName == username);
 
-            if(realUser.Gender == Gender.Male)
+            if (realUser.Gender == Gender.Male)
             {
                 result = (double)(66.4730 + (13.7516 * realUser.Weight) + (5.0033 * realUser.Height) - (6.7550 * realUser.Age));
             }
-            else if(realUser.Gender == Gender.Female)
+            else if (realUser.Gender == Gender.Female)
             {
                 result = (double)(655.0955 + (9.5634 * realUser.Weight) + (1.8496 * realUser.Height) - (4.6756 * realUser.Age));
             }
@@ -292,8 +309,6 @@
             return (int)result;
         }
 
-        
-
         public bool SetFitnessPlanToUser(ClientViewModel model)
         {
             var user = this.GetUserByUsernameAsync(model.UserName).Result;
@@ -320,9 +335,9 @@
 
         public void UpdateProfile(UserProfile model, string username)
         {
-            var userFromDb = this.userManager.Users.FirstOrDefault(user => user.UserName == username);
+            var userFromDb = this.context.Users.FirstOrDefault(user => user.UserName == username);
 
-            if(userFromDb != null)
+            if (userFromDb != null)
             {
                 userFromDb.Weight = model.Weight;
                 userFromDb.Height = model.Height;

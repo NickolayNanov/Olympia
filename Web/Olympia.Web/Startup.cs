@@ -11,7 +11,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    
+
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Seeding;
@@ -62,7 +62,7 @@
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);                   
+            services.AddSingleton(mapper);
 
             services
                 .Configure<CookiePolicyOptions>(options =>
@@ -80,7 +80,7 @@
             services.AddTransient<IAccountsServices, AccountsServices>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IFitnessService, FitnessService>();
-            services.AddTransient<IShopService, ShopService>();           
+            services.AddTransient<IShopService, ShopService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

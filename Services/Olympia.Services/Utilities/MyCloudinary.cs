@@ -37,7 +37,7 @@
                 uploadResult = cloudinary.Upload(uploadParams);
             }
 
-            if(uploadResult.Error != null)
+            if (uploadResult.Error != null)
             {
                 return "shit...";
             }

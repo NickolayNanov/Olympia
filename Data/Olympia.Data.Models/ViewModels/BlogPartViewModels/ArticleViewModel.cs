@@ -1,10 +1,8 @@
 ﻿namespace Olympia.Data.Models.ViewModels.BlogPartViewModels
 {
-    using System;
-    using System.Collections.Generic;
-
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain;
+    using System;
 
     public class ArticleViewModel : BaseModel<int>
     {

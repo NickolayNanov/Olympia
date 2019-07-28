@@ -1,11 +1,10 @@
 ﻿// ReSharper disable VirtualMemberCallInConstructor
 namespace Olympia.Data.Domain
 {
-    using System;
-    using System.Collections.Generic;
-
     using Microsoft.AspNetCore.Identity;
     using Olympia.Data.Common.Models;
+    using System;
+    using System.Collections.Generic;
 
     public class OlympiaUserRole : IdentityRole, IAuditInfo, IDeletableEntity
     {

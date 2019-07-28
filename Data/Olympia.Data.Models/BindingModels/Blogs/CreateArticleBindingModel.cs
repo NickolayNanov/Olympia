@@ -22,7 +22,7 @@
         public string Content { get; set; }
 
         [Display(Name = GlobalConstants.DisplayImg)]
-        [DataType(DataType.Upload)]       
+        [DataType(DataType.Upload)]
         public IFormFile ImgUrl { get; set; }
     }
 }

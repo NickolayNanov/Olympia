@@ -32,7 +32,6 @@
         private IFitnessService fitnessService;
 
         private UserManager<OlympiaUser> userManager;
-        private RoleManager<OlympiaUserRole> roleManager;
 
         public OlympiaServicesTests()
         {
@@ -45,7 +44,8 @@
 
             this.context = new OlympiaDbContext(optionsBuilder.Options);
             this.mockMapper = new Mock<IMapper>().Object;
-            this.mockUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+            this.mockUserService = new Mock<UsersService>(context, mockMapper, usermanager).Object;
             this.mockedBlogService = new Mock<BlogServices>(this.context, mockMapper, mockUserService).Object;
 
             new DataSeeder(this.context);
@@ -82,7 +82,9 @@
 
             this.context = new OlympiaDbContext(optionsBuilder.Options);
             this.mockMapper = new Mock<IMapper>().Object;
-            this.mockUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            this.mockUserService = new Mock<UsersService>(context, mockMapper, usermanager).Object;
             this.fitnessService = new Mock<FitnessService>(this.context, mockMapper, mockUserService).Object;
 
             new DataSeeder(this.context);
@@ -97,18 +99,10 @@
             this.mockMapper = new Mock<IMapper>().Object;
 
             this.userManager = this.TestUserManager<OlympiaUser>();
-            this.roleManager = this.MockRoleManager<OlympiaUserRole>();
 
-            this.mockUserService = new Mock<UsersService>(this.context, this.mockMapper, this.userManager, this.roleManager).Object;
+            this.mockUserService = new Mock<UsersService>(this.context, this.mockMapper, this.userManager).Object;
 
-        }
-        private RoleManager<TRole> MockRoleManager<TRole>(IRoleStore<TRole> store = null) where TRole : class
-        {
-            store = store ?? new Mock<IRoleStore<TRole>>().Object;
-            var roles = new List<IRoleValidator<TRole>>();
-            roles.Add(new RoleValidator<TRole>());
-            return new Mock<RoleManager<TRole>>(store, roles, new UpperInvariantLookupNormalizer(),
-                new IdentityErrorDescriber(), null).Object;
+            new DataSeeder(this.context);
         }
 
         private UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
@@ -439,7 +433,9 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, usermanager).Object;
             var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
 
             var expected = 1;
@@ -459,7 +455,7 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, this.userManager).Object;
             var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
 
 
@@ -485,7 +481,9 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, userManager).Object;
             var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
 
             var suppliers = new List<Supplier>()
@@ -542,7 +540,10 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockedUserService = new Mock<UsersService>(context, mockMapper, null, null).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+
+            var mockedUserService = new Mock<UsersService>(context, mockMapper, userManager).Object;
             var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
 
             var items = new List<Item>()
@@ -580,7 +581,9 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockedUserService = new Mock<UsersService>(context, mockedMapper, null, null).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var mockedUserService = new Mock<UsersService>(context, mockedMapper, usermanager).Object;
             var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
 
             var user = this.context.Users.Add(new OlympiaUser("Niki", "asd@asd.bg", "NikiNiki")).Entity;
@@ -593,10 +596,10 @@
         }
         #endregion
 
+        #region User Service Tests
         [Theory]
         [InlineData("Pesho")]
         [InlineData(null)]
-        #region User Service Tests
         public async Task GetUserProfileModelShouldReturnCorrectOne(string username)
         {
             this.InitiateInMemmoryDbForUsers();
@@ -607,7 +610,7 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, this.userManager, this.roleManager).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, this.userManager).Object;
 
             var result = await mockUserService.GetUserProfileModel(username);
 
@@ -625,11 +628,12 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
             var mockUserService = new Mock<UsersService>(
                 this.context,
                 mockedMapper,
-                this.userManager,
-                this.roleManager).Object;
+                usermanager).Object;
 
             var user = await mockUserService.GetUserByUsernameAsync("Pesho");
 
@@ -637,31 +641,427 @@
         }
 
         [Fact]
-        public async Task GetAllTrainersAsyncShouldReturnAll()
+        public async Task GetAllClientsByUserAsyncShouldReturnAll()
         {
             this.InitiateInMemmoryDbForUsers();
 
-             var mappingConfig = new MapperConfiguration(mc =>
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var mockUserService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            var pesho = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+            var mesho = this.context.Users.SingleOrDefault(x => x.UserName == "Mesho");
+            var gesho = this.context.Users.SingleOrDefault(x => x.UserName == "Gesho");
+
+            mesho.Trainer = pesho;
+            gesho.Trainer = pesho;
+
+            context.Update(mesho);
+            context.Update(gesho);
+            await context.SaveChangesAsync();
+
+            var expected = 2;
+            var actual = (await mockUserService.GetAllClientsByUserAsync(pesho.UserName)).Count();
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SetTrainerAsyncShouldSetTrainer()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockUserService = new Mock<UsersService>(
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
                 this.context,
                 mockedMapper,
-                this.userManager,
-                this.roleManager).Object;
+                userManager).Object;
+
+            var result = await userService.SetTrainerAsync("Pesho", "Mesho");
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task SetTrainerAsyncShouldReturnFalse()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            var result = await userService.SetTrainerAsync("", "Mesho");
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task SetTrainerAsyncShouldReturnFalseNullInput()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            var result = await userService.SetTrainerAsync("", "");
+
+            Assert.False(result);
+        }
+        [Fact]
+        public async Task SetTrainerAsyncShouldReturnFalseNullInputInvalidOne()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            var result = await userService.SetTrainerAsync("", "Mesho");
+
+            Assert.False(result);
+        }
+        [Fact]
+        public async Task GetUsersTrainerAsyncShouldReturnCorrectly()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                usermanager).Object;
+
+            var pesho = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+            var mesho = this.context.Users.SingleOrDefault(x => x.UserName == "Mesho").Trainer = pesho;
+
+            this.context.Update(mesho);
+            await this.context.SaveChangesAsync();
+
+            var result = await userService.GetUsersTrainerAsync("Mesho");
+            var actual = "Pesho";
+            var expected = result.UserName;
+
+
+            Assert.NotNull(result);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task GetUsersTrainerAsyncShouldReturnFalse()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                usermanager).Object;
+
+            var pesho = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+            var mesho = this.context.Users.SingleOrDefault(x => x.UserName == "Mesho").Trainer = pesho;
+
+            this.context.Update(mesho);
+            await this.context.SaveChangesAsync();
+
+            var result = await userService.GetUsersTrainerAsync("");
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task UpdateUserHeightAndWeightAsyncShouldIncrease()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                usermanager).Object;
+
+            ClientViewModel model = new ClientViewModel()
+            {
+                Height = 31,
+                Weight = 31,
+                Activity = ActityLevel.SixToServen
+            };
+
+            await userService.UpdateUserHeightAndWeightAsync(model, "Pesho");
 
             var user = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
-            await this.userManager.AddToRoleAsync(user, "TRAINER");
-            
-            var trainers = await mockUserService.GetAllTrainersAsync();
 
-            Assert.Contains(user, trainers);
+            var expectedHeight = 31;
+            var expectedWeight = 31;
+            var expectedActivity = ActityLevel.SixToServen;
+
+            var actualHeight = user.Height;
+            var actualWeight = user.Weight;
+            var actualActivity = ActityLevel.SixToServen;
+
+            Assert.Equal(expectedHeight, actualHeight);
+            Assert.Equal(expectedWeight, actualWeight);
+            Assert.Equal(expectedActivity, actualActivity);
+        }
+
+        [Fact]
+        public async Task UpdateUserHeightAndWeightAsyncShouldReturnFalse()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                usermanager).Object;
+
+            ClientViewModel model = new ClientViewModel()
+            {
+                Height = 31,
+                Weight = 31,
+                Activity = ActityLevel.SixToServen
+            };
+
+            var result = await userService.UpdateUserHeightAndWeightAsync(model, "");
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task GetAllUsersShouldReturnAll()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                usermanager).Object;
+
+            var expected = this.context.Users.Select(x => x.UserName).AsEnumerable();
+            var actual = userService.GetAllUsers().Select(x => x.UserName);
+
+            Assert.Equal(expected.Count(), actual.Count());
+            Assert.Equal(expected, actual);
+        }
+
+
+        [Fact]
+        public async Task DeleteUserAsyncShouldDelete()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                usermanager).Object;
+
+            this.context.Users.Add(new OlympiaUser { UserName = "asd", FullName = "asd", Email = "asd@ad.bg" });
+            await this.context.SaveChangesAsync();
+
+            var result = await userService.DeleteUserAsync("asd");
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteUserAsyncShouldReturnFalse()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                usermanager).Object;
+
+            await this.context.SaveChangesAsync();
+
+            var result = await userService.DeleteUserAsync("");
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task UnSetTrainerAsyncShouldSetTrainer()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            var pesho = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+            var mesho = this.context.Users.SingleOrDefault(x => x.UserName == "Mesho");
+
+            mesho.Trainer = pesho;
+            this.context.Update(mesho);
+            await this.context.SaveChangesAsync();
+
+            var result = await userService.UnsetTrainerAsync(mesho.UserName, pesho.UserName);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task UnSetTrainerAsyncShouldReturnFalse()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            var result = await userService.UnsetTrainerAsync("", "");
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task CalculateCaloriesShouldReturnCorrect()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
         }
         #endregion
-
     }
 }
 

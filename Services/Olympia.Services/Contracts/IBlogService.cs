@@ -1,10 +1,9 @@
 ﻿namespace Olympia.Services.Contracts
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IBlogService
     {

@@ -1,8 +1,5 @@
 ﻿namespace Olympia.Services
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using Olympia.Data;
@@ -13,6 +10,9 @@
     using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
 
     public class FitnessService : IFitnessService

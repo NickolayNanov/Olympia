@@ -1,7 +1,6 @@
 ﻿namespace Olympia.Web.Hubs
 {
     using Microsoft.AspNetCore.SignalR;
-    using Olympia.Common;
     using Olympia.Services.Contracts;
     using System.Threading.Tasks;
 
@@ -17,7 +16,7 @@
 
         public async Task SendMessage(string destuser, string message)
         {
-            if(string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message))
             {
                 return;
             }

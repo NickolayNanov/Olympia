@@ -31,8 +31,8 @@
         public async Task<bool> AddItemToUserCart(int itemId, string username)
         {
             var cart = await this.GetShoppingCartByUserNameAsync(username);
-            
-            if(cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId))
+
+            if (cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId))
             {
                 return false;
             }
@@ -45,7 +45,7 @@
             this.context.Update(cart);
             this.context.Update(item);
             await this.context.SaveChangesAsync();
-            
+
             return cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId);
         }
 
@@ -202,8 +202,8 @@
             if (cartItemsIds.Contains(itemId))
             {
                 var cartItem = cart.ShoppingCartItems
-                    .SingleOrDefault(shc => 
-                                    shc.ShoppingCartId == cart.Id && 
+                    .SingleOrDefault(shc =>
+                                    shc.ShoppingCartId == cart.Id &&
                                     shc.ItemId == itemId);
 
                 cart.ShoppingCartItems.Remove(cartItem);
@@ -247,7 +247,7 @@
             var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
             int initialValue = item.TimesBought;
 
-            if(initialValue <= 1)
+            if (initialValue <= 1)
             {
                 return true;
             }

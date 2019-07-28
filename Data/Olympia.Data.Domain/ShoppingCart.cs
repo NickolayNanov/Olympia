@@ -1,12 +1,9 @@
 ﻿namespace Olympia.Data.Domain
 {
-    using System.Collections.Concurrent;
+    using Olympia.Data.Common.Models;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
-
-    using Olympia.Data.Common.Models;
 
     public class ShoppingCart : BaseModel<int>
     {

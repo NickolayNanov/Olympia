@@ -10,7 +10,7 @@
         public WorkoutViewModel()
         {
             this.Exercises = new HashSet<Exercise>();
-            
+
         }
 
         public int Id { get; set; }

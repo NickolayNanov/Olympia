@@ -11,7 +11,6 @@
     using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Data.Models.ViewModels.Shop;
-    using System.Collections.Generic;
     using System.Linq;
 
     public class MappingProfile : Profile
