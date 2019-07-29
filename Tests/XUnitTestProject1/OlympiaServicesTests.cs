@@ -31,11 +31,7 @@
         private IAccountsServices accountService;
         private IFitnessService fitnessService;
 
-        private UserManager<OlympiaUser> userManager;
-
-        public OlympiaServicesTests()
-        {
-        }
+        private UserManager<OlympiaUser> userManager;        
 
         private void InitiateInMemmoryDbForBlog()
         {
@@ -317,7 +313,6 @@
                 Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                 ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg"
             };
-
             var actual = await this.mockedBlogService.GetArticleByIdAsync(1);
 
             Assert.Equal(expected.Id, actual.Id);
@@ -392,7 +387,6 @@
 
             Assert.Equal(model.UserName, user.UserName);
         }
-
 
         #endregion
 
@@ -612,7 +606,7 @@
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
             var mockUserService = new Mock<UsersService>(this.context, mockedMapper, this.userManager).Object;
 
-            var result = await mockUserService.GetUserProfileModel(username);
+            var result = await mockUserService.GetUserProfileModelAsync(username);
 
             Assert.True(result?.UserName == username);
         }
@@ -746,6 +740,7 @@
 
             Assert.False(result);
         }
+
         [Fact]
         public async Task SetTrainerAsyncShouldReturnFalseNullInputInvalidOne()
         {
@@ -769,6 +764,7 @@
 
             Assert.False(result);
         }
+
         [Fact]
         public async Task GetUsersTrainerAsyncShouldReturnCorrectly()
         {
@@ -844,7 +840,6 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-
             UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var userService = new Mock<UsersService>(
@@ -887,7 +882,6 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-
             UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var userService = new Mock<UsersService>(
@@ -918,7 +912,6 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-
             UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var userService = new Mock<UsersService>(
@@ -927,12 +920,11 @@
                 usermanager).Object;
 
             var expected = this.context.Users.Select(x => x.UserName).AsEnumerable();
-            var actual = userService.GetAllUsers().Select(x => x.UserName);
+            var actual = (await userService.GetAllUsersAsync()).Select(x => x.UserName);
 
             Assert.Equal(expected.Count(), actual.Count());
             Assert.Equal(expected, actual);
         }
-
 
         [Fact]
         public async Task DeleteUserAsyncShouldDelete()
@@ -945,7 +937,6 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-
             UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var userService = new Mock<UsersService>(
@@ -972,7 +963,6 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-
             UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var userService = new Mock<UsersService>(
@@ -998,7 +988,6 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-
             UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var userService = new Mock<UsersService>(
@@ -1053,17 +1042,29 @@
             });
 
             var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-
             UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
 
             var userService = new Mock<UsersService>(
                 this.context,
                 mockedMapper,
                 userManager).Object;
+
+            var user = await this.context.Users.SingleOrDefaultAsync(x => x.UserName == "Pesho");
+
+            user.Gender = Gender.Male;
+            user.Weight = 31;
+            user.Height = 31;
+            user.Age = 31;
+            user.Activity = ActityLevel.OneToThree;
+
+            this.context.Update(user);
+            await this.context.SaveChangesAsync();
+
+            var expected = 602;
+            var actual = await userService.CalculateCaloriesAsync(user.UserName);
+
+            Assert.Equal(expected, actual);
         }
         #endregion
     }
 }
-
-
-

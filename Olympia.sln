@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Data.Domain", "Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Data.Models", "Data\Olympia.Data.Models\Olympia.Data.Models.csproj", "{87843921-ED58-4C7C-A8A6-6505761A9681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Olympia.Services.Tests", "Tests\XUnitTestProject1\Olympia.Services.Tests.csproj", "{B795FAB8-358F-4BEE-84D0-300DBF9B12B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olympia.Services.Tests", "Tests\XUnitTestProject1\Olympia.Services.Tests.csproj", "{B795FAB8-358F-4BEE-84D0-300DBF9B12B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

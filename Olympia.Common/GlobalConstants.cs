@@ -32,6 +32,8 @@
         public const string AccountRegister = "/Accounts/Register";
         public const string AccountLogin = "/Accounts/Login";
         public const string Index = "/";
+
+        public const string ErrorPage = "/Home/Error";
         #endregion
 
         #region Errors

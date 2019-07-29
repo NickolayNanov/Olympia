@@ -20,22 +20,14 @@
 
         public async Task<IActionResult> ArticlesAll()
         {
-            var articles = await this.blogService
-                .GetAllArticlesAsync();
-
+            var articles = await this.blogService.GetAllArticlesAsync();
             return this.View(articles);
         }
 
         public async Task<IActionResult> ArticleDetails(int articleId)
         {
             var article = await this.blogService.GetArticleAndIncrementTimesReadAsync(articleId);
-
             return this.View(article);
-        }
-
-        public IActionResult CreateComment(CommentViewModel model)
-        {
-            return this.View();
         }
     }
 }

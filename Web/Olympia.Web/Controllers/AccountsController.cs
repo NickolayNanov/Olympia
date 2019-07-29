@@ -3,11 +3,13 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+
     using Olympia.Common;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
+
     using System.Threading.Tasks;
 
     [AllowAnonymous]
@@ -32,7 +34,7 @@
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                return this.Redirect("/Home/Error");
+                return this.Redirect(GlobalConstants.ErrorPage);
             }
 
             return this.View();
@@ -66,7 +68,7 @@
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                return this.Redirect("/Home/Error");
+                return this.Redirect(GlobalConstants.ErrorPage);
             }
 
             return this.View();
@@ -99,29 +101,28 @@
         public async Task<IActionResult> Logout()
         {
             await this.signInManager.SignOutAsync();
-
             return this.Redirect(GlobalConstants.Index);
         }
 
         [Authorize]
         public async Task<IActionResult> ProfileIndex()
         {
-            var currentUser = await this.usersService.GetUserProfileModel(this.User.Identity.Name);
+            var currentUser = await this.usersService
+                .GetUserProfileModelAsync(this.User.Identity.Name);
 
             return this.View(currentUser);
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult ProfileIndex(UserProfile model)
+        public async Task<IActionResult> ProfileIndex(UserProfile model)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(model);
             }
 
-            this.usersService.UpdateProfile(model, this.User.Identity.Name);
-
+            await this.usersService.UpdateProfileAsync(model, this.User.Identity.Name);
             return this.Redirect(GlobalConstants.Index);
         }
     }

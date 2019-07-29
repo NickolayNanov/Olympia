@@ -2,11 +2,13 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using Olympia.Common;
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
+
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -50,56 +52,48 @@
             }
 
             await this.blogService.CreateArticleAsync(model, this.User.Identity.Name);
-
             return this.Redirect(GlobalConstants.AdminArticlesAll);
         }
 
-        public IActionResult UsersAll()
+        public async Task<IActionResult> UsersAll()
         {
-            var users = this.usersService.GetAllUsers();
+            var users = this.usersService.GetAllUsersAsync();
             return this.View(users);
         }
 
         public async Task<IActionResult> ArticlesAll()
         {
             var articles = await this.blogService.GetAllArticlesAsync();
-
             return this.View(articles);
         }
 
         public IActionResult ItemsAll()
         {
             var items = this.fitnessService.GetAllItems();
-
             return this.View(items);
         }
-
 
         public async Task<IActionResult> DeleteUser(string username)
         {
             await this.usersService.DeleteUserAsync(username);
-            var users = this.usersService.GetAllUsers();
+            var users = await this.usersService.GetAllUsersAsync();
 
             return this.View("UsersAll", users);
         }
 
-
         public async Task<IActionResult> DeleteArticle(int articleId)
         {
             await this.blogService.DeleteArticleByIdAsync(articleId);
-
             return this.Redirect(GlobalConstants.AdministrationArticles);
         }
         public IActionResult AddItem()
         {
             var names = this.fitnessService.GetAllSuppliers().Select(x => x.Name);
-
             return this.View(new ItemBindingModel() { SupplierNames = names });
         }
 
         public IActionResult CreateItem()
         {
-
             return this.View();
         }
 
@@ -112,7 +106,7 @@
                 return this.View(model);
             }
 
-            var item = await this.shopService.CreateItemAsync(model);
+            await this.shopService.CreateItemAsync(model);
 
             var items = this.shopService.GetAllItems();
             var shopViewModel = new ShopViewModel() { Items = items };
@@ -141,14 +135,12 @@
             }
 
             var suppliers = this.fitnessService.GetAllSuppliers();
-
             return this.View("SuppliersAll", suppliers);
         }
 
         public IActionResult SuppliersAll()
         {
             var suppliers = this.shopService.GetAllSuppliers();
-
             return this.View(suppliers);
         }
 

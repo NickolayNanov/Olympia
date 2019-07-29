@@ -6,14 +6,16 @@
     using Olympia.Data.Models.ViewModels.AdminViewModels;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Data.Models.ViewModels.Home;
+
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface IUsersService
     {
         Task<ClientViewModel> GetUserWithFitnessPlanModelAsync(string username);
 
-        Task<UserProfile> GetUserProfileModel(string username);
+        Task<UserProfile> GetUserProfileModelAsync(string username);
 
         Task<OlympiaUser> GetUserByUsernameAsync(string username);
 
@@ -29,16 +31,18 @@
 
         Task<bool> UpdateUserHeightAndWeightAsync(ClientViewModel user, string username);
 
-        IEnumerable<ListedUserViewModel> GetAllUsers();
+        Task<IEnumerable<ListedUserViewModel>> GetAllUsersAsync();
 
         Task<bool> DeleteUserAsync(string username);
 
         Task<bool> UnsetTrainerAsync(string username, string trainerUsername);
 
-        int CalculateCalories(string username);
+        Task<int> CalculateCaloriesAsync(string username);
 
-        bool SetFitnessPlanToUser(ClientViewModel model);
+        Task<bool> SetFitnessPlanToUserAsync(ClientViewModel model);
 
-        void UpdateProfile(UserProfile model, string username);
+        Task UpdateProfileAsync(UserProfile model, string username);
+
+        Task<IndexModel> GetIndexModelAsync(ClaimsPrincipal user);
     }
 }

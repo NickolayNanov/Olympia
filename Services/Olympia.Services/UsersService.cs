@@ -17,6 +17,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public class UsersService : IUsersService
@@ -78,7 +79,6 @@
 
             return clients;
         }
-
 
         public async Task<OlympiaUser> GetUserByUsernameAsync(string username)
         {
@@ -142,7 +142,6 @@
 
             return done;
         }
-
 
         public async Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username)
         {
@@ -241,10 +240,17 @@
 
             return !this.context.Users.Contains(userToDelete);
         }
-        public IEnumerable<ListedUserViewModel> GetAllUsers()
+
+        public async Task<IEnumerable<ListedUserViewModel>> GetAllUsersAsync()
         {
-            var users = this.context.Users;
-            var userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
+            IEnumerable<ListedUserViewModel> userDtos = new List<ListedUserViewModel>();
+
+            await Task.Run(() =>
+            {
+                var users = this.context.Users;
+                userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
+
+            });
 
             return userDtos;
         }
@@ -267,51 +273,53 @@
             return (await this.GetUserByUsernameAsync(username)).Trainer == null;
         }
 
-        public int CalculateCalories(string username)
+        public async Task<int> CalculateCaloriesAsync(string username)
         {
             double result = 0;
-
-            var realUser = this.context
-                .Users
-                .Include(user => user.FitnessPlan)
-                .SingleOrDefault(user => user.UserName == username);
-
-            if (realUser.Gender == Gender.Male)
+            await Task.Run(async () =>
             {
-                result = (double)(66.4730 + (13.7516 * realUser.Weight) + (5.0033 * realUser.Height) - (6.7550 * realUser.Age));
-            }
-            else if (realUser.Gender == Gender.Female)
-            {
-                result = (double)(655.0955 + (9.5634 * realUser.Weight) + (1.8496 * realUser.Height) - (4.6756 * realUser.Age));
-            }
+                var realUser = await this.context
+                   .Users
+                   .Include(user => user.FitnessPlan)
+                   .SingleOrDefaultAsync(user => user.UserName == username);
 
-            switch (realUser.Activity)
-            {
-                case ActityLevel.Zero:
-                    result *= 1.2;
-                    break;
-                case ActityLevel.OneToThree:
-                    result *= 1.375;
-                    break;
-                case ActityLevel.ThreeToFive:
-                    result *= 1.55;
-                    break;
-                case ActityLevel.SixToServen:
-                    result *= 1.725;
-                    break;
-                case ActityLevel.Beast:
-                    result *= 1.9;
-                    break;
-            }
+                if (realUser.Gender == Gender.Male)
+                {
+                    result = (double)(66.4730 + (13.7516 * realUser.Weight) + (5.0033 * realUser.Height) - (6.7550 * realUser.Age));
+                }
+                else if (realUser.Gender == Gender.Female)
+                {
+                    result = (double)(655.0955 + (9.5634 * realUser.Weight) + (1.8496 * realUser.Height) - (4.6756 * realUser.Age));
+                }
 
-            realUser.FitnessPlan.CaloriesGoal = (int)result;
+                switch (realUser.Activity)
+                {
+                    case ActityLevel.Zero:
+                        result *= 1.2;
+                        break;
+                    case ActityLevel.OneToThree:
+                        result *= 1.375;
+                        break;
+                    case ActityLevel.ThreeToFive:
+                        result *= 1.55;
+                        break;
+                    case ActityLevel.SixToServen:
+                        result *= 1.725;
+                        break;
+                    case ActityLevel.Beast:
+                        result *= 1.9;
+                        break;
+                }
 
+                realUser.FitnessPlan.CaloriesGoal = (int)result;
+            });
+          
             return (int)result;
         }
 
-        public bool SetFitnessPlanToUser(ClientViewModel model)
+        public async Task<bool> SetFitnessPlanToUserAsync(ClientViewModel model)
         {
-            var user = this.GetUserByUsernameAsync(model.UserName).Result;
+            var user = await this.GetUserByUsernameAsync(model.UserName);
 
             var exercises = model.WorkoutViewModel.Exercises;
             var fitnessPlan = this.mapper.Map<FitnessPlan>(model);
@@ -320,12 +328,12 @@
             user.FitnessPlan = fitnessPlan;
 
             this.context.Update(user);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return user.FitnessPlan != null;
         }
 
-        public async Task<UserProfile> GetUserProfileModel(string username)
+        public async Task<UserProfile> GetUserProfileModelAsync(string username)
         {
             var userFromDb = this.mapper.Map<UserProfile>
                 (await this.context.Users.FirstOrDefaultAsync(user => user.UserName == username));
@@ -333,9 +341,9 @@
             return userFromDb;
         }
 
-        public void UpdateProfile(UserProfile model, string username)
+        public async Task UpdateProfileAsync(UserProfile model, string username)
         {
-            var userFromDb = this.context.Users.FirstOrDefault(user => user.UserName == username);
+            var userFromDb = await this.context.Users.SingleOrDefaultAsync(user => user.UserName == username);
 
             if (userFromDb != null)
             {
@@ -346,8 +354,33 @@
                 userFromDb.Age = model.Age;
 
                 this.context.Update(userFromDb);
-                this.context.SaveChanges();
+                await this.context.SaveChangesAsync();
             }
+        }
+
+        public async Task<IndexModel> GetIndexModelAsync(ClaimsPrincipal user)
+        {
+            IndexModel model = new IndexModel();
+
+            await Task.Run(async () =>
+            {
+                if (user.IsInRole(GlobalConstants.TrainerRoleName))
+                {
+                    model.ClientNames = (await
+                        this.GetUserByUsernameAsync(user.Identity.Name)).Clients.Select(client => client.UserName);
+                }
+                else if (user.IsInRole(GlobalConstants.ClientRoleName))
+                {
+                    model.TrainerName = (await 
+                        this.GetUserByUsernameAsync(user.Identity.Name)).Trainer?.UserName;
+                }
+                else if (user.IsInRole(GlobalConstants.AdministratorRoleName))
+                {
+                    model.ClientNames = (await this.GetAllUsersAsync()).Select(x => x.UserName);
+                }
+            });
+
+            return model;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿namespace Olympia.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+
     using Olympia.Common;
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
+
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -13,7 +15,10 @@
         private readonly IUsersService usersService;
         private readonly IShopService shopService;
 
-        public HomeController(IBlogService blogsService, IUsersService usersService, IShopService shopService)
+        public HomeController(
+            IBlogService blogsService,
+            IUsersService usersService,
+            IShopService shopService)
         {
             this.blogsService = blogsService;
             this.usersService = usersService;
@@ -56,23 +61,7 @@
 
         public async Task<IActionResult> Chat()
         {
-            IndexModel model = new IndexModel();
-
-            if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
-            {
-                model.ClientNames = (await this.usersService
-                    .GetUserByUsernameAsync(this.User.Identity.Name)).Clients.Select(client => client.UserName);
-            }
-            else if (this.User.IsInRole(GlobalConstants.ClientRoleName))
-            {
-                model.TrainerName = (await this.usersService
-                    .GetUserByUsernameAsync(this.User.Identity.Name)).Trainer?.UserName;
-            }
-            else if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-            {
-                model.ClientNames = this.usersService.GetAllUsers().Select(x => x.UserName);
-            }
-
+            IndexModel model = await this.usersService.GetIndexModelAsync(this.User);
             return this.View(model);
         }
     }
