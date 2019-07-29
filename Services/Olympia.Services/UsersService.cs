@@ -25,6 +25,7 @@
         private readonly OlympiaDbContext context;
         private readonly IMapper mapper;
         private readonly UserManager<OlympiaUser> userManager;
+        private readonly RoleManager<OlympiaUserRole> roleManager;
 
         public UsersService(
             OlympiaDbContext context,
@@ -36,25 +37,38 @@
             this.userManager = userManager;
         }
 
+        public UsersService(
+            OlympiaDbContext context,
+            IMapper mapper,
+            UserManager<OlympiaUser> userManager,
+            RoleManager<OlympiaUserRole> roleManager)
+        {
+            this.context = context;
+            this.mapper = mapper;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
+        }
+
 
         public async Task<IEnumerable<OlympiaUser>> GetAllTrainersAsync()
         {
             IEnumerable<OlympiaUser> trainers = new List<OlympiaUser>();
 
-            await Task.Run(() =>
+            // var trainers = await this.userManager.GetUsersInRoleAsync(GlobalConstants.TrainerRoleName);
+            // cannot include articles when using user manager
+            await Task.Run(async () =>
             {
-                var users = this.context
-                .Users
-                .Where(x => this.userManager.IsInRoleAsync(x, GlobalConstants.TrainerRoleName)
-                .GetAwaiter()
-                .GetResult());
+                var adminRole = await this.roleManager.GetRoleIdAsync(await this.roleManager.FindByNameAsync(GlobalConstants.TrainerRoleName));
+                var trainerIds = this.context.UserRoles
+                    .Where(ur => ur.RoleId == adminRole)
+                    .Select(x => x.UserId)
+                    .ToList();
 
-                foreach (var user in users)
-                {
-                    user.Articles = this.context.Articles.Where(x => x.AuthorId == user.Id).OrderByDescending(x => x.TimesRead).ToList();
-                }
-
-                trainers = users;
+                trainers = this.context
+                    .Users
+                    .Include(x => x.Articles)
+                    .Where(id => trainerIds.Any(x => x == id.Id))
+                    .OrderByDescending(trainer => trainer.Rating);
             });
 
             return trainers;
@@ -313,7 +327,7 @@
 
                 realUser.FitnessPlan.CaloriesGoal = (int)result;
             });
-          
+
             return (int)result;
         }
 
@@ -371,7 +385,7 @@
                 }
                 else if (user.IsInRole(GlobalConstants.ClientRoleName))
                 {
-                    model.TrainerName = (await 
+                    model.TrainerName = (await
                         this.GetUserByUsernameAsync(user.Identity.Name)).Trainer?.UserName;
                 }
                 else if (user.IsInRole(GlobalConstants.AdministratorRoleName))

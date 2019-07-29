@@ -13,27 +13,29 @@
 <div>
     <div class="row">
         <div class="leftcolumn col-md-9">
-            <div class="card">
+            <div class="card border-danger">
                 <div class="d-flex justify-content-between">
                     <h2>@Model.Name</h2>
                     <h2>@Model.Price $</h2>
                 </div>
-                <img src="@Model.ImgUrl" class="card-img">
-                <p class="mt-4" contenteditable>@Model.Description</p>
-            </div>
-            <div class="leftcolumn col-md-9 mt-4">
+                <hr class="bg-danger w-100" />
+                <div class="card-body">
+                    <img class="card-img" src="@Model.ImgUrl" alt="Loading..." />
+                    <p class="text-center text-capitalize">@Model.Description</p>
+                </div>
                 <a asp-area="AreaShop"
                    asp-controller="Shop"
                    asp-action="AddToCart"
                    asp-route-itemId="@Model.Id"
-                   class="btn btn-danger col-md-12">Add To Cart</a>
-            </div>
+                   class="btn btn-danger col-md-12 w-100">Add To Cart</a>
+            </div>  
         </div>
         <div class="rightcolumn col-md-3">
             <div class="card">
-                <h2 class="mb-3 text-center">About @Model.Supplier.Name</h2>
-                <div></div>
-                <p class="card-text mt-3">@Model.Supplier.Description</p>
+                <h2 class="mb-3 text-center">About <strong class="text-danger">@Model.Supplier.Name</strong></h2>
+                <div>
+                    <p class="card-text text-center mt-3"><i>@Model.Supplier.Description</i></p>
+                </div>               
             </div>
         </div>
         

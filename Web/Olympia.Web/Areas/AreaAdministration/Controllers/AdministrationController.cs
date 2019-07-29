@@ -107,10 +107,8 @@
             }
 
             await this.shopService.CreateItemAsync(model);
-
-            var items = this.shopService.GetAllItems();
-            var shopViewModel = new ShopViewModel() { Items = items };
-            return this.View("ItemsAll", shopViewModel);
+                        
+            return this.View("Success");
         }
 
         public IActionResult AddSupplier()

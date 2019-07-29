@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Moq;
+
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Domain.Enums;
@@ -16,6 +17,7 @@
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Data.Seeding;
+
     using Olympia.Services.Contracts;
     using System.Collections.Generic;
     using System.Linq;

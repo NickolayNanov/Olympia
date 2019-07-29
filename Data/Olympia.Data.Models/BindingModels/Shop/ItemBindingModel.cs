@@ -22,8 +22,8 @@
         public string Name { get; set; }
 
         [Required]
-        [Range(typeof(decimal), "0.01", "10000.0", ErrorMessage = GlobalConstants.ItemPriceErrorMessage)]
-        public decimal Price { get; set; }
+        [Range(0.01, 9999.99, ErrorMessage = GlobalConstants.ItemPriceErrorMessage)]
+        public double Price { get; set; }
 
         [Required]
         [Display(Name = GlobalConstants.DisplayCategoryName)]

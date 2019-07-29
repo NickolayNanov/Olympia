@@ -1358,7 +1358,9 @@
         {
             if (!this.context.Items.Any())
             {
-                var category = this.context.ChildCategories.SingleOrDefault(cat => cat.Name == "Fitness");
+                var fitnessCategory = this.context.ChildCategories.SingleOrDefault(cat => cat.Name == "Fitness");
+                var clothingCategory = this.context.ChildCategories.SingleOrDefault(cat => cat.Name == "Clothing");
+                var supplementsCategory = this.context.ChildCategories.SingleOrDefault(cat => cat.Name == "Supplements");
 
                 var supplier = this.context.Suppliers.SingleOrDefault(supp => supp.Name == "GymBeam");
 
@@ -1379,7 +1381,9 @@
 
                 foreach (var item in items)
                 {
-                    item.ItemCategories.Add(new ItemCategory { ChildCategory = category, Item = item });
+                    item.ItemCategories.Add(new ItemCategory { ChildCategory = fitnessCategory, Item = item });
+                    item.ItemCategories.Add(new ItemCategory { ChildCategory = clothingCategory, Item = item });
+                    item.ItemCategories.Add(new ItemCategory { ChildCategory = supplementsCategory, Item = item });
                 }
 
                 this.context.Items.AddRange(items);

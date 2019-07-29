@@ -28,7 +28,7 @@
             @foreach (var item in Model.Items)
             {
                 <div class="col-md-3 card mr-5 mb-4">
-                    <i><h5 class=" text-center">@item.Name</h5></i>
+                    <h5><i class=" text-center">@item.Name</i></h5>
                     <img class="card-img" src="@item.ImgUrl" alt="Loading..." />
                     <div class="d-flex justify-content-center">
                         <strong><p class="text-center">@item.Supplier.Name</p></strong>

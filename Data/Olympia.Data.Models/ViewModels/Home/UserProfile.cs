@@ -1,9 +1,9 @@
-﻿using Olympia.Common;
-using Olympia.Data.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
-
-namespace Olympia.Data.Models.ViewModels.Home
+﻿namespace Olympia.Data.Models.ViewModels.Home
 {
+    using Olympia.Common;
+    using Olympia.Data.Domain.Enums;
+    using System.ComponentModel.DataAnnotations;
+
     public class UserProfile
     {
         public string UserName { get; set; }

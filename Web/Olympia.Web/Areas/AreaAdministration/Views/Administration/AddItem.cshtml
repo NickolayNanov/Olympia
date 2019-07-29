@@ -5,8 +5,12 @@
     ViewData["Title"] = "AddItem";
 }
 
-<div class="container container-fluid">    
-    <form method="post" enctype="multipart/form-data" asp-antiforgery="true">
+<div class="container container-fluid">
+    <form method="post" enctype="multipart/form-data"
+          asp-antiforgery="true"
+          asp-area="AreaAdministration"
+          asp-controller="Administration"
+          asp-action="CreateItem">
         <h4>Create a new item.</h4>
         <hr class="w-100" />
         <div asp-validation-summary="All" class="text-danger"></div>
@@ -17,7 +21,7 @@
         </div>
         <div class="form-group">
             <label asp-for="@Model.SupplierName"></label>
-            <select asp-for="@Model.SupplierName" class="form-control"  asp-items="@(new SelectList(Model.SupplierNames))"></select>
+            <select asp-for="@Model.SupplierName" class="form-control" asp-items="@(new SelectList(Model.SupplierNames))"></select>
             <span asp-validation-for="@Model.SupplierName" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -27,7 +31,7 @@
         </div>
         <div class="form-group">
             <label asp-for="@Model.Price"></label>
-            <input type="number" asp-for="@Model.Price" class="form-control" />
+            <input type="number" asp-for="@Model.Price" class="form-control" step="0.01" />
             <span asp-validation-for="@Model.Price" class="text-danger"></span>
         </div>
         <div class="d-flex justify-content-around">
@@ -43,11 +47,7 @@
                 <span asp-validation-for="@Model.ImgUrl" class="text-danger"></span>
             </div>
         </div>
-
-        <button class="btn btn-danger form-control mt-5"
-                asp-area="AreaAdministration"
-                asp-controller="Administration"
-                asp-action="CreateItem">
+        <button class="btn btn-danger form-control mt-5">
             Create
         </button>
     </form>

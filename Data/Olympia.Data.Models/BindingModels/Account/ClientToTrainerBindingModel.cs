@@ -39,8 +39,12 @@
         [DataType(DataType.Upload)]
         public IFormFile ProfilePictureUrl { get; set; }
 
+        [Required]
+        [Range(1, 999)]
         public double Weight { get; set; }
 
+        [Required]
+        [Range(1, 999)]
         public double Height { get; set; }
 
         [Required]

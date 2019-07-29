@@ -9,7 +9,8 @@
     <a class="btn btn-danger"
        asp-area="AreaClient"
        asp-controller="Client"
-       asp-action="LeaveTrainer">
+       asp-action="LeaveTrainer"
+       asp-route-trainerUsername="@Model.UserName">
         Break contract
     </a>
 </div>

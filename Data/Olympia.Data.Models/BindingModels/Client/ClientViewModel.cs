@@ -24,6 +24,8 @@
 
         public int Age { get; set; }
 
+        public string TrainerName { get; set; }
+
         public ActityLevel Activity { get; set; }
 
         public Gender Gender { get; set; }

@@ -51,7 +51,6 @@
 
             return this.View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> ChooseTrainer(UsernamesAndTrainerNameModel model)
         {
@@ -64,7 +63,9 @@
 
             if (currnetUser.Weight == null || currnetUser.Height == null)
             {
-                return this.View("EditWeightHeight");
+                var modelForEditView = new ClientViewModel() { TrainerName = model.TrainerName };
+
+                return this.View("EditWeightHeight", modelForEditView);
             }
 
             await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
@@ -108,10 +109,10 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateWeightHeight(ClientViewModel model)
+        public async Task<IActionResult> UpdateWeightHeight(ClientViewModel model, string trainerName)
         {
-
             await this.usersService.UpdateUserHeightAndWeightAsync(model, this.User.Identity.Name);
+            await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
 
             return this.Redirect(GlobalConstants.ClientTrainersAll);
         }

@@ -10,7 +10,8 @@
 <form method="post" class="form-group"
       asp-area="AreaClient"
       asp-controller="Client"
-      asp-action="UpdateWeightHeight">
+      asp-action="UpdateWeightHeight"
+      asp-route-trainerName="@Model.TrainerName">
     <div class="form-group">
         <label asp-for="@Model.Activity"></label>
         <select asp-for="@Model.Activity" class="form-control" asp-items="@Html.GetEnumSelectList<Olympia.Data.Domain.Enums.ActityLevel>()"></select>
