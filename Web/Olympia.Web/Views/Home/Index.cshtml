@@ -28,7 +28,7 @@ else
             {
                 @foreach (var article in articles)
                 {
-                    <div class="card d-flex justify-content-between col-md-4" style="background-color:lightblue">
+                    <div class="card d-flex justify-content-between col-md-4" style="background:#f0ffff">
                         <img class="card-img" src="@article.ImgUrl" alt="Bologna">
                         <div class="card-body">
                             <h4 class="card-title">@article.Title</h4>
@@ -65,7 +65,7 @@ else
                 {
                     @foreach (var item in Model.Items)
                     {
-                        <div class="col-md-3 card mr-5 mb-4" style="background-color:lightblue">
+                        <div class="col-md-3 card mr-5 mb-4" style="background:#f0ffff">
                             <i><h5 class=" text-center">@item.Name</h5></i>
                             <img class="card-img" src="@item.ImgUrl" alt="Loading..." />
                             <div class="d-flex justify-content-center">

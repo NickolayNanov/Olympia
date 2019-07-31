@@ -268,7 +268,7 @@
 
             await Task.Run(() =>
             {
-                var users = this.context.Users;
+                var users = this.context.Users.Where(x => x.UserName != "God");
                 userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
 
             });

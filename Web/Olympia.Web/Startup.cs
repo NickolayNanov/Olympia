@@ -84,7 +84,7 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, RoleManager<OlympiaUserRole> roleManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var optionsBuilder = new DbContextOptionsBuilder<OlympiaDbContext>();
             optionsBuilder.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection"));

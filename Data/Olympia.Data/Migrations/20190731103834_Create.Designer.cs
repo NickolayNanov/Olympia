@@ -10,8 +10,8 @@ using Olympia.Data;
 namespace Olympia.Data.Migrations
 {
     [DbContext(typeof(OlympiaDbContext))]
-    [Migration("20190729121228_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190731103834_Create")]
+    partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

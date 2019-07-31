@@ -162,7 +162,7 @@
                 doesContain = this.context.Articles.Contains(articleFromDb);
             });
 
-            return doesContain;
+            return !doesContain;
         }
     }
 }

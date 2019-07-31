@@ -119,6 +119,7 @@
                 .FirstOrDefaultAsync(x => x.Name == categoryName))?
                 .ItemCategories
                 .Select(x => x.Item)
+                .OrderByDescending(x => x.CreatedOn)
                 .AsQueryable())
                 .AsEnumerable();
             });

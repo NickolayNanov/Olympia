@@ -29,7 +29,7 @@
 
         public async Task<IActionResult> Items(string categoryName)
         {
-            if(categoryName != "Fitness" && categoryName != "Supplements" && categoryName != "Clothing")
+            if (categoryName != "Fitness" && categoryName != "Supplements" && categoryName != "Clothing")
             {
                 return this.Redirect("/Home/Error");
             }
@@ -44,36 +44,45 @@
 
         public async Task<IActionResult> ItemDetails(int itemId)
         {
-            if (itemId == 0)
+            var item = await this.shopService.GetItemDtoByIdAsync(itemId);
+
+            if (item == null)
             {
-                return this.Redirect("/Error");
+                return this.Redirect(GlobalConstants.ErrorPage);
             }
 
-            var item = await this.shopService.GetItemDtoByIdAsync(itemId);
             return this.View(item);
         }
 
         public async Task<IActionResult> AddToCart(int itemId)
         {
-            var result = await
-                this.shopService
-                .AddItemToUserCartAsync(itemId, this.User.Identity.Name);
-
-            if (!result)
+            try
             {
-                this.ViewData["Errors"] = GlobalConstants.AlreadyAddedThisItem;
+                var result = await
+                    this.shopService
+                    .AddItemToUserCartAsync(itemId, this.User.Identity.Name);
+
+                if (!result)
+                {
+                    this.ViewData["Errors"] = GlobalConstants.AlreadyAddedThisItem;
+                }
+
+                var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
+                var items = this.shopService.GetAllItems();
+
+                ShopViewModel shopViewModel = new ShopViewModel
+                {
+                    Items = items,
+                    ShoppingCart = cart
+                };
+
+                return this.View("ItemsAll", shopViewModel);
             }
-
-            var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
-            var items = this.shopService.GetAllItems();
-
-            ShopViewModel shopViewModel = new ShopViewModel
+            catch
             {
-                Items = items,
-                ShoppingCart = cart
-            };
+                return this.Redirect(GlobalConstants.ErrorPage);
 
-            return this.View("ItemsAll", shopViewModel);
+            }
         }
 
         public async Task<IActionResult> ShoppingCart()
@@ -84,19 +93,26 @@
 
         public async Task<IActionResult> RemoveFromCart(int itemId)
         {
-            await this.shopService.RemoveFromCartAsync(this.User.Identity.Name, itemId);
-            var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
+            try
+            {
+                await this.shopService.RemoveFromCartAsync(this.User.Identity.Name, itemId);
+                var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
-            return this.View("ShoppingCart", cart);
+                return this.View("ShoppingCart", cart);
+            }
+            catch
+            {
+                return this.View(GlobalConstants.ErrorPage);
+            }
         }
 
         public async Task<IActionResult> IncreaseCount(int itemId)
         {
             var result = await this.shopService.IncreaseTimesItemIsBoughtAsync(itemId);
 
-            if(result == false)
+            if (result == false)
             {
-                return this.Redirect("/Home/Error");
+                return this.Redirect(GlobalConstants.ErrorPage);
             }
 
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
@@ -110,7 +126,7 @@
 
             if (result == false)
             {
-                return this.Redirect("/Home/Error");
+                return this.Redirect(GlobalConstants.ErrorPage);
             }
 
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
@@ -150,7 +166,7 @@
 
             if (result == false)
             {
-                return this.Redirect("/Home/Error");
+                return this.Redirect(GlobalConstants.ErrorPage);
             }
 
             var orders = await this.shopService.GetAllOrdersByUsernameAsync(this.User.Identity.Name);

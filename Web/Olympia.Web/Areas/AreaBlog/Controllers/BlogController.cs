@@ -27,6 +27,12 @@
         public async Task<IActionResult> ArticleDetails(int articleId)
         {
             var article = await this.blogService.GetArticleAndIncrementTimesReadAsync(articleId);
+
+            if(article == null)
+            {
+                return this.Redirect(GlobalConstants.ErrorPage);
+            }
+
             return this.View(article);
         }
     }

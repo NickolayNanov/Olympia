@@ -11,7 +11,7 @@
         <div class="card">
             <h2 class="text-center">@Model.Title</h2>
             <img src="@Model.ImgUrl" class="card-img">
-            <p class="mt-4" contenteditable>@Model.Content</p>
+            <p class="mt-4 font-weight-normal" contenteditable>@Model.Content</p>
         </div>
     </div>
     <div class="rightcolumn">
@@ -37,11 +37,12 @@
             }
             else
             {
-                <p class="mt-3">@Model.Author.Description</p>
+                <p class="mt-3 font-weight-normal">@Model.Author.Description</p>
             }
         </div>
         <div class="card">
             <h3>Popular Posts</h3>
+            <hr class="bg-danger w-100" />
             @foreach (var article in popularArticle.Where(article => article.Id != Model.Id))
             {
                 <div class="row">
