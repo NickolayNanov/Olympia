@@ -2,8 +2,10 @@
 namespace Olympia.Data.Domain
 {
     using Microsoft.AspNetCore.Identity;
+
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain.Enums;
+
     using System;
     using System.Collections.Generic;
 

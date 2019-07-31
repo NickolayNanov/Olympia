@@ -56,8 +56,6 @@
         {
             IEnumerable<OlympiaUser> trainers = new List<OlympiaUser>();
 
-            // var trainers = await this.userManager.GetUsersInRoleAsync(GlobalConstants.TrainerRoleName);
-            // cannot include articles when using user manager
             await Task.Run(async () =>
             {
                 var adminRole = await this.roleManager.GetRoleIdAsync(await this.roleManager.FindByNameAsync(GlobalConstants.TrainerRoleName));
@@ -124,8 +122,8 @@
         public async Task<ClientViewModel> GetUserWithFitnessPlanModelAsync(string username)
         {
             var user = await this.GetUserByUsernameAsync(username);
-
             var dto = this.mapper.Map<ClientViewModel>(user);
+
             return dto;
         }
 
@@ -177,12 +175,13 @@
             }
 
             realUser.OlympiaUserRole.Clear();
+
             this.context.Update(realUser);
             await this.context.SaveChangesAsync();
-             
+
             await this.userManager.UpdateSecurityStampAsync(realUser);
 
-            
+
             var roleHasChanged = await this.userManager.AddToRoleAsync(realUser, GlobalConstants.TrainerRoleName);
 
             if (!roleHasChanged.Succeeded)
@@ -247,13 +246,14 @@
             if (userToDelete != null)
             {
                 this.context.Articles.RemoveRange(this.context.Articles.Where(x => x.AuthorId == userToDelete.Id));
+
                 if (this.context.UserRoles.Any(x => x.UserId == userToDelete.Id))
                 {
                     this.context.UserRoles.Remove(this.context.UserRoles.FirstOrDefault(x => x.UserId == userToDelete.Id));
                     await this.context.SaveChangesAsync();
                 }
-                this.context.FitnessPlans.Remove(this.context.FitnessPlans.SingleOrDefault(x => x.OwnerId == userToDelete.Id));
 
+                this.context.FitnessPlans.Remove(this.context.FitnessPlans.SingleOrDefault(x => x.OwnerId == userToDelete.Id));
                 this.context.Users.Remove(userToDelete);
 
                 await this.context.SaveChangesAsync();
@@ -297,6 +297,7 @@
         public async Task<int> CalculateCaloriesAsync(string username)
         {
             double result = 0;
+
             await Task.Run(async () =>
             {
                 var realUser = await this.context

@@ -2,6 +2,7 @@
 {
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain;
+
     using System;
 
     public class ArticleViewModel : BaseModel<int>

@@ -2,6 +2,7 @@
 {
     using Olympia.Common;
     using Olympia.Data.Domain.Enums;
+
     using System.ComponentModel.DataAnnotations;
 
     public class UserProfile

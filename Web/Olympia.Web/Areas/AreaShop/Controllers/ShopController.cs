@@ -19,9 +19,9 @@
             this.shopService = shopService;
         }
 
-        public IActionResult ShopIndex()
+        public async Task<IActionResult> ShopIndex()
         {
-            var items = this.shopService.GetAllItems();
+            var items = await this.shopService.GetAllItemsAsync();
 
             ShopViewModel shopViewModel = new ShopViewModel { Items = items };
             return this.View(shopViewModel);
@@ -68,7 +68,7 @@
                 }
 
                 var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
-                var items = this.shopService.GetAllItems();
+                var items = await this.shopService.GetAllItemsAsync();
 
                 ShopViewModel shopViewModel = new ShopViewModel
                 {

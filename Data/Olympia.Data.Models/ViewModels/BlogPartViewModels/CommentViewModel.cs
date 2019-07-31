@@ -3,6 +3,7 @@
     using Olympia.Common;
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain;
+
     using System.ComponentModel.DataAnnotations;
 
     public class CommentViewModel : BaseModel<int>

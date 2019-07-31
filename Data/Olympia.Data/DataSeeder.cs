@@ -3,6 +3,7 @@
     using Olympia.Data.Domain;
     using Olympia.Data.Domain.Enums;
     using System.Collections.Generic;
+
     using System.Linq;
 
     public class DataSeeder

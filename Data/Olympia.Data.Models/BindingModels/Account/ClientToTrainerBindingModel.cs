@@ -1,8 +1,10 @@
 ﻿namespace Olympia.Data.Models.BindingModels.Account
 {
     using Microsoft.AspNetCore.Http;
+
     using Olympia.Common;
     using Olympia.Data.Domain.Enums;
+
     using System.ComponentModel.DataAnnotations;
 
     public class ClientToTrainerBindingModel

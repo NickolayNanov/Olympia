@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Data.Models.BindingModels.Account
 {
     using Olympia.Common;
+
     using System.ComponentModel.DataAnnotations;
 
     public class UserLoginBindingModel

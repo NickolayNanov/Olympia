@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Data.Domain
 {
     using Olympia.Data.Common.Models;
+
     using System;
     using System.ComponentModel.DataAnnotations;
 

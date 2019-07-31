@@ -3,12 +3,14 @@
     using AutoMapper;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+
     using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+
     using System.Linq;
     using System.Threading.Tasks;
 

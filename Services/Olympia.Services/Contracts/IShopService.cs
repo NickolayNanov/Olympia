@@ -13,7 +13,7 @@
 
         Task<Item> GetItemByIdAsync(int itemId);
 
-        IEnumerable<ItemViewModel> GetAllItems();
+        Task<IEnumerable<ItemViewModel>> GetAllItemsAsync();
 
         Task<bool> CreateItemAsync(ItemBindingModel model);
 
@@ -21,7 +21,7 @@
 
         Task<ItemViewModel> GetItemDtoByIdAsync(int itemId);
 
-        IEnumerable<Supplier> GetAllSuppliers();
+        Task<IEnumerable<Supplier>> GetAllSuppliersAsync();
 
         Task<bool> AddItemToUserCartAsync(int itemId, string username);
 

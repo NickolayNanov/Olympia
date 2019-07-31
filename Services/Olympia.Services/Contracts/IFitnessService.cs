@@ -5,21 +5,22 @@
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Data.Models.ViewModels.Shop;
+
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IFitnessService
     {
-        IEnumerable<WorkoutViewModel> GetWorkouts(WorkoutBindingModel model);
+        Task<IEnumerable<WorkoutViewModel>> GetWorkoutsAsync(WorkoutBindingModel model);
 
-        WorkoutViewModel GetWorkoutById(int workoutId);
+        Task<WorkoutViewModel> GetWorkoutByIdAsync(int workoutId);
 
         Task<bool> AddSupplierAsync(SupplierBindingModel model);
 
-        IEnumerable<Supplier> GetAllSuppliers();
+        Task<IEnumerable<Supplier>> GetAllSuppliersAsync();
 
-        ShopViewModel GetAllItems();
+        Task<ShopViewModel> GetAllItemsAsync();
 
-        Task<FitnessPlanViewModel> GetFitnessPlanByUsername(string username);
+        Task<FitnessPlanViewModel> GetFitnessPlanByUsernameAsync(string username);
     }
 }

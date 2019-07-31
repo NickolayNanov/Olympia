@@ -2,12 +2,14 @@
 {
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
+
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -94,11 +96,16 @@
             return this.context.Items.Contains(item);
         }
 
-        public IEnumerable<ItemViewModel> GetAllItems()
+        public async Task<IEnumerable<ItemViewModel>> GetAllItemsAsync()
         {
-            var itemsViewModels = this.mapper.ProjectTo<ItemViewModel>(this.context.Items).AsEnumerable();
+            IEnumerable<ItemViewModel> items = new List<ItemViewModel>();
 
-            return itemsViewModels;
+            await Task.Run(() =>
+            {
+                items = this.mapper.ProjectTo<ItemViewModel>(this.context.Items).AsEnumerable();
+            });
+
+            return items;
         }
 
         public async Task<IEnumerable<ItemViewModel>> GetAllItemsByCategoryAsync(string categoryName)
@@ -132,9 +139,16 @@
             return ShopViewModels;
         }
 
-        public IEnumerable<Supplier> GetAllSuppliers()
+        public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync()
         {
-            return this.context.Suppliers.Include(x => x.Items).AsEnumerable();
+            IEnumerable<Supplier> suppliers = new List<Supplier>();
+
+            await Task.Run(() =>
+            {
+                suppliers = this.context.Suppliers.Include(x => x.Items).AsEnumerable();
+            });
+
+            return suppliers;
         }
 
         public async Task<ItemViewModel> GetItemDtoByIdAsync(int itemId)
@@ -217,7 +231,7 @@
                 .ThenInclude(sh => sh.ShoppingCart)
                 .SingleOrDefaultAsync(u => u.UserName == name));
 
-            if(userFromDb == null)
+            if (userFromDb == null)
             {
                 return null;
             }
@@ -248,7 +262,7 @@
 
             var cart = await this.GetShoppingCartByUserNameAsync(username);
 
-            if(cart == null)
+            if (cart == null)
             {
                 return false;
             }
@@ -257,7 +271,7 @@
 
             if (!cartItemsIds.Contains(itemId))
             {
-                return false;               
+                return false;
             }
             else
             {
@@ -280,7 +294,7 @@
         {
             var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
 
-            if(item == null)
+            if (item == null)
             {
                 return false;
             }
@@ -298,7 +312,7 @@
         {
             var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
 
-            if(item == null)
+            if (item == null)
             {
                 return false;
             }
@@ -346,7 +360,7 @@
 
             var cart = await this.GetShoppingCartByUserNameAsync(name);
 
-            if(cart == null)
+            if (cart == null)
             {
                 return false;
             }
@@ -405,8 +419,8 @@
         public async Task<bool> CompleteOrderAsync(int orderId)
         {
             var orderFromDb = await this.context.Orders.Include(ord => ord.OrderItems).SingleOrDefaultAsync(order => order.Id == orderId);
-            
-            if(orderFromDb == null)
+
+            if (orderFromDb == null)
             {
                 return false;
             }

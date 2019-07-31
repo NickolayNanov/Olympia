@@ -6,7 +6,6 @@
     using Olympia.Common;
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.BindingModels.Shop;
-    using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
 
     using System.Linq;
@@ -67,9 +66,9 @@
             return this.View(articles);
         }
 
-        public IActionResult ItemsAll()
+        public async Task<IActionResult> ItemsAll()
         {
-            var items = this.fitnessService.GetAllItems();
+            var items = await this.fitnessService.GetAllItemsAsync();
             return this.View(items);
         }
 
@@ -86,9 +85,10 @@
             await this.blogService.DeleteArticleByIdAsync(articleId);
             return this.Redirect(GlobalConstants.AdministrationArticles);
         }
-        public IActionResult AddItem()
+
+        public async Task<IActionResult> AddItem()
         {
-            var names = this.fitnessService.GetAllSuppliers().Select(x => x.Name);
+            var names = (await this.fitnessService.GetAllSuppliersAsync()).Select(x => x.Name);
             return this.View(new ItemBindingModel() { SupplierNames = names });
         }
 
@@ -107,7 +107,6 @@
             }
 
             await this.shopService.CreateItemAsync(model);
-                        
             return this.View("Success");
         }
 
@@ -132,20 +131,20 @@
                 return this.View(model);
             }
 
-            var suppliers = this.fitnessService.GetAllSuppliers();
+            var suppliers = await this.fitnessService.GetAllSuppliersAsync();
             return this.View("SuppliersAll", suppliers);
         }
 
-        public IActionResult SuppliersAll()
+        public async Task<IActionResult> SuppliersAll()
         {
-            var suppliers = this.shopService.GetAllSuppliers();
+            var suppliers = await this.shopService.GetAllSuppliersAsync();
             return this.View(suppliers);
         }
 
         public async Task<IActionResult> DeleteItem(int itemId)
         {
             await this.shopService.DeleteItemAsync(itemId);
-            var items = this.fitnessService.GetAllItems();
+            var items = await this.fitnessService.GetAllItemsAsync();
 
             return this.View("ItemsAll", items);
         }

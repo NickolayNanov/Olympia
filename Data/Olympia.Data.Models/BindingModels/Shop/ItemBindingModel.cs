@@ -1,7 +1,9 @@
 ﻿namespace Olympia.Data.Models.BindingModels.Shop
 {
     using Microsoft.AspNetCore.Http;
+
     using Olympia.Common;
+
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 

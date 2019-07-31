@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Olympia.Common;
-    using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Services.Contracts;
     using System.Threading.Tasks;
 
@@ -28,7 +27,7 @@
         {
             var article = await this.blogService.GetArticleAndIncrementTimesReadAsync(articleId);
 
-            if(article == null)
+            if (article == null)
             {
                 return this.Redirect(GlobalConstants.ErrorPage);
             }

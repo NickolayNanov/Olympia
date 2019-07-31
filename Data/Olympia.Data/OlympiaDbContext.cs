@@ -3,8 +3,10 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+
     using Olympia.Data.Common.Models;
     using Olympia.Data.Domain;
+
     using System;
     using System.Linq;
     using System.Threading;
@@ -22,8 +24,6 @@
         }
 
         public DbSet<OlympiaRolesUsers> OlympiaRolesUsers { get; set; }
-
-        public DbSet<OlympiaUser> Users { get; set; }
 
         public DbSet<Article> Articles { get; set; }
 

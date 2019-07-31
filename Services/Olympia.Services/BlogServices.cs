@@ -2,12 +2,14 @@
 {
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
+
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Blogs;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -146,7 +148,7 @@
         {
             bool doesContain = true;
 
-            if(!this.context.Articles.Select(x => x.Id).Contains(articleId))
+            if (!this.context.Articles.Select(x => x.Id).Contains(articleId))
             {
                 return false;
             }
@@ -156,7 +158,7 @@
                 var articleFromDb = this.context
                 .Articles
                 .SingleOrDefault(article => article.Id == articleId);
-                
+
                 this.context.Articles.Remove(articleFromDb);
                 this.context.SaveChanges();
                 doesContain = this.context.Articles.Contains(articleFromDb);

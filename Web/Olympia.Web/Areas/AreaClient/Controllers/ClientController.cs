@@ -74,10 +74,10 @@
         }
 
         public async Task<IActionResult> BecomeTrainer(string username)
-        {            
+        {
             var user = await this.usersService.GetUserByUsernameAsync(username);
 
-            if(user == null)
+            if (user == null)
             {
                 return this.Redirect("/Home/Error");
             }
@@ -132,7 +132,7 @@
 
         public async Task<IActionResult> MyFitnessPlan()
         {
-            var fitnessPlan = await this.fitnessService.GetFitnessPlanByUsername(this.User.Identity.Name);
+            var fitnessPlan = await this.fitnessService.GetFitnessPlanByUsernameAsync(this.User.Identity.Name);
 
             return this.View(fitnessPlan);
         }

@@ -81,7 +81,7 @@
         {
             var user = await this.usersService.GetUserByUsernameAsync(username);
 
-            if(user == null)
+            if (user == null)
             {
                 return this.Redirect("/Home/Error");
             }
@@ -93,7 +93,7 @@
         {
             var model = await this.usersService.GetUserWithFitnessPlanModelAsync(username);
 
-            if(model == null)
+            if (model == null)
             {
                 return this.Redirect("/Home/Error");
             }
@@ -107,7 +107,7 @@
         }
 
         [HttpPost]
-        public IActionResult FileterWorkouts(ClientViewModel model)
+        public async Task<IActionResult> FileterWorkouts(ClientViewModel model)
         {
             if (model.WorkoutInputModel.Duration == 0 ||
                 model.WorkoutInputModel.WorkoutDifficulty == 0 ||
@@ -116,7 +116,7 @@
                 return this.View("ChooseWorkout", model);
             }
 
-            model.Workouts = this.fitnessService.GetWorkouts(model.WorkoutInputModel);
+            model.Workouts = await this.fitnessService.GetWorkoutsAsync(model.WorkoutInputModel);
             model.WeekWorkoutDuration = model.WorkoutInputModel.Duration;
 
             return this.View("Workouts", model);
@@ -137,11 +137,11 @@
             }
         }
 
-        public IActionResult AssignFitnessPlan(ClientViewModel user, int workoutId)
+        public async Task<IActionResult> AssignFitnessPlan(ClientViewModel user, int workoutId)
         {
             try
             {
-                WorkoutViewModel workout = this.fitnessService.GetWorkoutById(workoutId);
+                WorkoutViewModel workout = await this.fitnessService.GetWorkoutByIdAsync(workoutId);
 
                 if (workout == null)
                 {
@@ -161,9 +161,9 @@
         [HttpPost]
         public async Task<IActionResult> SetFitnessPlan(ClientViewModel model, int workoutId)
         {
-            model.WorkoutViewModel = this.fitnessService.GetWorkoutById(workoutId);
+            model.WorkoutViewModel = await this.fitnessService.GetWorkoutByIdAsync(workoutId);
 
-            if(model.WorkoutViewModel == null)
+            if (model.WorkoutViewModel == null)
             {
                 return this.Redirect("/Home/Error");
             }

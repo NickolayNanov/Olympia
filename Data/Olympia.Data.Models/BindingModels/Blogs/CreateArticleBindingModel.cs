@@ -1,7 +1,9 @@
 ﻿namespace Olympia.Data.Models.BindingModels.Blogs
 {
     using Microsoft.AspNetCore.Http;
+
     using Olympia.Common;
+
     using System.ComponentModel.DataAnnotations;
 
     public class CreateArticleBindingModel

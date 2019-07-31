@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Services
 {
     using AutoMapper;
+
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.BindingModels.Blogs;
@@ -11,6 +12,7 @@
     using Olympia.Data.Models.ViewModels.Fitness;
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Data.Models.ViewModels.Shop;
+
     using System.Linq;
 
     public class MappingProfile : Profile

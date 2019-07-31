@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Data.Models.ViewModels.Shop
 {
     using Olympia.Data.Domain;
+
     using System.Collections.Generic;
 
     public class ShopViewModel

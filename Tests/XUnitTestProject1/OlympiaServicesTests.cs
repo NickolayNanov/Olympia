@@ -142,7 +142,7 @@
         {
             this.InitiateInMemmoryDbForBlog();
 
-            var aricle = await this.mockedBlogService.DeleteArticleByIdAsync(1);
+            var aricle = await this.mockedBlogService.DeleteArticleByIdAsync(13);
             Assert.False(aricle);
         }
 
@@ -406,7 +406,7 @@
 
         #region Fitness Service Tests
         [Fact]
-        public void GetWorkoutsShouldReturnAllWorkouts()
+        public async Task GetWorkoutsShouldReturnAllWorkouts()
         {
             this.InitiateInMemmoryDbForFitness();
 
@@ -423,7 +423,7 @@
 
             var actual = this.mockMapper
                 .ProjectTo<WorkoutViewModel>
-                (this.fitnessService.GetWorkouts(model)
+                ((await this.fitnessService.GetWorkoutsAsync(model))
                     .AsQueryable())
                 .AsEnumerable();
 
@@ -431,7 +431,7 @@
         }
 
         [Fact]
-        public void GetWorkoutByIdShouldReturnTheCorrectOne()
+        public async Task GetWorkoutByIdShouldReturnTheCorrectOne()
         {
             this.InitiateInMemmoryDbForFitness();
 
@@ -447,7 +447,7 @@
             var fitnessService = new Mock<FitnessService>(this.context, mockedMapper, mockedUserService).Object;
 
             var expected = 1;
-            var article = fitnessService.GetWorkoutById(1).Id;
+            var article = (await fitnessService.GetWorkoutByIdAsync(1)).Id;
 
             Assert.Equal(expected, article);
         }
@@ -479,7 +479,7 @@
         }
 
         [Fact]
-        public void GetAllSuppliersShouldReturnAllSuppliers()
+        public async Task GetAllSuppliersShouldReturnAllSuppliers()
         {
             this.InitiateInMemmoryDbForFitness();
 
@@ -527,7 +527,7 @@
                         Description = "The best supplier ever."
                     }
                 }.Select(x => x.Name);
-            var actual = fitnessService.GetAllSuppliers().Select(x => x.Name).ToList();
+            var actual = (await fitnessService.GetAllSuppliersAsync()).Select(x => x.Name).ToList();
 
             int index = 0;
 
@@ -538,7 +538,7 @@
         }
 
         [Fact]
-        public void GetAllItemsShouldReturnAllItems()
+        public async Task GetAllItemsShouldReturnAllItems()
         {
             this.InitiateInMemmoryDbForFitness();
 
@@ -568,7 +568,7 @@
                     new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
                     new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you"},
                 }.Select(x => x.Name);
-            var actual = fitnessService.GetAllItems().Items.Select(x => x.Name).ToList();
+            var actual = (await fitnessService.GetAllItemsAsync()).Items.Select(x => x.Name).ToList();
 
             int index = 0;
 
@@ -598,7 +598,7 @@
             var fitnessPlan = this.context.FitnessPlans.Add(new FitnessPlan() { OwnerId = user.Id, Owner = user }).Entity;
             this.context.SaveChanges();
 
-            var actual = await fitnessService.GetFitnessPlanByUsername("Niki");
+            var actual = await fitnessService.GetFitnessPlanByUsernameAsync("Niki");
 
             Assert.Equal(fitnessPlan.Id, actual.Id);
         }
@@ -1253,7 +1253,7 @@
         }
 
         [Fact]
-        public void GetAllItems()
+        public async Task GetAllItems()
         {
             this.InitiateInMemmoryDbForShop();
 
@@ -1269,7 +1269,7 @@
 
             var expectedIds = this.context.Items.Select(x => x.Id).AsEnumerable();
 
-            var actualIds = shoppService.GetAllItems().Select(x => x.Id).ToList();
+            var actualIds = (await shoppService.GetAllItemsAsync()).Select(x => x.Id).ToList();
             var index = 0;
 
 
@@ -1384,7 +1384,7 @@
             var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
             var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
 
-            IEnumerable<int> expectedIds = Enumerable.Range(1, 11);
+            var expectedIds = Enumerable.Range(1, 11).Reverse();
             var actualIds = (await shoppService.GetAllItemsByCategoryAsync("Fitness")).Select(x => x.Id).ToList();
 
             Assert.Equal(expectedIds.Count(), actualIds.Count());
@@ -1439,7 +1439,7 @@
         }
 
         [Fact]
-        public void GetAllSuppliersShouldReturnAll()
+        public async Task GetAllSuppliersShouldReturnAll()
         {
             this.InitiateInMemmoryDbForShop();
 
@@ -1454,7 +1454,7 @@
             var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
 
             var expected = this.context.Suppliers.AsEnumerable();
-            var actual = shoppService.GetAllSuppliers().ToList();
+            var actual = (await shoppService.GetAllSuppliersAsync()).ToList();
             var index = 0;
 
             Assert.Equal(expected.Count(), actual.Count());
@@ -1792,7 +1792,7 @@
             var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
             var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
 
-            if(username == "Pesho")
+            if (username == "Pesho")
             {
                 var user = await this.context.Users.SingleOrDefaultAsync(x => x.UserName == username);
                 var items = this.context.Items.Take(3).ToList();
@@ -1822,7 +1822,7 @@
                     Assert.True(result);
                 }
             }
-        }        
+        }
         #endregion
     }
 }

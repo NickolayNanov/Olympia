@@ -1,7 +1,7 @@
-﻿
-namespace Olympia.Data.Models.BindingModels.Client
+﻿namespace Olympia.Data.Models.BindingModels.Client
 {
     using Olympia.Data.Domain.Enums;
+
     using System.ComponentModel.DataAnnotations;
 
     public class WorkoutBindingModel
