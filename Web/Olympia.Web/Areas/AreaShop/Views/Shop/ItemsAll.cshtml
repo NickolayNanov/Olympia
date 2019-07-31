@@ -10,8 +10,7 @@
     <a class="btn btn-danger col-md-2"
        asp-area="AreaShop"
        asp-controller="Shop"
-       asp-action="ShoppingCart"
-       asp-route-cartId="@Model.ShoppingCart.Id">
+       asp-action="ShoppingCart">
         <i class="fas fa-shopping-cart">    Cart(@Model.ShoppingCart.ShoppingCartItems.Count())</i>
     </a>
 </div>

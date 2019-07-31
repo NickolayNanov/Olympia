@@ -45,7 +45,7 @@
                         asp-for="@Model.TrainerName"
                         asp-items="@(new SelectList(Model.Trainers.Select(x => x.UserName)))"></select>
             </div>
-            <input class="btn btn-danger form-control" type="submit" />
+            <input class="btn btn-danger form-control" type="submit" value="Choose" />
         </div>
     </form>
 }

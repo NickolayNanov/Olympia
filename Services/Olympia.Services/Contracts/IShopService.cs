@@ -3,6 +3,7 @@
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.Shop;
+
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -16,13 +17,13 @@
 
         Task<bool> CreateItemAsync(ItemBindingModel model);
 
-        Task<IEnumerable<ItemViewModel>> GetAllItemsByCategory(string categoryName);
+        Task<IEnumerable<ItemViewModel>> GetAllItemsByCategoryAsync(string categoryName);
 
         Task<ItemViewModel> GetItemDtoByIdAsync(int itemId);
 
         IEnumerable<Supplier> GetAllSuppliers();
 
-        Task<bool> AddItemToUserCart(int itemId, string username);
+        Task<bool> AddItemToUserCartAsync(int itemId, string username);
 
         Task<IEnumerable<ItemViewModel>> GetTopFiveItemsAsync();
 
@@ -34,9 +35,9 @@
 
         Task<bool> DeleteItemAsync(int itemId);
 
-        Task<bool> IncreaseTimesItemIsBought(int itemId);
+        Task<bool> IncreaseTimesItemIsBoughtAsync(int itemId);
 
-        Task<bool> DecreaseTimesItemIsBought(int itemId);
+        Task<bool> DecreaseTimesItemIsBoughtAsync(int itemId);
 
         Task<bool> FinishOrderAsync(string name);
 

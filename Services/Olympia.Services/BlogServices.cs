@@ -146,12 +146,17 @@
         {
             bool doesContain = true;
 
+            if(!this.context.Articles.Select(x => x.Id).Contains(articleId))
+            {
+                return false;
+            }
+
             await Task.Run(() =>
             {
                 var articleFromDb = this.context
                 .Articles
                 .SingleOrDefault(article => article.Id == articleId);
-
+                
                 this.context.Articles.Remove(articleFromDb);
                 this.context.SaveChanges();
                 doesContain = this.context.Articles.Contains(articleFromDb);

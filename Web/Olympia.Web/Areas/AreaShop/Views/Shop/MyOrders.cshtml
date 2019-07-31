@@ -1,45 +1,54 @@
 ﻿
 @{
-    ViewData["Title"] = "MyOrders"; 
+    ViewData["Title"] = "MyOrders";
     Layout = "~/Views/Shared/_Layout.cshtml";
     @model IEnumerable<Olympia.Data.Domain.Order>
 }
 
-<h1 class="text-center text-danger" >My Orders</h1>
 
-<div class="container">
-    <div class="row">
-        <table class="table col-xl-12">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Date of order</th>
-                    <th scope="col">Expected delivery date</th>
-                    <th scope="col">Count of ordered items</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model)
-                {
-                <tr>
-                    <th scope="row">@(Model.ToList().IndexOf(order) + 1)</th>
-                    <th scope="row">@order.OrderDate.ToString("dd/MM/yyyy")</th>
-                    <th scope="row">@order.ExpectedDeliveryDate.ToString("dd/MM/yyyy")</th>
-                    <th scope="row">@order.OrderItems.Count()</th>
-                    <th scope="row">@order.EndPrice$</th>
-                    <th scope="row">@order.DeliveryAddress</th>
-                    <th scope="row"><a class="btn btn-danger"
-                                       asp-area="AreaShop"
-                                       asp-controller="Shop"
-                                       asp-action="CompleteOrder"
-                                       asp-route-orderId="@order.Id">Complete</a></th>
-                </tr>
-                }
-            </tbody>
-        </table>
+@if (Model.Any())
+{
+    <h1 class="text-center text-danger">My Orders</h1>
+
+    <div class="container">
+        <div class="row">
+            <table class="table col-xl-12">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Date of order</th>
+                        <th scope="col">Expected delivery date</th>
+                        <th scope="col">Count of ordered items</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <th scope="row">@(Model.ToList().IndexOf(order) + 1)</th>
+                            <th scope="row">@order.OrderDate.ToString("dd/MM/yyyy")</th>
+                            <th scope="row">@order.ExpectedDeliveryDate.ToString("dd/MM/yyyy")</th>
+                            <th scope="row">@order.OrderItems.Count()</th>
+                            <th scope="row">@order.EndPrice$</th>
+                            <th scope="row">@order.DeliveryAddress</th>
+                            <th scope="row">
+                                <a class="btn btn-danger"
+                                   asp-area="AreaShop"
+                                   asp-controller="Shop"
+                                   asp-action="CompleteOrder"
+                                   asp-route-orderId="@order.Id">Complete</a>
+                            </th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-
+}
+else
+{
+    <h4 class="text-center text-danger">You do not have any orders yet.</h4>
+}

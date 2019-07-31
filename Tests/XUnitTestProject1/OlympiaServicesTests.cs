@@ -16,10 +16,13 @@
     using Olympia.Data.Models.BindingModels.Shop;
     using Olympia.Data.Models.ViewModels.BlogPartViewModels;
     using Olympia.Data.Models.ViewModels.Fitness;
+    using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Data.Seeding;
 
     using Olympia.Services.Contracts;
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
@@ -33,7 +36,7 @@
         private IAccountsServices accountService;
         private IFitnessService fitnessService;
 
-        private UserManager<OlympiaUser> userManager;        
+        private UserManager<OlympiaUser> userManager;
 
         private void InitiateInMemmoryDbForBlog()
         {
@@ -99,6 +102,15 @@
             this.userManager = this.TestUserManager<OlympiaUser>();
 
             this.mockUserService = new Mock<UsersService>(this.context, this.mockMapper, this.userManager).Object;
+
+            new DataSeeder(this.context);
+        }
+
+        private void InitiateInMemmoryDbForShop()
+        {
+            DbContextOptionsBuilder<OlympiaDbContext> optionsBuilder = new DbContextOptionsBuilder<OlympiaDbContext>();
+            optionsBuilder.UseInMemoryDatabase("testDb");
+            this.context = new OlympiaDbContext(optionsBuilder.Options);
 
             new DataSeeder(this.context);
         }
@@ -614,6 +626,24 @@
         }
 
         [Fact]
+        public async Task GetUserProfileModelShouldReturnNull()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, this.userManager).Object;
+
+            var result = await mockUserService.GetUserProfileModelAsync("");
+
+            Assert.Null(result);
+        }
+
+        [Fact]
         public async Task GetUserByUsernameAsyncShouldReturnCorrectOne()
         {
             this.InitiateInMemmoryDbForUsers();
@@ -1067,6 +1097,732 @@
 
             Assert.Equal(expected, actual);
         }
+
+
+        [Fact]
+        public async Task SetFitnessPlanToUserAsyncShouldReturnTrue()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            ClientViewModel model = new ClientViewModel()
+            {
+                UserName = "Pesho",
+                WorkoutViewModel = new WorkoutViewModel
+                {
+                    Exercises = this.context.Exercises.ToList()
+                },
+                Calories = 2010
+            };
+
+            var result = await userService.SetFitnessPlanToUserAsync(model);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task UpdateProfileAsyncShouldExecuteCorrectly()
+        {
+            this.InitiateInMemmoryDbForUsers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            UserManager<OlympiaUser> usermanager = this.TestUserManager<OlympiaUser>();
+
+            var userService = new Mock<UsersService>(
+                this.context,
+                mockedMapper,
+                userManager).Object;
+
+            var user = await this.context.Users.SingleOrDefaultAsync(x => x.UserName == "Pesho");
+
+            UserProfile model = new UserProfile()
+            {
+                Weight = 31,
+                Height = 31,
+                Age = 31,
+                Actity = ActityLevel.ThreeToFive,
+            };
+
+            await userService.UpdateProfileAsync(model, user.UserName);
+
+            Assert.Equal(user.Height, model.Height);
+            Assert.Equal(user.Weight, model.Weight);
+            Assert.Equal(user.Age, model.Age);
+            Assert.Equal(user.Activity, model.Actity);
+        }
+        #endregion
+
+        #region Shop Service Tests
+        [Fact]
+        public async Task GetShoppingCartDtoByUserNameAsyncShouldReturnTrue()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var cart = await shoppService.GetShoppingCartDtoByUserNameAsync("Pesho");
+
+            Assert.NotNull(cart);
+        }
+
+        [Fact]
+        public async Task GetShoppingCartDtoByUserNameAsyncShouldReturnNull()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var cart = await shoppService.GetShoppingCartDtoByUserNameAsync(null);
+
+            Assert.Null(cart);
+        }
+
+        [Fact]
+        public async Task GetItemByIdAsyncShouldNotBeNull()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var item = await shoppService.GetItemByIdAsync(1);
+
+            Assert.NotNull(item);
+        }
+
+        [Fact]
+        public async Task GetItemByIdAsyncShouldBeNull()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var itemIntMax = await shoppService.GetItemByIdAsync(int.MaxValue);
+            var itemIntMin = await shoppService.GetItemByIdAsync(int.MinValue);
+
+            Assert.Null(itemIntMax);
+            Assert.Null(itemIntMin);
+        }
+
+        [Fact]
+        public void GetAllItems()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var expectedIds = this.context.Items.Select(x => x.Id).AsEnumerable();
+
+            var actualIds = shoppService.GetAllItems().Select(x => x.Id).ToList();
+            var index = 0;
+
+
+            Assert.Equal(expectedIds.Count(), actualIds.Count());
+
+            foreach (var expected in expectedIds)
+            {
+                Assert.Equal(expected, actualIds[index++]);
+            }
+        }
+
+        [Fact]
+        public async Task CreateItemAsyncShouldReturnTrue()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var fileMock = new Mock<IFormFile>();
+            //Setup mock file using a memory stream
+            var content = "Hello World from a Fake File";
+            var fileName = "test.pdf";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(content);
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            var file = fileMock.Object;
+
+            ItemBindingModel model = new ItemBindingModel()
+            {
+                Name = "Item",
+                Description = "asd",
+                Price = 31.31,
+                ImgUrl = file,
+                CategoryName = Category.Fitness,
+                SupplierName = "GymBeam"
+            };
+
+            var result = await shoppService.CreateItemAsync(model);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task CreateItemAsyncShouldReturnFalse()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var fileMock = new Mock<IFormFile>();
+            //Setup mock file using a memory stream
+            var content = "Hello World from a Fake File";
+            var fileName = "test.pdf";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(content);
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            var file = fileMock.Object;
+
+            ItemBindingModel model = new ItemBindingModel()
+            {
+                Name = "",
+                Description = "",
+                Price = -21,
+                ImgUrl = null,
+                CategoryName = Category.Fitness,
+                SupplierName = ""
+            };
+
+            var result = await shoppService.CreateItemAsync(model);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task GetAllItemsByCategoryShouldReturnAll()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            IEnumerable<int> expectedIds = Enumerable.Range(1, 11);
+            var actualIds = (await shoppService.GetAllItemsByCategoryAsync("Fitness")).Select(x => x.Id).ToList();
+
+            Assert.Equal(expectedIds.Count(), actualIds.Count());
+            int index = 0;
+
+            foreach (var expectedId in expectedIds)
+            {
+                Assert.Equal(expectedId, actualIds[index++]);
+            }
+        }
+
+        [Fact]
+        public async Task GetItemDtoByIdAsyncShouldNotBeNull()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var result = await shoppService.GetItemDtoByIdAsync(1);
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task GetItemDtoByIdAsyncShouldBeNull()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var resultMax = await shoppService.GetItemDtoByIdAsync(int.MaxValue);
+            var resultMin = await shoppService.GetItemDtoByIdAsync(int.MinValue);
+
+            Assert.Null(resultMax);
+            Assert.Null(resultMin);
+        }
+
+        [Fact]
+        public void GetAllSuppliersShouldReturnAll()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var expected = this.context.Suppliers.AsEnumerable();
+            var actual = shoppService.GetAllSuppliers().ToList();
+            var index = 0;
+
+            Assert.Equal(expected.Count(), actual.Count());
+
+            foreach (var expectedSupplier in expected)
+            {
+                Assert.Equal(expectedSupplier, actual[index++]);
+            }
+        }
+
+        [Fact]
+        public async Task AddItemToUserCartAsyncShouldReturnTrue()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == 1);
+            var user = await this.context.Users.SingleOrDefaultAsync(x => x.UserName == "Pesho");
+
+            var result = await shoppService.AddItemToUserCartAsync(item.Id, user.UserName);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task AddItemToUserCartAsyncShouldReturnFalse()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var result = await shoppService.AddItemToUserCartAsync(int.MaxValue, "");
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task AddItemToUserCartAsyncShouldReturnFalseIntMax()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var user = await this.context.Users.SingleOrDefaultAsync(x => x.UserName == "Pesho");
+            var result = await shoppService.AddItemToUserCartAsync(int.MaxValue, user.UserName);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task GetTopFiveItemsAsyncShouldReturnAll()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var expected = this.context.Items.OrderByDescending(x => x.TimesBought).Take(5).Select(x => x.Id).AsEnumerable();
+            var actual = (await shoppService.GetTopFiveItemsAsync()).Select(x => x.Id).ToList();
+            var index = 0;
+
+            Assert.Equal(expected.Count(), actual.Count());
+
+            foreach (var expectedItem in expected)
+            {
+                Assert.Equal(expectedItem, actual[index++]);
+            }
+        }
+
+        [Fact]
+        public async Task GetShoppingCartByUserNameAsyncShouldNotBeNull()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var cart = await shoppService.GetShoppingCartByUserNameAsync("Pesho");
+
+            Assert.NotNull(cart);
+        }
+
+        [Fact]
+        public async Task GetShoppingCartByUserNameAsyncShouldBeNull()
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var cartNull = await shoppService.GetShoppingCartByUserNameAsync(null);
+            var cartStringEmpty = await shoppService.GetShoppingCartByUserNameAsync("");
+
+            Assert.Null(cartNull);
+            Assert.Null(cartStringEmpty);
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        [InlineData(1)]
+        public async Task GetShoppingCartByCartIdAsyncShouldNotBeNull(int id)
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var cart = await shoppService.GetShoppingCartByCartIdAsync(id);
+
+            if (id == int.MaxValue || id == int.MinValue)
+            {
+                Assert.Null(cart);
+            }
+            else
+            {
+                Assert.NotNull(cart);
+            }
+        }
+
+        [Theory]
+        [InlineData(null, 1)]
+        [InlineData(null, int.MaxValue)]
+        [InlineData("Pesho", int.MaxValue)]
+        [InlineData("Pesho", int.MinValue)]
+        [InlineData("Pesho", 6)]
+        [InlineData("", 1)]
+        public async Task RemoveFromCartAsync(string username, int itemId)
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var result = await shoppService.RemoveFromCartAsync(username, itemId);
+
+            if (username == "Pesho" && itemId == 1)
+            {
+                Assert.True(result);
+            }
+            else
+            {
+                Assert.False(result);
+            }
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        [InlineData(5)]
+        public async Task DeleteItemAsyncShouldDelete(int itemId)
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+
+            if (itemId == 5)
+            {
+                var item = new Item("ASD", 31.31m) { Id = 21 };
+                await this.context.Items.AddAsync(item);
+                await this.context.SaveChangesAsync();
+
+                var result = await shoppService.DeleteItemAsync(21);
+
+                if (itemId == int.MaxValue || itemId == int.MinValue)
+                {
+                    Assert.False(result);
+                }
+                else
+                {
+                    Assert.True(result);
+                }
+            }
+            else
+            {
+
+                var result = await shoppService.DeleteItemAsync(itemId);
+
+                if (itemId == int.MaxValue || itemId == int.MinValue)
+                {
+                    Assert.False(result);
+                }
+                else
+                {
+                    Assert.True(result);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        [InlineData(5)]
+        public async Task IncreaseTimesItemIsBoughtAsyncShouldIncreaseOrReturnNull(int itemId)
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var result = await shoppService.IncreaseTimesItemIsBoughtAsync(itemId);
+
+            if (itemId == int.MaxValue || itemId == int.MinValue)
+            {
+                Assert.False(result);
+            }
+            else
+            {
+                Assert.True(result);
+            }
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        [InlineData(5)]
+        public async Task DecreaseTimesItemIsBoughtAsyncShouldIncreaseOrReturnNull(int itemId)
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            var result = await shoppService.DecreaseTimesItemIsBoughtAsync(itemId);
+
+            if (itemId == int.MaxValue || itemId == int.MinValue)
+            {
+                Assert.False(result);
+            }
+            else
+            {
+                Assert.True(result);
+            }
+        }
+
+        [Theory]
+        [InlineData("Pesho")]
+        [InlineData("asd")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task FinishOrderAsyncShouldFinishSuccessfully(string username)
+        {
+            this.InitiateInMemmoryDbForShop();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            var usermanager = this.TestUserManager<OlympiaUser>();
+            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
+            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
+            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
+
+            if(username == "Pesho")
+            {
+                var user = await this.context.Users.SingleOrDefaultAsync(x => x.UserName == username);
+                var items = this.context.Items.Take(3).ToList();
+
+                foreach (var item in items)
+                {
+                    user.ShoppingCart.ShoppingCartItems.Add(new ShoppingCartItem() { Item = item, ShoppingCart = user.ShoppingCart });
+                }
+
+                this.context.Update(user);
+                await this.context.SaveChangesAsync();
+
+                var result = await shoppService.FinishOrderAsync(username);
+
+                Assert.True(result);
+            }
+            else
+            {
+                var result = await shoppService.FinishOrderAsync(username);
+
+                if (string.IsNullOrEmpty(username) || username == "asd")
+                {
+                    Assert.False(result);
+                }
+                else
+                {
+                    Assert.True(result);
+                }
+            }
+        }        
         #endregion
     }
 }

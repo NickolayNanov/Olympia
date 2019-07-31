@@ -29,7 +29,12 @@
 
         public async Task<IActionResult> Items(string categoryName)
         {
-            var items = await this.shopService.GetAllItemsByCategory(categoryName);
+            if(categoryName != "Fitness" && categoryName != "Supplements" && categoryName != "Clothing")
+            {
+                return this.Redirect("/Home/Error");
+            }
+
+            var items = await this.shopService.GetAllItemsByCategoryAsync(categoryName);
             var shoppingCart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
 
             var shopViewModel = new ShopViewModel() { Items = items, ShoppingCart = shoppingCart };
@@ -52,7 +57,7 @@
         {
             var result = await
                 this.shopService
-                .AddItemToUserCart(itemId, this.User.Identity.Name);
+                .AddItemToUserCartAsync(itemId, this.User.Identity.Name);
 
             if (!result)
             {
@@ -87,7 +92,13 @@
 
         public async Task<IActionResult> IncreaseCount(int itemId)
         {
-            await this.shopService.IncreaseTimesItemIsBought(itemId);
+            var result = await this.shopService.IncreaseTimesItemIsBoughtAsync(itemId);
+
+            if(result == false)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View("ShoppingCart", cart);
@@ -95,7 +106,13 @@
 
         public async Task<IActionResult> DecreaseCount(int itemId)
         {
-            await this.shopService.DecreaseTimesItemIsBought(itemId);
+            var result = await this.shopService.DecreaseTimesItemIsBoughtAsync(itemId);
+
+            if (result == false)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View("ShoppingCart", cart);
@@ -129,7 +146,13 @@
 
         public async Task<IActionResult> CompleteOrder(int orderId)
         {
-            await this.shopService.CompleteOrderAsync(orderId);
+            var result = await this.shopService.CompleteOrderAsync(orderId);
+
+            if (result == false)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             var orders = await this.shopService.GetAllOrdersByUsernameAsync(this.User.Identity.Name);
 
             if (!orders.Any())

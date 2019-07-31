@@ -29,6 +29,7 @@
         [Display(Name = GlobalConstants.DisplayCategoryName)]
         public Category CategoryName { get; set; }
 
+        [Required]
         public string SupplierName { get; set; }
 
         public IEnumerable<string> SupplierNames { get; set; }

@@ -28,7 +28,7 @@ else
             {
                 @foreach (var article in articles)
                 {
-                    <div class="card d-flex justify-content-between col-md-4">
+                    <div class="card d-flex justify-content-between col-md-4" style="background-color:lightblue">
                         <img class="card-img" src="@article.ImgUrl" alt="Bologna">
                         <div class="card-body">
                             <h4 class="card-title">@article.Title</h4>
@@ -36,7 +36,7 @@ else
                             <a asp-area="AreaBlog"
                                asp-controller="Blog"
                                asp-action="ArticleDetails"
-                               asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
+                               asp-route-articleId="@article.Id" class="btn btn-danger">Read Me</a>
                         </div>
                         <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
                             <div class="views">
@@ -65,7 +65,7 @@ else
                 {
                     @foreach (var item in Model.Items)
                     {
-                        <div class="col-md-3 card mr-5 mb-4">
+                        <div class="col-md-3 card mr-5 mb-4" style="background-color:lightblue">
                             <i><h5 class=" text-center">@item.Name</h5></i>
                             <img class="card-img" src="@item.ImgUrl" alt="Loading..." />
                             <div class="d-flex justify-content-center">

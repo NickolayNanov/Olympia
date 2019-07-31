@@ -73,9 +73,15 @@
             return this.View("SuccessfullSignInTrainer");
         }
 
-        public IActionResult BecomeTrainer(string username)
-        {
-            var user = this.usersService.GetUserByUsernameAsync(username).Result;
+        public async Task<IActionResult> BecomeTrainer(string username)
+        {            
+            var user = await this.usersService.GetUserByUsernameAsync(username);
+
+            if(user == null)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             var futureTrainer = this.mapper.Map<ClientToTrainerBindingModel>(user);
 
             return this.View(futureTrainer);
@@ -124,9 +130,9 @@
             return this.Redirect(GlobalConstants.Index);
         }
 
-        public async Task<IActionResult> MyFitnessPlan(string username)
+        public async Task<IActionResult> MyFitnessPlan()
         {
-            var fitnessPlan = await this.fitnessService.GetFitnessPlanByUsername(username);
+            var fitnessPlan = await this.fitnessService.GetFitnessPlanByUsername(this.User.Identity.Name);
 
             return this.View(fitnessPlan);
         }

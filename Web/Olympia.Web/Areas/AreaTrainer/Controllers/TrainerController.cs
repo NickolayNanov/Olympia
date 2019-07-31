@@ -67,19 +67,37 @@
 
         public async Task<IActionResult> DeleteArticle(int articleId)
         {
-            await this.blogService.DeleteArticleByIdAsync(articleId);
+            var result = await this.blogService.DeleteArticleByIdAsync(articleId);
+
+            if (result == false)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             return this.Redirect(GlobalConstants.TrainerMyArticles);
         }
 
         public async Task<IActionResult> ClientDetails(string username)
         {
             var user = await this.usersService.GetUserByUsernameAsync(username);
+
+            if(user == null)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             return this.View(user);
         }
 
         public async Task<IActionResult> CreateFitnessPlan(string username)
         {
             var model = await this.usersService.GetUserWithFitnessPlanModelAsync(username);
+
+            if(model == null)
+            {
+                return this.Redirect("/Home/Error");
+            }
+
             return this.View(model);
         }
 
@@ -106,24 +124,49 @@
 
         public async Task<IActionResult> CalculateCalories(ClientViewModel user)
         {
-            var calories = await this.usersService.CalculateCaloriesAsync(user.UserName);
-            user.Calories = calories;
+            try
+            {
+                var calories = await this.usersService.CalculateCaloriesAsync(user.UserName);
+                user.Calories = calories;
 
-            return this.View("CreateFitnessPlan", user);
+                return this.View("CreateFitnessPlan", user);
+            }
+            catch
+            {
+                return this.Redirect("/Home/Error");
+            }
         }
 
         public IActionResult AssignFitnessPlan(ClientViewModel user, int workoutId)
         {
-            WorkoutViewModel workout = this.fitnessService.GetWorkoutById(workoutId);
-            user.WorkoutViewModel = workout;
+            try
+            {
+                WorkoutViewModel workout = this.fitnessService.GetWorkoutById(workoutId);
 
-            return this.View("CreateFitnessPlan", user);
+                if (workout == null)
+                {
+                    return this.Redirect("/Home/Error");
+                }
+
+                user.WorkoutViewModel = workout;
+
+                return this.View("CreateFitnessPlan", user);
+            }
+            catch
+            {
+                return this.Redirect("/Home/Error");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> SetFitnessPlan(ClientViewModel model, int workoutId)
         {
             model.WorkoutViewModel = this.fitnessService.GetWorkoutById(workoutId);
+
+            if(model.WorkoutViewModel == null)
+            {
+                return this.Redirect("/Home/Error");
+            }
 
             if (model.Calories == 0 || model.WorkoutViewModel == null)
             {

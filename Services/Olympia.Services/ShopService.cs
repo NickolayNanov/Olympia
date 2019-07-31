@@ -28,9 +28,19 @@
             this.context = context;
         }
 
-        public async Task<bool> AddItemToUserCart(int itemId, string username)
+        public async Task<bool> AddItemToUserCartAsync(int itemId, string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
             var cart = await this.GetShoppingCartByUserNameAsync(username);
+
+            if (cart == null)
+            {
+                return false;
+            }
 
             if (cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId))
             {
@@ -38,6 +48,13 @@
             }
 
             var item = await this.GetItemByIdAsync(itemId);
+
+            if (item == null)
+            {
+                return false;
+            }
+
+
             item.TimesBought = 1;
 
             cart.ShoppingCartItems.Add(new ShoppingCartItem() { ItemId = itemId, ShoppingCartId = cart.Id });
@@ -84,7 +101,7 @@
             return itemsViewModels;
         }
 
-        public async Task<IEnumerable<ItemViewModel>> GetAllItemsByCategory(string categoryName)
+        public async Task<IEnumerable<ItemViewModel>> GetAllItemsByCategoryAsync(string categoryName)
         {
             if (string.IsNullOrEmpty(categoryName))
             {
@@ -99,12 +116,17 @@
                 .Include(x => x.ItemCategories)
                 .ThenInclude(ic => ic.Item)
                 .ThenInclude(item => item.Supplier)
-                .FirstOrDefaultAsync(x => x.Name == categoryName))
+                .FirstOrDefaultAsync(x => x.Name == categoryName))?
                 .ItemCategories
                 .Select(x => x.Item)
                 .AsQueryable())
                 .AsEnumerable();
             });
+
+            if (ShopViewModels == null)
+            {
+                return null;
+            }
 
             return ShopViewModels;
         }
@@ -116,7 +138,11 @@
 
         public async Task<ItemViewModel> GetItemDtoByIdAsync(int itemId)
         {
-            var itemDto = this.mapper.Map<ItemViewModel>(await this.context.Items.Include(item => item.Supplier).SingleOrDefaultAsync(item => item.Id == itemId));
+            var itemDto = this.mapper.Map<ItemViewModel>(
+                await this.context
+                            .Items
+                            .Include(item => item.Supplier)
+                            .SingleOrDefaultAsync(item => item.Id == itemId));
 
             return itemDto;
         }
@@ -124,7 +150,6 @@
         public async Task<Item> GetItemByIdAsync(int itemId)
         {
             var itemFromDb = await this.context.Items.SingleOrDefaultAsync(item => item.Id == itemId);
-
             return itemFromDb;
         }
 
@@ -148,12 +173,22 @@
 
         public async Task<ShoppingCartViewModel> GetShoppingCartDtoByUserNameAsync(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return null;
+            }
+
             var shoppingCart = (await this.context
                 .Users
                 .Include(user => user.ShoppingCart)
                 .ThenInclude(shc => shc.ShoppingCartItems)
                 .ThenInclude(sh => sh.Item)
                 .SingleOrDefaultAsync(u => u.UserName == name)).ShoppingCart;
+
+            if (shoppingCart == null)
+            {
+                return null;
+            }
 
             var cartViewModel = this.mapper.Map<ShoppingCartViewModel>(shoppingCart);
 
@@ -167,16 +202,26 @@
 
         public async Task<ShoppingCart> GetShoppingCartByUserNameAsync(string name)
         {
-            var shoppingCart = (await this.context
+            if (string.IsNullOrEmpty(name))
+            {
+                return null;
+            }
+
+            var userFromDb = (await this.context
                 .Users
                 .Include(user => user.ShoppingCart)
                 .ThenInclude(shc => shc.ShoppingCartItems)
                 .ThenInclude(sh => sh.Item)
                 .ThenInclude(sh => sh.ShoppingCartItems)
                 .ThenInclude(sh => sh.ShoppingCart)
-                .SingleOrDefaultAsync(u => u.UserName == name)).ShoppingCart;
+                .SingleOrDefaultAsync(u => u.UserName == name));
 
-            return shoppingCart;
+            if(userFromDb == null)
+            {
+                return null;
+            }
+
+            return userFromDb.ShoppingCart;
         }
 
         public async Task<ShoppingCart> GetShoppingCartByCartIdAsync(int cartId)
@@ -195,11 +240,25 @@
 
         public async Task<bool> RemoveFromCartAsync(string username, int itemId)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
             var cart = await this.GetShoppingCartByUserNameAsync(username);
+
+            if(cart == null)
+            {
+                return false;
+            }
 
             var cartItemsIds = cart.ShoppingCartItems.Select(x => x.ItemId);
 
-            if (cartItemsIds.Contains(itemId))
+            if (!cartItemsIds.Contains(itemId))
+            {
+                return false;               
+            }
+            else
             {
                 var cartItem = cart.ShoppingCartItems
                     .SingleOrDefault(shc =>
@@ -212,7 +271,7 @@
             this.context.Update(cart);
             await this.context.SaveChangesAsync();
 
-            return (await this.GetShoppingCartByUserNameAsync(username))
+            return !(await this.GetShoppingCartByUserNameAsync(username))
                 .ShoppingCartItems.Select(x => x.ItemId).Contains(itemId);
         }
 
@@ -220,18 +279,29 @@
         {
             var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
 
+            if(item == null)
+            {
+                return false;
+            }
+
             this.context.ShoppingCartItems.RemoveRange(this.context.ShoppingCartItems.Where(x => x.ItemId == item.Id));
             this.context.ItemCategories.RemoveRange(this.context.ItemCategories.Where(x => x.ItemId == item.Id));
             this.context.Items.Remove(item);
 
             await this.context.SaveChangesAsync();
 
-            return this.context.Items.Contains(item);
+            return !this.context.Items.Contains(item);
         }
 
-        public async Task<bool> IncreaseTimesItemIsBought(int itemId)
+        public async Task<bool> IncreaseTimesItemIsBoughtAsync(int itemId)
         {
             var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
+
+            if(item == null)
+            {
+                return false;
+            }
+
             int initialValue = item.TimesBought;
 
             item.TimesBought++;
@@ -242,9 +312,15 @@
             return initialValue != item.TimesBought;
         }
 
-        public async Task<bool> DecreaseTimesItemIsBought(int itemId)
+        public async Task<bool> DecreaseTimesItemIsBoughtAsync(int itemId)
         {
             var item = await this.context.Items.SingleOrDefaultAsync(x => x.Id == itemId);
+
+            if (item == null)
+            {
+                return false;
+            }
+
             int initialValue = item.TimesBought;
 
             if (initialValue <= 1)
@@ -262,7 +338,17 @@
 
         public async Task<bool> FinishOrderAsync(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return false;
+            }
+
             var cart = await this.GetShoppingCartByUserNameAsync(name);
+
+            if(cart == null)
+            {
+                return false;
+            }
 
             if (cart.ShoppingCartItems.Count == 0)
             {
@@ -318,6 +404,11 @@
         public async Task<bool> CompleteOrderAsync(int orderId)
         {
             var orderFromDb = await this.context.Orders.Include(ord => ord.OrderItems).SingleOrDefaultAsync(order => order.Id == orderId);
+            
+            if(orderFromDb == null)
+            {
+                return false;
+            }
 
             this.context.OrderItems.RemoveRange(orderFromDb.OrderItems);
             this.context.Orders.Remove(orderFromDb);

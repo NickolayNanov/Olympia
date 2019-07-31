@@ -3,6 +3,7 @@
     using AutoMapper;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+
     using Olympia.Common;
     using Olympia.Data;
     using Olympia.Data.Domain;
@@ -14,6 +15,7 @@
     using Olympia.Data.Models.ViewModels.Home;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -174,8 +176,13 @@
                 realUser.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
             }
 
+            realUser.OlympiaUserRole.Clear();
+            this.context.Update(realUser);
+            await this.context.SaveChangesAsync();
+             
             await this.userManager.UpdateSecurityStampAsync(realUser);
 
+            
             var roleHasChanged = await this.userManager.AddToRoleAsync(realUser, GlobalConstants.TrainerRoleName);
 
             if (!roleHasChanged.Succeeded)

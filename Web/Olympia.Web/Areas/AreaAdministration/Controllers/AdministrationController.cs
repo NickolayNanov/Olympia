@@ -57,7 +57,7 @@
 
         public async Task<IActionResult> UsersAll()
         {
-            var users = this.usersService.GetAllUsersAsync();
+            var users = await this.usersService.GetAllUsersAsync();
             return this.View(users);
         }
 

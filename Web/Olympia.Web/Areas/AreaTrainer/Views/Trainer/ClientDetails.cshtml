@@ -5,34 +5,32 @@
     @model Olympia.Data.Domain.OlympiaUser
 }
 
+<h2 class="text-danger text-center">@Model.FullName</h2>
 <hr class="bg-danger" />
 
-<div class="row">
-    <div class="col-lg-3 form-group mr-5 ml-5">
-        <div class="mt-4 text-danger form-control-plaintext"><strong>Full Name - @Model.FullName</strong></div>
-        <div class="mt-4 text-danger form-control-plaintext"><strong>Age - @Model.Age</strong></div>
-        <div class="mt-4 text-danger form-control-plaintext"><strong>Gender - @Model.Gender</strong></div>
-        <div class="mt-4 text-danger form-control-plaintext"><strong>Weight - @Model.Weight</strong></div>
-        <div class="mt-4 text-danger form-control-plaintext"><strong>Height - @Model.Height</strong></div>
-        <div class="mt-4 text-danger form-control-plaintext"><strong>Phone number - @(string.IsNullOrEmpty(Model.PhoneNumber) ? "" : Model.PhoneNumber)</strong></div>
-
-        <a class="btn btn-primary mt-5"
-                asp-area="AreaTrainer"
-                asp-controller="Trainer"
-                asp-action="CreateFitnessPlan"
-                asp-route-username="@Model.UserName">
-            Create Fitness Plan
-        </a>
-
-    </div>
-    <div>
-        <div class="card card-trainer ml-5">
-            <img src="@Model.ProfilePicturImgUrl" alt="John" style="width:100%">
-            <h3>@Model.FullName</h3>
-            <p class="title">Client</p>
+<div class="container">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div>
+                <div class="row">
+                    <h3 class="col-md-12 text-danger mb-5">Age: @Model.Age</h3>
+                    <h3 class="col-md-12 text-danger mb-5">Gender: @Model.Gender</h3>
+                    <h3 class="col-md-12 text-danger mb-5">Weight: @Model.Weight</h3>
+                    <h3 class="col-md-12 text-danger mb-5">Height: @Model.Height</h3>
+                </div>               
+            </div>
+            <div class="card card-trainer ml-4">
+                <img src="@Model.ProfilePicturImgUrl" alt="Loading..." style="width:100%">
+                <h3>@Model.FullName</h3>
+                <p class="title">Olympia Trainer</p>
+            </div>
         </div>
     </div>
-    <div>
-
+    <div class="row">
+        <a asp-area="AreaTrainer"
+                asp-controller="Trainer"
+                asp-action="CreateFitnessPlan"
+                asp-route-username="@Model.UserName"
+           class="btn btn-primary col-md-12 mt-5">Create Fitness Plan</a>
     </div>
 </div>
