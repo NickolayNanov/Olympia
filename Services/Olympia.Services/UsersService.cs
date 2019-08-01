@@ -67,6 +67,7 @@
                 trainers = this.context
                     .Users
                     .Include(x => x.Articles)
+                    .Include(x => x.Clients)
                     .Where(id => trainerIds.Any(x => x == id.Id))
                     .OrderByDescending(trainer => trainer.Rating);
             });
@@ -159,7 +160,7 @@
 
         public async Task<bool> BecomeTrainerAsync(ClientToTrainerBindingModel model, string username)
         {
-            OlympiaUser realUser = this.context.Users.Include(x => x.OlympiaUserRole).SingleOrDefault(user => user.UserName == username);
+            OlympiaUser realUser = this.context.Users.SingleOrDefault(user => user.UserName == username);
 
             realUser.Age = model.Age;
             realUser.Description = model.Description;
@@ -173,8 +174,6 @@
                 var url = MyCloudinary.UploadImage(model.ProfilePictureUrl, model.Username);
                 realUser.ProfilePicturImgUrl = url ?? Constants.CloudinaryInvalidUrl;
             }
-
-            realUser.OlympiaUserRole.Clear();
 
             this.context.Update(realUser);
             await this.context.SaveChangesAsync();

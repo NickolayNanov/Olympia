@@ -9,7 +9,7 @@
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
-
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -420,7 +420,7 @@
         {
             var orderFromDb = await this.context.Orders.Include(ord => ord.OrderItems).SingleOrDefaultAsync(order => order.Id == orderId);
 
-            if (orderFromDb == null)
+            if (orderFromDb == null || DateTime.Now < orderFromDb.ExpectedDeliveryDate)
             {
                 return false;
             }

@@ -23,8 +23,6 @@
         {
         }
 
-        public DbSet<OlympiaRolesUsers> OlympiaRolesUsers { get; set; }
-
         public DbSet<Article> Articles { get; set; }
 
         public DbSet<Address> Addresses { get; set; }
@@ -129,35 +127,6 @@
 
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)
         {
-            builder.Entity<OlympiaUser>()
-                .HasMany(e => e.Claims)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<OlympiaUser>()
-                .HasMany(e => e.Logins)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<OlympiaUser>()
-                .HasMany(u => u.OlympiaUserRole)
-                .WithOne()
-                .HasForeignKey(fk => fk.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<OlympiaUserRole>()
-                .HasMany(r => r.OlympiaRolesUsers)
-                .WithOne(oru => oru.Role)
-                .HasForeignKey(fk => fk.RoleId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-
             builder.Entity<IdentityUserRole<string>>()
                 .HasKey(fk => new { fk.RoleId, fk.UserId });
         }

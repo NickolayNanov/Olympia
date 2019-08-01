@@ -6,14 +6,11 @@ namespace Olympia.Data.Domain
     using Olympia.Data.Common.Models;
 
     using System;
-    using System.Collections.Generic;
 
-    public class OlympiaUserRole : IdentityRole, IAuditInfo, IDeletableEntity
+    public class OlympiaUserRole : IdentityRole<string>, IAuditInfo, IDeletableEntity
     {
         public OlympiaUserRole()
-            : this(null)
         {
-            this.OlympiaRolesUsers = new HashSet<OlympiaRolesUsers>();
         }
 
         public OlympiaUserRole(string name)
@@ -21,8 +18,6 @@ namespace Olympia.Data.Domain
         {
             this.Id = Guid.NewGuid().ToString();
         }
-
-        public ICollection<OlympiaRolesUsers> OlympiaRolesUsers { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

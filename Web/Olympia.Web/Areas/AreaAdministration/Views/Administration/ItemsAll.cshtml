@@ -4,17 +4,22 @@
     @model Olympia.Data.Models.ViewModels.Shop.ShopViewModel
 }
 
-<div class="row">
-    <h1 class="text-lg-center col-sm-10">All Items</h1>
+    <div class="row">
+        <h1 class="text-lg-center col-sm-8">All Items</h1>
 
-    <div class="col-sm-2">
-        <a 
-           asp-area="AreaAdministration" 
-           asp-controller="Administration" 
-           asp-action="AddItem" class="btn btn-danger">Add Item</a>
+        <div class="col-sm-2">
+            <a asp-area="AreaAdministration"
+               asp-controller="Administration"
+               asp-action="AddItem" class="btn btn-danger">Add Item</a>
+        </div>
+
+        <div class="col-sm-2">
+            <a asp-area="AreaAdministration"
+               asp-controller="Administration"
+               asp-action="AddSupplier" class="btn btn-danger">Add Supplier</a>
+        </div>
+
     </div>
-
-</div>
 <div class="container">
     <div class="row">
         @if (Model.Items.Any())

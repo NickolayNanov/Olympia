@@ -39,11 +39,7 @@
             this.CreateMap<OlympiaUser, ClientViewModel>()
                 .ReverseMap();
 
-            this.CreateMap<OlympiaUser, ListedUserViewModel>()
-                .ForMember(x => x.Role,
-                y => y.MapFrom(z => z.OlympiaUserRole
-                        .Select(x => x.RoleId)
-                        .Contains("e9a584d9-3bcd-439b-ac73-aa996070897e") ? "Trainer" : "Client"));
+            this.CreateMap<OlympiaUser, ListedUserViewModel>();
 
             this.CreateMap<Workout, WorkoutViewModel>()
                 .ReverseMap();

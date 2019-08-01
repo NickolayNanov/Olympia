@@ -5,7 +5,7 @@
     @model Olympia.Data.Domain.OlympiaUser
 }
 
-<div class="offset-6">
+<div class="text-center">
     <a class="btn btn-danger"
        asp-area="AreaClient"
        asp-controller="Client"
@@ -16,17 +16,15 @@
 </div>
 
 <div class="container">
-    <div class="d-flex justify-content-between">
-        <div class="card card-trainer ml-4">
+    <div class="d-flex justify-content-between row">
+        <div class="card card-trainer ml-4 mt-4 col-md-6">
             <img src="@Model.ProfilePicturImgUrl" alt="John" style="width:100%">
             <h3>@Model.FullName</h3>
             <p class="title">Olympia Trainer</p>
-            
+
         </div>
-        <div>
-            <div>
-                <p>@Model.Description</p>
-            </div>
+        <div class="col-md-6 mt-4">
+            <h5><strong>@Model.Description</strong></h5>
         </div>
     </div>
 </div>

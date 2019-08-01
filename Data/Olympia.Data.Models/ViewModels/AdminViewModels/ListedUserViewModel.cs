@@ -6,8 +6,6 @@
 
         public string FullName { get; set; }
 
-        public string Role { get; set; }
-
         public string Description { get; set; }
 
         public string ProfilePicturImgUrl { get; set; }

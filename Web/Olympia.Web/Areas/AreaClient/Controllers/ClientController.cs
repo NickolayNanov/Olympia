@@ -69,8 +69,9 @@
             }
 
             await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
+            var trainer = await this.usersService.GetUsersTrainerAsync(this.User.Identity.Name);
 
-            return this.View("SuccessfullSignInTrainer");
+            return this.View("MyTrainer", trainer);
         }
 
         public async Task<IActionResult> BecomeTrainer(string username)

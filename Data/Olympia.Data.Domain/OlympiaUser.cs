@@ -9,16 +9,11 @@ namespace Olympia.Data.Domain
     using System;
     using System.Collections.Generic;
 
-    public class OlympiaUser : IdentityUser, IAuditInfo, IDeletableEntity
+    public class OlympiaUser : IdentityUser<string>, IAuditInfo, IDeletableEntity
     {
         public OlympiaUser()
         {
             this.Id = Guid.NewGuid().ToString();
-
-            this.Claims = new HashSet<IdentityUserClaim<string>>();
-            this.Logins = new HashSet<IdentityUserLogin<string>>();
-            this.Clients = new HashSet<OlympiaUser>();
-            this.OlympiaUserRole = new HashSet<IdentityUserRole<string>>();
 
             this.FitnessPlan = new FitnessPlan() { OwnerId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);
@@ -76,13 +71,6 @@ namespace Olympia.Data.Domain
         public virtual Address Address { get; set; }
 
         public virtual ICollection<OlympiaUser> Clients { get; set; }
-
-        public virtual ICollection<IdentityUserRole<string>> OlympiaUserRole { get; set; }
-
-        public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
-
-        public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
-
 
         public virtual ICollection<Article> Articles { get; set; }
 
