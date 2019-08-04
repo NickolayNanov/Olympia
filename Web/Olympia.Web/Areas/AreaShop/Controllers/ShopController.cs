@@ -31,7 +31,7 @@
         {
             if (categoryName != "Fitness" && categoryName != "Supplements" && categoryName != "Clothing")
             {
-                return this.Redirect("/Home/Error");
+                return this.Redirect(GlobalConstants.ErrorPage);
             }
 
             var items = await this.shopService.GetAllItemsByCategoryAsync(categoryName);
@@ -54,7 +54,7 @@
             return this.View(item);
         }
 
-        public async Task<IActionResult> AddToCart(int itemId)
+        public async Task<IActionResult> AddToCart(int itemId, string category)
         {
             try
             {
@@ -68,7 +68,7 @@
                 }
 
                 var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
-                var items = await this.shopService.GetAllItemsAsync();
+                var items = await this.shopService.GetAllItemsByCategoryAsync(category);
 
                 ShopViewModel shopViewModel = new ShopViewModel
                 {
@@ -164,9 +164,12 @@
         {
             var result = await this.shopService.CompleteOrderAsync(orderId);
 
-            if (result == false)
+            if (!result)
             {
-                return this.Redirect(GlobalConstants.ErrorPage);
+                this.ViewData["Errors"] = "You can't finish the order before the expected date.";
+                var ordersToReturn = await this.shopService.GetAllOrdersByUsernameAsync(this.User.Identity.Name);
+
+                return this.View("MyOrders", ordersToReturn);
             }
 
             var orders = await this.shopService.GetAllOrdersByUsernameAsync(this.User.Identity.Name);

@@ -10,7 +10,7 @@
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
-
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -75,7 +75,8 @@
             if (model.Age < 12 || model.Age > 65 ||
                 string.IsNullOrEmpty(model.Username) ||
                 string.IsNullOrEmpty(model.FullName) ||
-                this.userManager.Users.Select(users => users.UserName).Any(name => name == model.Username))
+                this.userManager.Users.Select(users => users.UserName).Any(name => name == model.Username) ||
+                !this.CheckUsername(model.Username))
             {
                 return null;
             }
@@ -109,9 +110,21 @@
             return user;
         }
 
+        private bool CheckUsername(string username)
+        {
+            char[] symbols = new char[] { '*', '/', '\\', '^', '@', '#', '$', '%', '&','(', ')', '{', '}' };
+
+            if(username.ToCharArray().Any(x => symbols.Contains(x)))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private async Task AddRootAdminIfDoesNotExistAsync()
         {
-            if (!this.userManager.Users.Any(user => user.UserName == "God"))
+            if (!this.context.Users.Any(user => user.UserName == "God"))
             {
                 var god = new OlympiaUser("God", "God@abv.bg", "God God");
                 await this.userManager.CreateAsync(god, password: "imgod123");

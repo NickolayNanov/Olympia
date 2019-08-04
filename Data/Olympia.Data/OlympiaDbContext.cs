@@ -74,8 +74,6 @@
         {
             base.OnModelCreating(modelBuilder);
 
-            ConfigureUserIdentityRelations(modelBuilder);
-
             var entityTypes = modelBuilder.Model.GetEntityTypes().ToList();
 
             modelBuilder.Entity<ItemCategory>()
@@ -124,13 +122,7 @@
             modelBuilder.Entity<ShoppingCartItem>()
                 .HasKey(pk => new { pk.ItemId, pk.ShoppingCartId });
         }
-
-        private static void ConfigureUserIdentityRelations(ModelBuilder builder)
-        {
-            builder.Entity<IdentityUserRole<string>>()
-                .HasKey(fk => new { fk.RoleId, fk.UserId });
-        }
-
+       
         private void ApplyAuditInfoRules()
         {
             var changedEntries = this.ChangeTracker

@@ -9,6 +9,7 @@
 
     public interface IShopService
     {
+
         Task<ShoppingCartViewModel> GetShoppingCartDtoByUserNameAsync(string username);
 
         Task<Item> GetItemByIdAsync(int itemId);

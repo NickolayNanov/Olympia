@@ -35,6 +35,9 @@
             services
                 .AddIdentity<OlympiaUser, OlympiaUserRole>(options =>
                 {
+                    options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.1234567890";
+
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;

@@ -41,6 +41,6 @@
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 
 
-        public virtual ICollection<ItemCategory> ItemCategories { get; set; }
+        public ICollection<ItemCategory> ItemCategories { get; set; }
     }
 }

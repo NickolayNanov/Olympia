@@ -112,6 +112,7 @@
                 .Include(x => x.Trainer)
                 .Include(x => x.ShoppingCart)
                 .Include(x => x.FitnessPlan)
+                .ThenInclude(x => x.Owner)
                 .Include(x => x.Articles)
                 .Include(x => x.Address)
                 .SingleOrDefault(user => user.UserName == username);
@@ -252,8 +253,12 @@
                     await this.context.SaveChangesAsync();
                 }
 
-                this.context.FitnessPlans.Remove(this.context.FitnessPlans.SingleOrDefault(x => x.OwnerId == userToDelete.Id));
+                this.context.FitnessPlans
+                    .Include(x => x.Owner)
+                    .FirstOrDefault(x => x.Owner.UserName == userToDelete.UserName).Owner = null;
+
                 this.context.Users.Remove(userToDelete);
+                this.context.FitnessPlans.Remove(userToDelete.FitnessPlan);
 
                 await this.context.SaveChangesAsync();
             }

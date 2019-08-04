@@ -1,4 +1,5 @@
-﻿namespace Olympia.Web.Controllers
+﻿
+namespace Olympia.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 
