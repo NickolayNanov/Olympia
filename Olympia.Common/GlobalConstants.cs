@@ -38,6 +38,7 @@
 
         #region Errors
         public const string ErrorInputMessage = "The {0} must be at least {1} and at max {2} characters long.";
+        public const string ErrorDescriptionMessage = "The {0} must be at least {2} and at max {1} characters long.";
 
         public const string ConfirmPasswordErrorMessage = "The password and confirmation password do not match.";
         public const string AgeErrorMessage = "Your age must be between 12 and 65";

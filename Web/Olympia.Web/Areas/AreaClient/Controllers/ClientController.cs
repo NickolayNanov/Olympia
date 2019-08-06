@@ -4,12 +4,14 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+
     using Olympia.Common;
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.BindingModels.Client;
     using Olympia.Services.Contracts;
     using Olympia.Web.Areas.Client.Models;
+
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -51,6 +53,7 @@
 
             return this.View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> ChooseTrainer(UsernamesAndTrainerNameModel model)
         {
@@ -77,12 +80,6 @@
         public async Task<IActionResult> BecomeTrainer(string username)
         {
             var user = await this.usersService.GetUserByUsernameAsync(username);
-
-            if (user == null)
-            {
-                return this.Redirect("/Home/Error");
-            }
-
             var futureTrainer = this.mapper.Map<ClientToTrainerBindingModel>(user);
 
             return this.View(futureTrainer);
@@ -104,7 +101,6 @@
             }
 
             await this.signInManager.SignOutAsync();
-
             return this.Redirect(GlobalConstants.Index);
         }
 
@@ -127,14 +123,12 @@
         public async Task<IActionResult> LeaveTrainer(string trainerUsername)
         {
             await this.usersService.UnsetTrainerAsync(this.User.Identity.Name, trainerUsername);
-
             return this.Redirect(GlobalConstants.Index);
         }
 
         public async Task<IActionResult> MyFitnessPlan()
         {
             var fitnessPlan = await this.fitnessService.GetFitnessPlanByUsernameAsync(this.User.Identity.Name);
-
             return this.View(fitnessPlan);
         }
     }

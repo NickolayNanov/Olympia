@@ -67,37 +67,19 @@
 
         public async Task<IActionResult> DeleteArticle(int articleId)
         {
-            var result = await this.blogService.DeleteArticleByIdAsync(articleId);
-
-            if (result == false)
-            {
-                return this.Redirect("/Home/Error");
-            }
-
+            await this.blogService.DeleteArticleByIdAsync(articleId);
             return this.Redirect(GlobalConstants.TrainerMyArticles);
         }
 
         public async Task<IActionResult> ClientDetails(string username)
         {
             var user = await this.usersService.GetUserByUsernameAsync(username);
-
-            if (user == null)
-            {
-                return this.Redirect("/Home/Error");
-            }
-
             return this.View(user);
         }
 
         public async Task<IActionResult> CreateFitnessPlan(string username)
         {
             var model = await this.usersService.GetUserWithFitnessPlanModelAsync(username);
-
-            if (model == null)
-            {
-                return this.Redirect("/Home/Error");
-            }
-
             return this.View(model);
         }
 
@@ -124,38 +106,18 @@
 
         public async Task<IActionResult> CalculateCalories(ClientViewModel user)
         {
-            try
-            {
-                var calories = await this.usersService.CalculateCaloriesAsync(user.UserName);
-                user.Calories = calories;
+            var calories = await this.usersService.CalculateCaloriesAsync(user.UserName);
+            user.Calories = calories;
 
-                return this.View("CreateFitnessPlan", user);
-            }
-            catch
-            {
-                return this.Redirect("/Home/Error");
-            }
+            return this.View("CreateFitnessPlan", user);
         }
 
         public async Task<IActionResult> AssignFitnessPlan(ClientViewModel user, int workoutId)
         {
-            try
-            {
-                WorkoutViewModel workout = await this.fitnessService.GetWorkoutByIdAsync(workoutId);
+            var workout = await this.fitnessService.GetWorkoutByIdAsync(workoutId);
+            user.WorkoutViewModel = workout;
 
-                if (workout == null)
-                {
-                    return this.Redirect("/Home/Error");
-                }
-
-                user.WorkoutViewModel = workout;
-
-                return this.View("CreateFitnessPlan", user);
-            }
-            catch
-            {
-                return this.Redirect("/Home/Error");
-            }
+            return this.View("CreateFitnessPlan", user);
         }
 
         [HttpPost]
@@ -163,15 +125,11 @@
         {
             model.WorkoutViewModel = await this.fitnessService.GetWorkoutByIdAsync(workoutId);
 
-            if (model.WorkoutViewModel == null)
-            {
-                return this.Redirect("/Home/Error");
-            }
-
             if (model.Calories == 0 || model.WorkoutViewModel == null)
             {
                 model.WorkoutViewModel = new WorkoutViewModel() { Name = "", ImgUrl = "" };
                 this.ViewData["Errors"] = "In order to assign a fitness plan both calories and workout must be filled!";
+
                 return this.View("CreateFitnessPlan", model);
             }
 

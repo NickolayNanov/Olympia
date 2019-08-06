@@ -7,22 +7,45 @@
 }
 
 <div class="row">
-    <div class="leftcolumn">
+    <div class="col-md-9">
         <div class="card">
             <h2 class="text-center">@Model.Title</h2>
             <img src="@Model.ImgUrl" class="card-img">
             <p class="mt-4 font-weight-normal" contenteditable>@Model.Content</p>
         </div>
     </div>
-    <div class="rightcolumn">
+    <div class="col-md-3">
         @if ((this.User.IsInRole("Trainer") || this.User.IsInRole("Admin")) && user.Articles.Select(x => x.Id).Contains(Model.Id))
         {
             <div>
-                <a class="btn btn-danger"
-                   asp-area="AreaTrainer"
-                   asp-controller="Trainer"
-                   asp-action="DeleteArticle"
-                   asp-route-articleId="@Model.Id">Delete</a>
+                <a class="btn btn-danger text-light"
+                   data-toggle="modal" data-target="#articleDeleteModal">Delete</a>
+            </div>
+
+            <div class="modal fade" id="articleDeleteModal" tabindex="-1" role="dialog" aria-labelledby="articleDeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete article</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure to delete this article?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a type="button" class="btn btn-primary" 
+                                    asp-area="AreaTrainer"
+                                    asp-controller="Trainer"
+                                    asp-action="DeleteArticle"
+                                    asp-route-articleId="@Model.Id">
+                                Confirm
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         }
         <div class="card">

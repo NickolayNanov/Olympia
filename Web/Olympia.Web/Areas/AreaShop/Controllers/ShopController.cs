@@ -22,18 +22,13 @@
         public async Task<IActionResult> ShopIndex()
         {
             var items = await this.shopService.GetAllItemsAsync();
-
             ShopViewModel shopViewModel = new ShopViewModel { Items = items };
+
             return this.View(shopViewModel);
         }
 
         public async Task<IActionResult> Items(string categoryName)
         {
-            if (categoryName != "Fitness" && categoryName != "Supplements" && categoryName != "Clothing")
-            {
-                return this.Redirect(GlobalConstants.ErrorPage);
-            }
-
             var items = await this.shopService.GetAllItemsByCategoryAsync(categoryName);
             var shoppingCart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
 
@@ -45,44 +40,30 @@
         public async Task<IActionResult> ItemDetails(int itemId)
         {
             var item = await this.shopService.GetItemDtoByIdAsync(itemId);
-
-            if (item == null)
-            {
-                return this.Redirect(GlobalConstants.ErrorPage);
-            }
-
             return this.View(item);
         }
 
         public async Task<IActionResult> AddToCart(int itemId, string category)
         {
-            try
+            var result = await
+                this.shopService
+                .AddItemToUserCartAsync(itemId, this.User.Identity.Name);
+
+            if (!result)
             {
-                var result = await
-                    this.shopService
-                    .AddItemToUserCartAsync(itemId, this.User.Identity.Name);
-
-                if (!result)
-                {
-                    this.ViewData["Errors"] = GlobalConstants.AlreadyAddedThisItem;
-                }
-
-                var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
-                var items = await this.shopService.GetAllItemsByCategoryAsync(category);
-
-                ShopViewModel shopViewModel = new ShopViewModel
-                {
-                    Items = items,
-                    ShoppingCart = cart
-                };
-
-                return this.View("ItemsAll", shopViewModel);
+                this.ViewData["Errors"] = GlobalConstants.AlreadyAddedThisItem;
             }
-            catch
+
+            var cart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
+            var items = await this.shopService.GetAllItemsByCategoryAsync(category);
+
+            ShopViewModel shopViewModel = new ShopViewModel
             {
-                return this.Redirect(GlobalConstants.ErrorPage);
+                Items = items,
+                ShoppingCart = cart
+            };
 
-            }
+            return this.View("ItemsAll", shopViewModel);
         }
 
         public async Task<IActionResult> ShoppingCart()
@@ -93,28 +74,15 @@
 
         public async Task<IActionResult> RemoveFromCart(int itemId)
         {
-            try
-            {
-                await this.shopService.RemoveFromCartAsync(this.User.Identity.Name, itemId);
-                var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
+            await this.shopService.RemoveFromCartAsync(this.User.Identity.Name, itemId);
+            var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
-                return this.View("ShoppingCart", cart);
-            }
-            catch
-            {
-                return this.View(GlobalConstants.ErrorPage);
-            }
+            return this.View("ShoppingCart", cart);
         }
 
         public async Task<IActionResult> IncreaseCount(int itemId)
         {
-            var result = await this.shopService.IncreaseTimesItemIsBoughtAsync(itemId);
-
-            if (result == false)
-            {
-                return this.Redirect(GlobalConstants.ErrorPage);
-            }
-
+            await this.shopService.IncreaseTimesItemIsBoughtAsync(itemId);
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View("ShoppingCart", cart);
@@ -122,13 +90,7 @@
 
         public async Task<IActionResult> DecreaseCount(int itemId)
         {
-            var result = await this.shopService.DecreaseTimesItemIsBoughtAsync(itemId);
-
-            if (result == false)
-            {
-                return this.Redirect(GlobalConstants.ErrorPage);
-            }
-
+            await this.shopService.DecreaseTimesItemIsBoughtAsync(itemId);
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
 
             return this.View("ShoppingCart", cart);

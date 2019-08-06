@@ -50,7 +50,7 @@
         public double Height { get; set; }
 
         [Required]
-        [StringLength(DescriptionMaxNumber, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = DescriptionMinNumber)]
+        [StringLength(DescriptionMaxNumber, ErrorMessage = GlobalConstants.ErrorDescriptionMessage, MinimumLength = DescriptionMinNumber)]
         public string Description { get; set; }
     }
 }

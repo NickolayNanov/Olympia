@@ -28,6 +28,7 @@ namespace Olympia.Data.Domain
             this.Email = email;
             this.FullName = fullname;
 
+            this.FitnessPlan = new FitnessPlan() { OwnerId = this.Id };
             this.Address = new Address() { UserId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);
         }

@@ -2,8 +2,10 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using Olympia.Common;
     using Olympia.Services.Contracts;
+
     using System.Threading.Tasks;
 
     [Area(GlobalConstants.BlogArea)]
@@ -26,12 +28,6 @@
         public async Task<IActionResult> ArticleDetails(int articleId)
         {
             var article = await this.blogService.GetArticleAndIncrementTimesReadAsync(articleId);
-
-            if (article == null)
-            {
-                return this.Redirect(GlobalConstants.ErrorPage);
-            }
-
             return this.View(article);
         }
     }

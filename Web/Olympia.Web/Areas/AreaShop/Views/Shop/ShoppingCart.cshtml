@@ -19,7 +19,7 @@
                                 <div class="d-flex justify-content-around">
                                     <h5 class="card-body col-md-4">@item.Name (@item.TimesBought)</h5>
                                     <img src="@item.ImgUrl" class="card-img col-md-3" alt="Loading..." />
-                                    <strong><p class="col-md-3">@item.Price$</p></strong>                                   
+                                    <strong><p class="col-md-3">@item.Price$</p></strong>
                                     <div class="form-group">
                                         <a class="form-control text-center btn btn-primary col-xs-3"
                                            asp-area="AreaShop"
@@ -32,11 +32,33 @@
                                            asp-action="DecreaseCount"
                                            asp-route-itemId="@item.Id">Decrease</a>
                                         <a class="form-control text-center btn col-xs-3"
-                                           asp-area="AreaShop"
-                                           asp-controller="Shop"
-                                           asp-action="RemoveFromCart"
-                                           asp-route-cartId="@Model.Id"
-                                           asp-route-itemId="@item.Id">Remove</a>
+                                           data-toggle="modal" data-target="#shoppingCartItemDeleteModal">Remove</a>
+                                        <div class="modal fade" id="shoppingCartItemDeleteModal" tabindex="-1" role="dialog" aria-labelledby="shoppingCartItemDeleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Delete article</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure to remove this item from your shopping cart?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <a type="button" class="btn btn-primary"
+                                                           asp-area="AreaShop"
+                                                           asp-controller="Shop"
+                                                           asp-action="RemoveFromCart"
+                                                           asp-route-cartId="@Model.Id"
+                                                           asp-route-itemId="@item.Id">
+                                                            Confirm
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -68,7 +90,7 @@
                        asp-controller="Shop"
                        asp-action="FinishOrder">Finish Pruchase</a>
                 </div>
-                @if(this.ViewData["Messages"] != null)
+                @if (this.ViewData["Messages"] != null)
                 {
                     <h5 class="text-primary">@this.ViewData["Messages"]</h5>
                 }

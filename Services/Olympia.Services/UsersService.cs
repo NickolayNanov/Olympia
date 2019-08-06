@@ -178,9 +178,7 @@
 
             this.context.Update(realUser);
             await this.context.SaveChangesAsync();
-
             await this.userManager.UpdateSecurityStampAsync(realUser);
-
 
             var roleHasChanged = await this.userManager.AddToRoleAsync(realUser, GlobalConstants.TrainerRoleName);
 
@@ -192,7 +190,9 @@
             await this.userManager.UpdateAsync(realUser);
             this.context.Update(realUser);
             await this.context.SaveChangesAsync();
-            return true;
+
+            var result = await this.userManager.IsInRoleAsync(realUser, GlobalConstants.TrainerRoleName);
+            return result;
         }
 
         public async Task<OlympiaUser> GetUsersTrainerAsync(string username)
@@ -246,6 +246,16 @@
             if (userToDelete != null)
             {
                 this.context.Articles.RemoveRange(this.context.Articles.Where(x => x.AuthorId == userToDelete.Id));
+                   
+                var orders = this.context.Orders.Where(x => x.UserId == userToDelete.Id).ToList();
+                var items = this.context.OrderItems.Where(x => orders.Select(t => t.Id).Contains(x.Order.Id)).Select(x => x.Item).ToList();
+
+                var oi = this.context
+                    .OrderItems
+                    .Where(x => orders.Select(t => t.Id)
+                        .Contains(x.Order.Id) && 
+                        items.Select(q => q.Id)
+                        .Contains(x.Item.Id));
 
                 if (this.context.UserRoles.Any(x => x.UserId == userToDelete.Id))
                 {
@@ -253,12 +263,12 @@
                     await this.context.SaveChangesAsync();
                 }
 
-                this.context.FitnessPlans
-                    .Include(x => x.Owner)
-                    .FirstOrDefault(x => x.Owner.UserName == userToDelete.UserName).Owner = null;
+                this.context.OrderItems.RemoveRange(oi);
+                this.context.Orders.RemoveRange(orders);
 
-                this.context.Users.Remove(userToDelete);
-                this.context.FitnessPlans.Remove(userToDelete.FitnessPlan);
+                var fitnessPlan = await this.context.FitnessPlans.SingleOrDefaultAsync(x => x.OwnerId == userToDelete.Id);
+
+                this.context.RemoveRange(new object[] { userToDelete, fitnessPlan });
 
                 await this.context.SaveChangesAsync();
             }
