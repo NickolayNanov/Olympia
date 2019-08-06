@@ -18,6 +18,8 @@
         private const int AgeMaxNumber = 65;
         private const int AgeMinNumber = 12;
 
+        private const int AdressMaxLength = 300;
+
         [Required]
         [Display(Name = GlobalConstants.DisplayUsername)]
         public string Username { get; set; }
@@ -42,7 +44,7 @@
         public string Email { get; set; }
 
         [Required]
-        [StringLength(300, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = FullnameMinLength)]
+        [StringLength(AdressMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = FullnameMinLength)]
         public string Address { get; set; }
 
         [Required(ErrorMessage = "The Age field is required!")]

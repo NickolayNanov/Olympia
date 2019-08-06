@@ -27,15 +27,14 @@
 
         public string TrainerName { get; set; }
 
+        [Required]
+        public int Calories { get; set; }
+
         public ActityLevel Activity { get; set; }
 
         public Gender Gender { get; set; }
 
         public WeekWorkoutDuration WeekWorkoutDuration { get; set; }
-
-        [Required]
-        public int Calories { get; set; }
-
 
         public WorkoutViewModel WorkoutViewModel { get; set; }
 

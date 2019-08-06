@@ -373,6 +373,28 @@ namespace Olympia.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Message",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Content = table.Column<string>(nullable: false),
+                    ReceiverId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Message", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Message_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -441,6 +463,30 @@ namespace Olympia.Data.Migrations
                         name: "FK_ShoppingCartItems_ShoppingCarts_ShoppingCartId",
                         column: x => x.ShoppingCartId,
                         principalTable: "ShoppingCarts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserMessages",
+                columns: table => new
+                {
+                    SenderId = table.Column<string>(nullable: false),
+                    MessageId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserMessages", x => new { x.SenderId, x.MessageId });
+                    table.ForeignKey(
+                        name: "FK_UserMessages_Message_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "Message",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserMessages_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -560,6 +606,11 @@ namespace Olympia.Data.Migrations
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Message_ReceiverId",
+                table: "Message",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ItemId",
                 table: "OrderItems",
                 column: "ItemId");
@@ -573,6 +624,11 @@ namespace Olympia.Data.Migrations
                 name: "IX_ShoppingCartItems_ShoppingCartId",
                 table: "ShoppingCartItems",
                 column: "ShoppingCartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserMessages_MessageId",
+                table: "UserMessages",
+                column: "MessageId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -611,6 +667,9 @@ namespace Olympia.Data.Migrations
                 name: "ShoppingCartItems");
 
             migrationBuilder.DropTable(
+                name: "UserMessages");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -626,10 +685,13 @@ namespace Olympia.Data.Migrations
                 name: "Items");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Message");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

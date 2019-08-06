@@ -14,6 +14,6 @@
 
         public ShoppingCart ShoppingCart { get; set; }
 
-        public IEnumerable<ItemViewModel> Items { get; set; }
+        public virtual IEnumerable<ItemViewModel> Items { get; set; }
     }
 }

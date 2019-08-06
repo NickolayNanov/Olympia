@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Olympia.Data;
 
 namespace Olympia.Data.Migrations
 {
     [DbContext(typeof(OlympiaDbContext))]
-    partial class OlympiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190806145654_addedCreatedOn")]
+    partial class addedCreatedOn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,13 +284,9 @@ namespace Olympia.Data.Migrations
 
                     b.Property<string>("ReceiverId");
 
-                    b.Property<string>("SenderId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
@@ -643,10 +641,6 @@ namespace Olympia.Data.Migrations
                     b.HasOne("Olympia.Data.Domain.OlympiaUser", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId");
-
-                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>

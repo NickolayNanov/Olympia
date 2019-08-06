@@ -18,6 +18,12 @@
         private const int DescriptionMinNumber = 5;
         private const int DescriptionMaxNumber = 255;
 
+        private const double WeightMinNumber = 1;
+        private const double WeightMaxNumber = 999;
+
+        private const double HeightMinNumber = 1;
+        private const double HeightMaxNumber = 500;
+
         [Required]
         [Display(Name = GlobalConstants.DisplayUsername)]
         public string Username { get; set; }
@@ -42,11 +48,11 @@
         public IFormFile ProfilePictureUrl { get; set; }
 
         [Required]
-        [Range(1, 999)]
+        [Range(WeightMinNumber, WeightMaxNumber)]
         public double Weight { get; set; }
 
         [Required]
-        [Range(1, 999)]
+        [Range(HeightMinNumber, HeightMaxNumber)]
         public double Height { get; set; }
 
         [Required]

@@ -115,6 +115,8 @@
                 .ThenInclude(x => x.Owner)
                 .Include(x => x.Articles)
                 .Include(x => x.Address)
+                .Include(x => x.Messages)
+                .ThenInclude(x => x.Message)
                 .SingleOrDefault(user => user.UserName == username);
             });
 

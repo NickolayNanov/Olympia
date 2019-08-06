@@ -51,6 +51,10 @@
 
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
 
+        public DbSet<UserMessages> UserMessages { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -121,8 +125,21 @@
 
             modelBuilder.Entity<ShoppingCartItem>()
                 .HasKey(pk => new { pk.ItemId, pk.ShoppingCartId });
+
+            modelBuilder.Entity<UserMessages>()
+                .HasKey(pk => new { pk.SenderId, pk.MessageId });
+
+            modelBuilder.Entity<OlympiaUser>()
+                .HasMany(x => x.Messages)
+                .WithOne(x => x.Sender)
+                .HasForeignKey(x => x.SenderId);
+
+            modelBuilder.Entity<Message>()
+                .HasMany(x => x.UserMessages)
+                .WithOne(x => x.Message)
+                .HasForeignKey(x => x.MessageId);
         }
-       
+
         private void ApplyAuditInfoRules()
         {
             var changedEntries = this.ChangeTracker

@@ -56,7 +56,6 @@
                 return false;
             }
 
-
             item.TimesBought = 1;
 
             cart.ShoppingCartItems.Add(new ShoppingCartItem() { ItemId = itemId, ShoppingCartId = cart.Id });
@@ -79,9 +78,7 @@
             }
 
             var item = this.mapper.Map<Item>(model);
-
             var url = MyCloudinary.UploadImage(model.ImgUrl, model.Name);
-
             item.ImgUrl = url ?? Constants.CloudinaryInvalidUrl;
 
             var category = this.context.ChildCategories.FirstOrDefault(cat => cat.Name == model.CategoryName.ToString());

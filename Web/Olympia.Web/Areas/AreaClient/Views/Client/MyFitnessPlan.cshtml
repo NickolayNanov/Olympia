@@ -5,7 +5,7 @@
     @model Olympia.Data.Models.ViewModels.Fitness.FitnessPlanViewModel
 }
 
-@if (Model == null)
+@if (Model.Calories == 0)
 {
     <h3 class="text-danger">You do not have a fitness plan yet, but feel free to ask your trainer to make you one!</h3>
 }

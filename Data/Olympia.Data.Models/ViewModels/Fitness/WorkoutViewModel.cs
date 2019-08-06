@@ -20,10 +20,10 @@
 
         public string ImgUrl { get; set; }
 
-        public ICollection<Exercise> Exercises { get; set; }
-
         public WorkoutDifficulty WorkoutDifficulty { get; set; }
 
         public WorkoutType WorkoutType { get; set; }
+
+        public virtual ICollection<Exercise> Exercises { get; set; }
     }
 }

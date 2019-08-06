@@ -67,7 +67,6 @@
             if (currnetUser.Weight == null || currnetUser.Height == null)
             {
                 var modelForEditView = new ClientViewModel() { TrainerName = model.TrainerName };
-
                 return this.View("EditWeightHeight", modelForEditView);
             }
 

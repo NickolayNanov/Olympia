@@ -10,8 +10,8 @@ using Olympia.Data;
 namespace Olympia.Data.Migrations
 {
     [DbContext(typeof(OlympiaDbContext))]
-    [Migration("20190801222530_Create")]
-    partial class Create
+    [Migration("20190806150445_asd")]
+    partial class asd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -269,6 +269,32 @@ namespace Olympia.Data.Migrations
                     b.ToTable("ItemCategories");
                 });
 
+            modelBuilder.Entity("Olympia.Data.Domain.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<string>("ReceiverId");
+
+                    b.Property<string>("SenderId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>
                 {
                     b.Property<string>("Id")
@@ -486,6 +512,19 @@ namespace Olympia.Data.Migrations
                     b.ToTable("Suppliers");
                 });
 
+            modelBuilder.Entity("Olympia.Data.Domain.UserMessages", b =>
+                {
+                    b.Property<string>("SenderId");
+
+                    b.Property<int>("MessageId");
+
+                    b.HasKey("SenderId", "MessageId");
+
+                    b.HasIndex("MessageId");
+
+                    b.ToTable("UserMessages");
+                });
+
             modelBuilder.Entity("Olympia.Data.Domain.Workout", b =>
                 {
                     b.Property<int>("Id")
@@ -601,6 +640,17 @@ namespace Olympia.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("Olympia.Data.Domain.Message", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId");
+
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId");
+                });
+
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>
                 {
                     b.HasOne("Olympia.Data.Domain.Address", "Address")
@@ -649,6 +699,19 @@ namespace Olympia.Data.Migrations
                     b.HasOne("Olympia.Data.Domain.ShoppingCart", "ShoppingCart")
                         .WithMany("ShoppingCartItems")
                         .HasForeignKey("ShoppingCartId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.UserMessages", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.Message", "Message")
+                        .WithMany("UserMessages")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

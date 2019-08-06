@@ -141,6 +141,7 @@
                     articleViewModel = this.mapper.Map<ArticleViewModel>(articleFromDb);
                 });
             }
+
             return articleViewModel;
         }
 

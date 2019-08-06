@@ -14,7 +14,7 @@
 
         public decimal EndPrice => this.GetEndPrice();
 
-        public ICollection<ItemViewModel> Items { get; set; }
+        public virtual ICollection<ItemViewModel> Items { get; set; }
 
         private decimal GetEndPrice()
         {

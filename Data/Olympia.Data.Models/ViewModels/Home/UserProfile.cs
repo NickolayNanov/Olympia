@@ -7,24 +7,36 @@
 
     public class UserProfile
     {
+        private const double WeightMinValue = 0.01;
+        private const double WeightMaxValue = 500.0;
+
+        private const double HeightMinValue = 0.01;
+        private const double HeightMaxValue = 300.0;
+
+        private const int AgeMinValue = 12;
+        private const int AgeMaxValue = 65;
+
+        private const int DescriptionMinLength = 5;
+        private const int DescriptionMaxLength = 9999;
+
         public string UserName { get; set; }
 
         public string FullName { get; set; }
 
-        [Range(0.0, 500.0, ErrorMessage = GlobalConstants.ErrorInputMessage)]
+        [Range(WeightMinValue, WeightMaxValue, ErrorMessage = GlobalConstants.ErrorInputMessage)]
         public double? Weight { get; set; }
 
-        [Range(0.0, 300.0, ErrorMessage = GlobalConstants.ErrorInputMessage)]
+        [Range(HeightMinValue, HeightMaxValue, ErrorMessage = GlobalConstants.ErrorInputMessage)]
         public double? Height { get; set; }
 
         public string Interests { get; set; }
 
-        [Range(12, 65, ErrorMessage = GlobalConstants.ErrorInputMessage)]
+        [Range(AgeMinValue, AgeMaxValue, ErrorMessage = GlobalConstants.ErrorInputMessage)]
         public int Age { get; set; }
 
-        public ActityLevel Actity { get; set; }
-
-        [StringLength(9999, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = 5)]
+        [StringLength(DescriptionMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; }
+
+        public ActityLevel Actity { get; set; }
     }
 }

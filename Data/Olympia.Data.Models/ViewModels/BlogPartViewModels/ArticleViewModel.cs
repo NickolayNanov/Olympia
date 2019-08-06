@@ -16,13 +16,11 @@
 
         public string Title { get; set; }
 
-        public OlympiaUser Author { get; set; }
-
         public string ImgUrl { get; set; }
-
-        public string AuthorId { get; set; }
 
         public int TimesRead { get; set; }
 
+        public string AuthorId { get; set; }
+        public OlympiaUser Author { get; set; }
     }
 }

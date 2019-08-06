@@ -13,12 +13,12 @@
             this.Items = new HashSet<ItemViewModel>();
         }
 
-        public IEnumerable<ArticleViewModel> Articles { get; set; }
-
-        public IEnumerable<ItemViewModel> Items { get; set; }
-
-        public IEnumerable<string> ClientNames { get; set; }
-
         public string TrainerName { get; set; }
+
+        public virtual IEnumerable<ArticleViewModel> Articles { get; set; }
+
+        public virtual IEnumerable<ItemViewModel> Items { get; set; }
+
+        public virtual IEnumerable<string> ClientNames { get; set; }
     }
 }

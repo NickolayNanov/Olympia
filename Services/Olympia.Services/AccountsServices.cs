@@ -54,12 +54,6 @@
 
             var result = await this.signInManager.PasswordSignInAsync(user, model.Password, true, true);
 
-            //For Testing
-            if (result == null)
-            {
-                return user;
-            }
-
             if (!result.Succeeded)
             {
                 return null;
@@ -86,12 +80,6 @@
             user.ShoppingCart.UserId = user.Id;
 
             var result = await this.userManager.CreateAsync(user, model.Password);
-
-            //For tests...
-            if (result == null)
-            {
-                return user;
-            }
 
             if (result.Succeeded)
             {

@@ -18,6 +18,10 @@ namespace Olympia.Data.Domain
             this.FitnessPlan = new FitnessPlan() { OwnerId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);
             this.Address = new Address() { UserId = this.Id };
+
+            this.Messages = new HashSet<UserMessages>();
+            this.Clients = new HashSet<OlympiaUser>();
+            this.Articles = new HashSet<Article>();
         }
 
         public OlympiaUser(string username, string email, string fullname)
@@ -31,6 +35,11 @@ namespace Olympia.Data.Domain
             this.FitnessPlan = new FitnessPlan() { OwnerId = this.Id };
             this.Address = new Address() { UserId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);
+
+
+            this.Messages = new HashSet<UserMessages>();
+            this.Clients = new HashSet<OlympiaUser>();
+            this.Articles = new HashSet<Article>();
         }
 
         public Gender Gender { get; set; }
@@ -71,12 +80,15 @@ namespace Olympia.Data.Domain
 
         public virtual Address Address { get; set; }
 
+        public int ShoppingCartId { get; set; }
+
+        public ShoppingCart ShoppingCart { get; set; }
+
         public virtual ICollection<OlympiaUser> Clients { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; }
 
-        public int ShoppingCartId { get; set; }
+        public virtual ICollection<UserMessages> Messages { get; set; }
 
-        public ShoppingCart ShoppingCart { get; set; }
     }
 }

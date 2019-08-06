@@ -33,7 +33,6 @@
             var shoppingCart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
 
             var shopViewModel = new ShopViewModel() { Items = items, ShoppingCart = shoppingCart };
-
             return this.View("ItemsAll", shopViewModel);
         }
 
