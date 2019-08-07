@@ -204,12 +204,12 @@
 
             OlympiaUser trainer = null;
 
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
-                trainer = await this.context
+                trainer = this.context
                 .Users
                 .Include(user => user.Trainer)
-                .SingleOrDefaultAsync(x => x.UserName == username);
+                .SingleOrDefault(x => x.UserName == username);
             });
 
             return trainer.Trainer;
@@ -372,6 +372,12 @@
         public async Task<UserProfile> GetUserProfileModelAsync(string username)
         {
             var model = await this.context.Users.Include(x => x.Address).FirstOrDefaultAsync(user => user.UserName == username);
+
+            if(model == null)
+            {
+                return null;
+            }
+
             var userFromDb = this.mapper.Map<UserProfile>(model);
             userFromDb.Adress = model.Address.Location;
 
@@ -390,6 +396,11 @@
                 userFromDb.Description = model.Description;
                 userFromDb.Age = model.Age;
                 userFromDb.Address.Location = model.Adress;
+
+                if(model.ProfilePictureUrl != null)
+                {
+                    userFromDb.ProfilePicturImgUrl = MyCloudinary.UploadImage(model.ProfilePictureUrl, "Picture");
+                }
 
                 this.context.Update(userFromDb);
                 await this.context.SaveChangesAsync();

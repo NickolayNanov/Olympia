@@ -10,6 +10,8 @@ connection.on("ReceiveMessage", () => {
 });
 
 connection.on("ReceiveMessage", function (currentUser, message) {
+
+    isFinished = true;
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     var encodedMsg = currentUser + ": " + msg;
     var li = document.createElement("li");
@@ -17,6 +19,25 @@ connection.on("ReceiveMessage", function (currentUser, message) {
     li.classList.add(["list-group-item"])
     document.getElementById("messagesList").appendChild(li);
 
+});
+
+let isFinished = false;
+
+connection.on("LoadMessage", (currentUser, message) => {
+
+    let ul = document.getElementById("messagesList").getElementsByTagName("li")
+    if (isFinished != false) {
+        if (ul.length != 0) {
+            return;
+        }
+    }
+
+    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var encodedMsg = currentUser + ": " + msg;
+    var li = document.createElement("li");
+    li.textContent = encodedMsg;
+    li.classList.add(["list-group-item"])
+    document.getElementById("messagesList").appendChild(li);
 });
 
 connection.start().then(function () {

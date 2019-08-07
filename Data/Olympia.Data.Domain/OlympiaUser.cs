@@ -1,5 +1,4 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace Olympia.Data.Domain
+﻿namespace Olympia.Data.Domain
 {
     using Microsoft.AspNetCore.Identity;
 
@@ -21,6 +20,7 @@ namespace Olympia.Data.Domain
 
             this.Clients = new HashSet<OlympiaUser>();
             this.Articles = new HashSet<Article>();
+            this.Messages = new HashSet<Message>();
         }
 
         public OlympiaUser(string username, string email, string fullname)
@@ -37,9 +37,8 @@ namespace Olympia.Data.Domain
 
             this.Clients = new HashSet<OlympiaUser>();
             this.Articles = new HashSet<Article>();
+            this.Messages = new HashSet<Message>();
         }
-
-        public Gender Gender { get; set; }
 
         public string FullName { get; set; }
 
@@ -73,6 +72,8 @@ namespace Olympia.Data.Domain
 
         public ActityLevel Activity { get; set; }
 
+        public Gender Gender { get; set; }
+
         public int AddressId { get; set; }
 
         public virtual Address Address { get; set; }
@@ -85,5 +86,6 @@ namespace Olympia.Data.Domain
 
         public virtual ICollection<Article> Articles { get; set; }
 
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

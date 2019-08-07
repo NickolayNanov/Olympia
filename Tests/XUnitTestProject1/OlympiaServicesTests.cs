@@ -383,26 +383,7 @@
 
             Assert.Equal(expected, actual);
         }
-        #endregion
-
-        #region Accounts Service Tests
-        [Fact]
-        public async Task LoginUserAsyncShouldReturnRealUser()
-        {
-            this.InitiateInMemmoryDbForAccount();
-
-            UserLoginBindingModel model = new UserLoginBindingModel
-            {
-                UserName = "Pesho",
-                Password = "123123"
-            };
-
-            var user = await this.accountService.LoginUserAsync(model);
-
-            Assert.Equal(model.UserName, user.UserName);
-        }
-
-        #endregion
+        #endregion      
 
         #region Fitness Service Tests
         [Fact]

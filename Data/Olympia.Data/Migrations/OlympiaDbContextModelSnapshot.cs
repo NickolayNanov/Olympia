@@ -267,6 +267,30 @@ namespace Olympia.Data.Migrations
                     b.ToTable("ItemCategories");
                 });
 
+            modelBuilder.Entity("Olympia.Data.Domain.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<string>("ReceiverId");
+
+                    b.Property<string>("SenderId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>
                 {
                     b.Property<string>("Id")
@@ -597,6 +621,13 @@ namespace Olympia.Data.Migrations
                         .WithMany("ItemCategories")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.Message", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>

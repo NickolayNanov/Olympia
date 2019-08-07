@@ -59,7 +59,6 @@
             }
 
             await this.signInManager.SignInAsync(user, isPersistent: true);
-
             return this.Redirect(GlobalConstants.Index);
         }
 

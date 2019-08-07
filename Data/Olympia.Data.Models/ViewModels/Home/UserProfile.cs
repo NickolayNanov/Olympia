@@ -1,5 +1,7 @@
 ﻿namespace Olympia.Data.Models.ViewModels.Home
 {
+    using Microsoft.AspNetCore.Http;
+
     using Olympia.Common;
     using Olympia.Data.Domain.Enums;
 
@@ -44,5 +46,9 @@
         public string Adress { get; set; }
 
         public ActityLevel Actity { get; set; }
+
+        [Display(Name = GlobalConstants.DisplayProfilePic)]
+        [DataType(DataType.Upload)]
+        public IFormFile ProfilePictureUrl { get; set; }
     }
 }

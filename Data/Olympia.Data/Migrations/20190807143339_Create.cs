@@ -143,7 +143,6 @@ namespace Olympia.Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Gender = table.Column<int>(nullable: false),
                     FullName = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
@@ -157,6 +156,7 @@ namespace Olympia.Data.Migrations
                     Weight = table.Column<double>(nullable: true),
                     Height = table.Column<double>(nullable: true),
                     Activity = table.Column<int>(nullable: false),
+                    Gender = table.Column<int>(nullable: false),
                     AddressId = table.Column<int>(nullable: false),
                     ShoppingCartId = table.Column<int>(nullable: false)
                 },
@@ -373,6 +373,29 @@ namespace Olympia.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    SenderId = table.Column<string>(nullable: true),
+                    ReceiverId = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -560,6 +583,11 @@ namespace Olympia.Data.Migrations
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Messages_SenderId",
+                table: "Messages",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ItemId",
                 table: "OrderItems",
                 column: "ItemId");
@@ -603,6 +631,9 @@ namespace Olympia.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ItemCategories");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "OrderItems");

@@ -10,7 +10,7 @@ using Olympia.Data;
 namespace Olympia.Data.Migrations
 {
     [DbContext(typeof(OlympiaDbContext))]
-    [Migration("20190807080559_Create")]
+    [Migration("20190807143339_Create")]
     partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -267,6 +267,30 @@ namespace Olympia.Data.Migrations
                     b.HasIndex("ChildCategoryId");
 
                     b.ToTable("ItemCategories");
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<string>("ReceiverId");
+
+                    b.Property<string>("SenderId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>
@@ -599,6 +623,13 @@ namespace Olympia.Data.Migrations
                         .WithMany("ItemCategories")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Olympia.Data.Domain.Message", b =>
+                {
+                    b.HasOne("Olympia.Data.Domain.OlympiaUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("Olympia.Data.Domain.OlympiaUser", b =>

@@ -106,7 +106,6 @@
         public async Task<IActionResult> MyTrainer(string username)
         {
             var trainer = await this.usersService.GetUsersTrainerAsync(username);
-
             return this.View(trainer);
         }
 
@@ -116,7 +115,8 @@
             await this.usersService.UpdateUserHeightAndWeightAsync(model, this.User.Identity.Name);
             await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
 
-            var trainer = await this.usersService.GetUsersTrainerAsync(trainerName);
+            var trainer = await this.usersService.GetUsersTrainerAsync(this.User.Identity.Name);
+
             return this.View("MyTrainer", trainer);
         }
 

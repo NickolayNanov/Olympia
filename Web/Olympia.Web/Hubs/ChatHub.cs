@@ -1,6 +1,7 @@
 ﻿namespace Olympia.Web.Hubs
 {
     using Microsoft.AspNetCore.SignalR;
+    using Microsoft.EntityFrameworkCore;
     using Olympia.Data;
     using Olympia.Data.Domain;
     using Olympia.Services.Contracts;
@@ -13,6 +14,7 @@
     {
         private readonly IUsersService usersService;
         private readonly OlympiaDbContext context;
+        private bool isFirstTime = true;
 
         public ChatHub(IUsersService usersService,
             OlympiaDbContext context)
@@ -27,14 +29,46 @@
             {
                 return;
             }
-
+            
             string senderUsername = this.Context.GetHttpContext().User.Identity.Name;
 
-            var userFromDb = await this.usersService.GetUserByUsernameAsync(destuser);
-            var currentUserFormDb = await this.usersService.GetUserByUsernameAsync(senderUsername);
+            var sender = this.context.Users
+                .Include(x => x.Messages)
+                .SingleOrDefault(x => x.UserName == senderUsername);
 
-            await this.Clients.User(userFromDb.Id).SendAsync("ReceiveMessage", senderUsername, message);
-            await this.Clients.User(currentUserFormDb.Id).SendAsync("ReceiveMessage", senderUsername, message);
+            var receiver = this.context.Users
+                .Include(x => x.Messages)
+                .SingleOrDefault(x => x.UserName == destuser);
+
+            if (isFirstTime)
+            {
+                await LoadPreviousMessagesAsync(sender, receiver);
+                this.isFirstTime = false;
+            }
+
+            await AddMessageToDbAsync(message, sender, receiver);
+            await this.Clients.User(sender.Id).SendAsync("ReceiveMessage", sender.UserName, message);
+            await this.Clients.User(receiver.Id).SendAsync("ReceiveMessage", sender.UserName, message);
+        }
+
+        private async Task LoadPreviousMessagesAsync(OlympiaUser sender, OlympiaUser receiver)
+        {
+            List<Message> messages = new List<Message>(sender.Messages.Where(x => x.ReceiverId == receiver.Id));
+            messages = messages.Concat(receiver.Messages.Where(x => x.ReceiverId == sender.Id)).OrderByDescending(x => x.Id).ToList();
+
+            foreach (var message in messages.Take(5).OrderBy(x => x.Id))
+            {
+                await this.Clients.User(message.SenderId).SendAsync("LoadMessage", message.Sender.UserName, message.Content);
+                await this.Clients.User(message.ReceiverId).SendAsync("LoadMessage", message.Sender.UserName, message.Content);
+            }
+        }
+
+        private async Task AddMessageToDbAsync(string message, OlympiaUser sender, OlympiaUser receiver)
+        {
+            var currentMessage = new Message() { Content = message, ReceiverId = receiver.Id };
+            sender.Messages.Add(currentMessage);
+            this.context.Update(sender);
+            await this.context.SaveChangesAsync();
         }
     }
 }
