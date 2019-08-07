@@ -57,7 +57,10 @@
 
             this.CreateMap<SupplierBindingModel, Supplier>();
 
-            this.CreateMap<OlympiaUser, UserProfile>().ReverseMap();
+            this.CreateMap<OlympiaUser, UserProfile>()
+                .ForMember(x => x.Adress, y => y.MapFrom(z => z.Address.Location))
+                .ReverseMap();
+
             this.CreateMap<FitnessPlan, FitnessPlanViewModel>()
                 .ForMember(x => x.Workout, y => y.MapFrom(z => z.Workout))
                 .ForMember(x => x.Calories, y => y.MapFrom(z => z.CaloriesGoal))

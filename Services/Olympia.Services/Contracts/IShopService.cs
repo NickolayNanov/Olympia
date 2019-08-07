@@ -18,7 +18,7 @@
 
         Task<bool> CreateItemAsync(ItemBindingModel model);
 
-        Task<IEnumerable<ItemViewModel>> GetAllItemsByCategoryAsync(string categoryName);
+        Task<IList<ItemViewModel>> GetAllItemsByCategoryAsync(string categoryName);
 
         Task<ItemViewModel> GetItemDtoByIdAsync(int itemId);
 

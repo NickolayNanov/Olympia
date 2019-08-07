@@ -115,8 +115,6 @@
                 .ThenInclude(x => x.Owner)
                 .Include(x => x.Articles)
                 .Include(x => x.Address)
-                .Include(x => x.Messages)
-                .ThenInclude(x => x.Message)
                 .SingleOrDefault(user => user.UserName == username);
             });
 
@@ -373,15 +371,16 @@
 
         public async Task<UserProfile> GetUserProfileModelAsync(string username)
         {
-            var userFromDb = this.mapper.Map<UserProfile>
-                (await this.context.Users.FirstOrDefaultAsync(user => user.UserName == username));
+            var model = await this.context.Users.Include(x => x.Address).FirstOrDefaultAsync(user => user.UserName == username);
+            var userFromDb = this.mapper.Map<UserProfile>(model);
+            userFromDb.Adress = model.Address.Location;
 
             return userFromDb;
         }
 
         public async Task UpdateProfileAsync(UserProfile model, string username)
         {
-            var userFromDb = await this.context.Users.SingleOrDefaultAsync(user => user.UserName == username);
+            var userFromDb = await this.context.Users.Include(x => x.Address).SingleOrDefaultAsync(user => user.UserName == username);
 
             if (userFromDb != null)
             {
@@ -390,6 +389,7 @@
                 userFromDb.Activity = model.Actity;
                 userFromDb.Description = model.Description;
                 userFromDb.Age = model.Age;
+                userFromDb.Address.Location = model.Adress;
 
                 this.context.Update(userFromDb);
                 await this.context.SaveChangesAsync();

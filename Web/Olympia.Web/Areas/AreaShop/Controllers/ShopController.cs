@@ -30,15 +30,23 @@
         public async Task<IActionResult> Items(string categoryName)
         {
             var items = await this.shopService.GetAllItemsByCategoryAsync(categoryName);
+
+            foreach (var item in items)
+            {
+                item.Category = categoryName;
+            }
+
             var shoppingCart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
 
             var shopViewModel = new ShopViewModel() { Items = items, ShoppingCart = shoppingCart };
             return this.View("ItemsAll", shopViewModel);
         }
 
-        public async Task<IActionResult> ItemDetails(int itemId)
+        public async Task<IActionResult> ItemDetails(int itemId, string category)
         {
             var item = await this.shopService.GetItemDtoByIdAsync(itemId);
+            item.Category = category;
+
             return this.View(item);
         }
 
@@ -61,6 +69,11 @@
                 Items = items,
                 ShoppingCart = cart
             };
+
+            foreach (var item in shopViewModel.Items)
+            {
+                item.Category = category;
+            }
 
             return this.View("ItemsAll", shopViewModel);
         }

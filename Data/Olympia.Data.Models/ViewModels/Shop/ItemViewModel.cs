@@ -31,6 +31,8 @@
 
         public int TimesBought { get; set; }
 
+        public string Category { get; set; }
+
 
         public ShoppingCart ShoppingCart { get; set; }
 

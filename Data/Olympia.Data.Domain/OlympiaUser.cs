@@ -19,7 +19,6 @@ namespace Olympia.Data.Domain
             this.ShoppingCart = new ShoppingCart(this.Id);
             this.Address = new Address() { UserId = this.Id };
 
-            this.Messages = new HashSet<UserMessages>();
             this.Clients = new HashSet<OlympiaUser>();
             this.Articles = new HashSet<Article>();
         }
@@ -36,8 +35,6 @@ namespace Olympia.Data.Domain
             this.Address = new Address() { UserId = this.Id };
             this.ShoppingCart = new ShoppingCart(this.Id);
 
-
-            this.Messages = new HashSet<UserMessages>();
             this.Clients = new HashSet<OlympiaUser>();
             this.Articles = new HashSet<Article>();
         }
@@ -87,8 +84,6 @@ namespace Olympia.Data.Domain
         public virtual ICollection<OlympiaUser> Clients { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; }
-
-        public virtual ICollection<UserMessages> Messages { get; set; }
 
     }
 }

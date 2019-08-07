@@ -105,18 +105,18 @@
             return items;
         }
 
-        public async Task<IEnumerable<ItemViewModel>> GetAllItemsByCategoryAsync(string categoryName)
+        public async Task<IList<ItemViewModel>> GetAllItemsByCategoryAsync(string categoryName)
         {
             if (string.IsNullOrEmpty(categoryName))
             {
                 return new List<ItemViewModel>();
             }
 
-            IEnumerable<ItemViewModel> ShopViewModels = new List<ItemViewModel>();
+            IEnumerable<ItemViewModel> shopViewModels = new List<ItemViewModel>();
 
             await Task.Run(async () =>
             {
-                ShopViewModels = this.mapper.ProjectTo<ItemViewModel>((await this.context.ChildCategories
+                shopViewModels = this.mapper.ProjectTo<ItemViewModel>((await this.context.ChildCategories
                 .Include(x => x.ItemCategories)
                 .ThenInclude(ic => ic.Item)
                 .ThenInclude(item => item.Supplier)
@@ -124,16 +124,15 @@
                 .ItemCategories
                 .Select(x => x.Item)
                 .OrderByDescending(x => x.CreatedOn)
-                .AsQueryable())
-                .AsEnumerable();
+                .AsQueryable());
             });
 
-            if (ShopViewModels == null)
+            if (shopViewModels == null)
             {
                 return null;
             }
 
-            return ShopViewModels;
+            return shopViewModels.ToList();
         }
 
         public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync()

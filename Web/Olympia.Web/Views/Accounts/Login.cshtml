@@ -1,43 +1,40 @@
-﻿
-@{
-    ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+    ViewData["Title"] = "Log in";
     @model Olympia.Data.Models.BindingModels.Account.UserLoginBindingModel
 }
-
 
 <h1>@ViewData["Title"]</h1>
 <div class="row">
     <div class="col-md-4">
         <section>
-            @if (this.ViewData["Errors"] != null)
-            {
-                <h5 class="text-danger">@this.ViewData["Errors"];</h5>
-            }
-            <form id="account" method="post" asp-antiforgery="true">
-                <h4>Use a local account to log in.</h4>
+            <form id="account" method="post" asp-controller="Accounts" asp-action="Login">
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="@Model.UserName"></label>
-                    <input asp-for="@Model.UserName" class="form-control" />
-                    <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                    <label asp-for="UserName"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.Password"></label>
-                    <input asp-for="@Model.Password" class="form-control" />
-                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
-                        <label asp-for="@Model.RememberMe">
-                            <input asp-for="@Model.RememberMe" />
+                        <label asp-for="RememberMe">
+                            <input asp-for="RememberMe" />
                             @Html.DisplayNameFor(m => m.RememberMe)
                         </label>
                     </div>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a asp-controller="Accounts" asp-action="Register">Register as a new user</a>
+                    </p>
                 </div>
             </form>
         </section>

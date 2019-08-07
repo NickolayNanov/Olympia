@@ -27,11 +27,12 @@
                    asp-controller="Shop"
                    asp-action="AddToCart"
                    asp-route-itemId="@Model.Id"
+                   asp-route-category="@Model.Category"
                    class="btn btn-danger col-md-12 w-100">Add To Cart</a>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card">
+            <div class="card border-danger">
                 <h2 class="mb-3 text-center">About <strong class="text-danger">@Model.Supplier.Name</strong></h2>
                 <div>
                     <p class="card-text text-center mt-3"><i>@Model.Supplier.Description</i></p>

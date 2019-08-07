@@ -19,6 +19,9 @@
         private const int DescriptionMinLength = 5;
         private const int DescriptionMaxLength = 9999;
 
+        private const int AdressMinLength = 3;
+        private const int AdressMaxLength = 9999;
+
         public string UserName { get; set; }
 
         public string FullName { get; set; }
@@ -36,6 +39,9 @@
 
         [StringLength(DescriptionMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; }
+
+        [StringLength(AdressMaxLength, ErrorMessage = GlobalConstants.ErrorInputMessage, MinimumLength = AdressMinLength)]
+        public string Adress { get; set; }
 
         public ActityLevel Actity { get; set; }
     }

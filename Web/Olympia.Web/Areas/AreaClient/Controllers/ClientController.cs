@@ -116,7 +116,8 @@
             await this.usersService.UpdateUserHeightAndWeightAsync(model, this.User.Identity.Name);
             await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
 
-            return this.Redirect(GlobalConstants.ClientTrainersAll);
+            var trainer = await this.usersService.GetUsersTrainerAsync(trainerName);
+            return this.View("MyTrainer", trainer);
         }
 
         public async Task<IActionResult> LeaveTrainer(string trainerUsername)
