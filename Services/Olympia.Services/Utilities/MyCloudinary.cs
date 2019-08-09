@@ -38,11 +38,6 @@
                 uploadResult = cloudinary.Upload(uploadParams);
             }
 
-            if (uploadResult.Error != null)
-            {
-                return "shit...";
-            }
-
             return uploadResult.SecureUri.AbsoluteUri;
         }
 

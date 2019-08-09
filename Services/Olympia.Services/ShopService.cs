@@ -39,12 +39,7 @@
 
             var cart = await this.GetShoppingCartByUserNameAsync(username);
 
-            if (cart == null)
-            {
-                return false;
-            }
-
-            if (cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId))
+            if (cart == null || cart.ShoppingCartItems.Select(x => x.ItemId).Contains(itemId))
             {
                 return false;
             }
@@ -174,7 +169,7 @@
                             .ProjectTo<ItemViewModel>(this.context
                                 .Items
                                 .Include(item => item.Supplier)
-                                .OrderByDescending(x => x.TimesBought)
+                                .OrderByDescending(x => x.TimesEverBought)
                                 .Take(5))
                             .AsEnumerable();
             });
@@ -314,9 +309,7 @@
             }
 
             int initialValue = item.TimesBought;
-
             item.TimesBought++;
-
             this.context.Update(item);
             await this.context.SaveChangesAsync();
 

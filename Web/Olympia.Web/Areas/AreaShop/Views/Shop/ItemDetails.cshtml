@@ -12,6 +12,39 @@
 
 <div>
     <div class="row">
+        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        {
+            <a class="btn btn-danger col-md-9 mb-2 text-light"
+               data-toggle="modal" data-target="#adminItemDeleteModal">Delete</a>
+
+            <div class="modal fade" id="adminItemDeleteModal" tabindex="-1" role="dialog" aria-labelledby="adminItemDeleteLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete article</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure to delete this item?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a type="button" class="btn btn-primary"
+                               asp-area="AreaAdministration"
+                               asp-controller="Administration"
+                               asp-action="DeleteItem"
+                               asp-route-itemId="@Model.Id">
+                                Confirm
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
         <div class="col-md-9">
             <div class="card border-danger">
                 <div class="d-flex justify-content-between">

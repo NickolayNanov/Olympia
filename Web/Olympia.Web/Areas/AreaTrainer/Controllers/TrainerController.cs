@@ -54,6 +54,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateArticle(CreateArticleBindingModel model)
         {
             if (!this.ModelState.IsValid)
@@ -89,6 +90,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> FileterWorkouts(ClientViewModel model)
         {
             if (model.WorkoutInputModel.Duration == 0 ||
@@ -121,6 +123,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetFitnessPlan(ClientViewModel model, int workoutId)
         {
             model.WorkoutViewModel = await this.fitnessService.GetWorkoutByIdAsync(workoutId);

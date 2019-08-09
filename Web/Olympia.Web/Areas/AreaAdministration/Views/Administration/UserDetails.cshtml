@@ -1,0 +1,59 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "ClientDetails";
+    @model Olympia.Data.Domain.OlympiaUser
+}
+
+<h2 class="text-danger text-center">@Model.FullName</h2>
+<hr class="bg-danger" />
+
+<div class="container">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div>
+                <div class="row">
+                    <h3 class="col-md-12 text-danger mb-5">Age: @Model.Age</h3>
+                    <h3 class="col-md-12 text-danger mb-5">Gender: @Model.Gender</h3>
+                    <h3 class="col-md-12 text-danger mb-5">Weight: @Model.Weight</h3>
+                    <h3 class="col-md-12 text-danger mb-5">Height: @Model.Height</h3>
+                </div>
+            </div>
+            <div class="card card-trainer ml-4">
+                <img src="@Model.ProfilePicturImgUrl" alt="Loading..." style="width:100%">
+                <h3>@Model.FullName</h3>
+                <p class="title">Olympia Client</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary col-md-12 mt-5 text-light"
+           data-toggle="modal" data-target="#adminUserDeleteModal">Delete User</a>
+
+        <div class="modal fade" id="adminUserDeleteModal" tabindex="-1" role="dialog" aria-labelledby="adminItemDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete article</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure to delete @Model.UserName?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <a type="button" class="btn btn-primary"
+                           asp-area="AreaAdministration"
+                           asp-controller="Administration"
+                           asp-action="DeleteUser"
+                           asp-route-username="@Model.UserName">
+                            Confirm
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

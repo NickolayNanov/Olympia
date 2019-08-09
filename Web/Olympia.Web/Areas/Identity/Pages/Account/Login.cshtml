@@ -7,6 +7,11 @@
 }
 
 <h1>@ViewData["Title"]</h1>
+
+@if (this.ViewData["Errors"] != null)
+{
+    <h3 class="text-danger">@this.ViewData["Errors"]</h3>
+}
 <div class="row">
     <div class="col-md-4">
         <section>

@@ -10,8 +10,9 @@
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
-    using System;
+
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public class AccountsServices : IAccountsServices
@@ -47,14 +48,14 @@
                 .SingleOrDefaultAsync(x =>
                 x.UserName == model.UserName);
 
-            if (user == null)
+            if(user == null)
             {
                 return null;
             }
 
             var result = await this.signInManager.PasswordSignInAsync(user, model.Password, true, true);
 
-            if (!result.Succeeded)
+            if (user == null || !result.Succeeded)
             {
                 return null;
             }
@@ -69,8 +70,9 @@
             if (model.Age < 12 || model.Age > 65 ||
                 string.IsNullOrEmpty(model.Username) ||
                 string.IsNullOrEmpty(model.FullName) ||
-                this.userManager.Users.Select(users => users.UserName).Any(name => name == model.Username) ||
-                !this.CheckUsername(model.Username))
+                this.CheckForExistingUser(model) ||
+                !this.CheckUsername(model.Username) ||
+                !this.CheckFullName(model.FullName))
             {
                 return null;
             }
@@ -97,12 +99,24 @@
 
             return user;
         }
-
+       
         private bool CheckUsername(string username)
         {
-            char[] symbols = new char[] { '*', '/', '\\', '^', '@', '#', '$', '%', '&','(', ')', '{', '}' };
+            Regex regex = new Regex(@"^[A-Za-z_]+[0-9]*$");
 
-            if(username.ToCharArray().Any(x => symbols.Contains(x)))
+            if (!regex.IsMatch(username))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckFullName(string fullName)
+        {
+            Regex regex = new Regex(@"^[A-Za-zА-Яа-я ]+$");
+
+            if (!regex.IsMatch(fullName))
             {
                 return false;
             }
@@ -119,6 +133,13 @@
                 god.ShoppingCart.UserId = god.Id;
                 await this.userManager.AddToRoleAsync(god, GlobalConstants.AdministratorRoleName);
             }
+        }
+
+        private bool CheckForExistingUser(UserRegisterBingingModel model)
+        {
+            return this.userManager.Users
+                                .Select(users => users.UserName)
+                                .Any(name => name == model.Username);
         }
     }
 }

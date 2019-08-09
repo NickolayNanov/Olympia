@@ -43,6 +43,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateArticle(CreateArticleBindingModel model)
         {
             if (!this.ModelState.IsValid)
@@ -51,7 +52,8 @@
             }
 
             await this.blogService.CreateArticleAsync(model, this.User.Identity.Name);
-            return this.Redirect(GlobalConstants.AdminArticlesAll);
+            var articles = await this.blogService.GetAllArticlesAsync();
+            return this.View("ArticlesAll", articles);
         }
 
         public async Task<IActionResult> UsersAll()
@@ -103,7 +105,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View(model);
+                return this.View("AddItem", model);
             }
 
             await this.shopService.CreateItemAsync(model);
@@ -116,6 +118,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddSupplier(SupplierBindingModel model)
         {
             if (!this.ModelState.IsValid)
@@ -147,6 +150,11 @@
             var items = await this.fitnessService.GetAllItemsAsync();
 
             return this.View("ItemsAll", items);
+        }
+        public async Task<IActionResult> UserDetails(string username)
+        {
+            var user = await this.usersService.GetUserByUsernameAsync(username);
+            return this.View(user);
         }
     }
 }

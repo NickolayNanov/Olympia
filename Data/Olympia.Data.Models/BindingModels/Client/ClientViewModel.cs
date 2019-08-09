@@ -1,5 +1,6 @@
 ﻿namespace Olympia.Data.Models.BindingModels.Client
 {
+    using Olympia.Common;
     using Olympia.Data.Domain.Enums;
     using Olympia.Data.Models.ViewModels.Fitness;
 
@@ -8,6 +9,9 @@
 
     public class ClientViewModel
     {
+        private const double heightWeightMinValue = 0.1;
+        private const double heightWeightMaxValue = 999.99;
+
         public ClientViewModel()
         {
             this.WorkoutInputModel = new WorkoutBindingModel();
@@ -27,7 +31,6 @@
 
         public string TrainerName { get; set; }
 
-        [Required]
         public int Calories { get; set; }
 
         public ActityLevel Activity { get; set; }

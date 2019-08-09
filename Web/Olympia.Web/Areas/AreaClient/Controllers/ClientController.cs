@@ -9,8 +9,8 @@
     using Olympia.Data.Domain;
     using Olympia.Data.Models.BindingModels.Account;
     using Olympia.Data.Models.BindingModels.Client;
+    using Olympia.Data.Models.ViewModels;
     using Olympia.Services.Contracts;
-    using Olympia.Web.Areas.Client.Models;
 
     using System.Linq;
     using System.Threading.Tasks;
@@ -110,13 +110,18 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateWeightHeight(ClientViewModel model, string trainerName)
+        public async Task<IActionResult> UpdateWeightHeight(ClientViewModel model)
         {
+            if (model.Weight <= 0 || model.Height <= 0)
+            {
+                this.ViewData["Errors"] = GlobalConstants.ErrorWeightHeightMessage;
+                return this.View("EditWeightHeight", model);
+            }
+
             await this.usersService.UpdateUserHeightAndWeightAsync(model, this.User.Identity.Name);
             await this.usersService.SetTrainerAsync(model.TrainerName, this.User.Identity.Name);
 
             var trainer = await this.usersService.GetUsersTrainerAsync(this.User.Identity.Name);
-
             return this.View("MyTrainer", trainer);
         }
 

@@ -268,6 +268,13 @@
 
                 var fitnessPlan = await this.context.FitnessPlans.SingleOrDefaultAsync(x => x.OwnerId == userToDelete.Id);
 
+                this.context.Messages.Where(x => x.SenderId == userToDelete.Id).ToList().ForEach(x =>
+                {
+                    x.Sender = null;
+                    x.Receiver = null;
+                });
+
+                userToDelete.Messages.Clear();
                 this.context.RemoveRange(new object[] { userToDelete, fitnessPlan });
 
                 await this.context.SaveChangesAsync();
@@ -284,7 +291,6 @@
             {
                 var users = this.context.Users.Where(x => x.UserName != "God");
                 userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
-
             });
 
             return userDtos;
@@ -392,10 +398,14 @@
             {
                 userFromDb.Weight = model.Weight;
                 userFromDb.Height = model.Height;
-                userFromDb.Activity = model.Actity;
                 userFromDb.Description = model.Description;
                 userFromDb.Age = model.Age;
                 userFromDb.Address.Location = model.Adress;
+
+                if(userFromDb.Activity != model.Actity)
+                {
+                    userFromDb.Activity = model.Actity;
+                }
 
                 if(model.ProfilePictureUrl != null)
                 {

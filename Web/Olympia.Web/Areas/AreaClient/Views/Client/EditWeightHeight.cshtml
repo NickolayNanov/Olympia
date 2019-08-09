@@ -7,6 +7,10 @@
 
 <h4>Just a quick update...every trainer must know your height and weight so please insert yours here.</h4>
 
+@if(this.ViewData["Errors"] != null)
+{
+    <h3 class="text-danger">@this.ViewData["Errors"]</h3>
+}
 <form method="post" class="form-group"
       asp-area="AreaClient"
       asp-controller="Client"

@@ -93,7 +93,6 @@
 
 
             var dto = this.mapper.Map<FitnessPlanViewModel>(fitnessPlanFromDb);
-
             return dto;
         }
 

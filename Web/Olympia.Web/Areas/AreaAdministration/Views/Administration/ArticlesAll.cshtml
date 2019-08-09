@@ -11,57 +11,40 @@
        asp-action="CreateArticle">New Article</a>
 </div>
 
-<div>
-    <div class="container">
-        <div class="row">
-            @foreach (var article in Model)
-            {
-                <div class="card col-md-9 mt-3 mb-3 mr-3 ml-3">
-                    <img class="card-img" src="@article.ImgUrl" alt="Bologna">
-                    <div class="card-body">
-                        <h4 class="card-title">@article.Title</h4>
-                        <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
-                        <h5>Author: @article.Author.FullName</h5>
-                        <a class="btn btn-info text-light">Read Me</a>
-                        <a class="btn btn-danger text-light" 
-                           data-toggle="modal" data-target="#adminArticleDeleteModal">Delete</a>
-                        <div class="modal fade" id="adminArticleDeleteModal" tabindex="-1" role="dialog" aria-labelledby="adminItemDeleteLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Delete article</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure to delete this article?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <a type="button" class="btn btn-primary"
-                                           asp-area="AreaAdministration"
-                                           asp-controller="Administration"
-                                           asp-action="DeleteArticle"
-                                           asp-route-articleId="@article.Id">
-                                            Confirm
-                                        </a>
-                                    </div>
-                                </div>
+@if (Model.Any())
+{
+    <div>
+        <div class="container">
+            <div class="row">
+                @foreach (var article in Model)
+                {
+                    <div class="card col-md-9 mt-3 mb-3 mr-3 ml-3">
+                        <img class="card-img" src="@article.ImgUrl" alt="Bologna">
+                        <div class="card-body">
+                            <h4 class="card-title">@article.Title</h4>
+                            <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
+                            <h5>Author: @article.Author.FullName</h5>
+                            <a asp-area="AreaBlog"
+                               asp-controller="Blog"
+                               asp-action="ArticleDetails"
+                               asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
+                        </div>
+                        <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+                            <div class="views">
+                                @article.CreatedOn
                             </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
-                        <div class="views">
-                            @article.CreatedOn
-                        </div>
-                        <div class="stats">
-                            <i class="far fa-eye"></i> @article.TimesRead
-                        </div>
+                            <div class="stats">
+                                <i class="far fa-eye"></i> @article.TimesRead
+                            </div>
 
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <h3 class="text-danger text-center">There are currently no articles.</h3>
+}

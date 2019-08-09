@@ -1,6 +1,6 @@
-﻿
-namespace Olympia.Web.Controllers
+﻿namespace Olympia.Web.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Olympia.Common;
@@ -26,6 +26,7 @@ namespace Olympia.Web.Controllers
             this.shopService = shopService;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var articles = await this.blogsService.GetTopThreeArticlesAsync();
@@ -49,17 +50,19 @@ namespace Olympia.Web.Controllers
             return this.View(model);
         }
 
+        [AllowAnonymous]
         public IActionResult FAQ()
         {
             return this.View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [AllowAnonymous]
         public IActionResult Error()
         {
             return this.View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Chat()
         {
             IndexModel model = await this.usersService.GetIndexModelAsync(this.User);

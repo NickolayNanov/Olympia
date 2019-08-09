@@ -2,9 +2,11 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using Olympia.Common;
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
+
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -37,8 +39,8 @@
             }
 
             var shoppingCart = await this.shopService.GetShoppingCartByUserNameAsync(this.User.Identity.Name);
-
             var shopViewModel = new ShopViewModel() { Items = items, ShoppingCart = shoppingCart };
+
             return this.View("ItemsAll", shopViewModel);
         }
 

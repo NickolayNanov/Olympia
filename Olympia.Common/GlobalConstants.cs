@@ -27,10 +27,8 @@
         public const string Shop = "/AreaShop/Shop/";
         public const string ChooseExercisesRoute = "/AreaTrainer/Trainer/ChooseWorkout";
 
-        public const string AdminUsersAll = "/AreaAdministration/Administration/UsersAll";
+        public const string Login = "/Accounts/Login";
         public const string AdminArticlesAll = "/AreaAdministration/Administration/ArticlesAll";
-        public const string AccountRegister = "/Accounts/Register";
-        public const string AccountLogin = "/Accounts/Login";
         public const string Index = "/";
 
         public const string ErrorPage = "/Home/Error";
@@ -38,6 +36,8 @@
 
         #region Errors
         public const string ErrorInputMessage = "The {0} must be at least {1} and at max {2} characters long.";
+        public const string ErrorInputNumberMessage = "The {0} must be between {1} and {2}.";
+        public const string ErrorWeightHeightMessage = "The height and weight must be positive number.";
         public const string ErrorDescriptionMessage = "The {0} must be at least {2} and at max {1} characters long.";
 
         public const string ConfirmPasswordErrorMessage = "The password and confirmation password do not match.";

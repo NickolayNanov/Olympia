@@ -12,7 +12,6 @@
 
     using System.Threading.Tasks;
 
-    [AllowAnonymous]
     public class AccountsController : Controller
     {
         private readonly SignInManager<OlympiaUser> signInManager;
@@ -78,9 +77,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLoginBindingModel model)
         {
-            if (!this.ModelState.IsValid ||
-                string.IsNullOrEmpty(model.UserName) ||
-                string.IsNullOrEmpty(model.Password))
+            if (!this.ModelState.IsValid)
             {
                 return this.View(model);
             }
@@ -102,13 +99,11 @@
             await this.signInManager.SignOutAsync();
             return this.Redirect(GlobalConstants.Index);
         }
-
+       
         [Authorize]
         public async Task<IActionResult> ProfileIndex()
         {
-            var currentUser = await this.usersService
-                .GetUserProfileModelAsync(this.User.Identity.Name);
-
+            var currentUser = await this.usersService.GetUserProfileModelAsync(this.User.Identity.Name);
             return this.View(currentUser);
         }
 

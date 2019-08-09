@@ -28,10 +28,10 @@
 
         public string FullName { get; set; }
 
-        [Range(WeightMinValue, WeightMaxValue, ErrorMessage = GlobalConstants.ErrorInputMessage)]
+        [Range(WeightMinValue, WeightMaxValue, ErrorMessage = GlobalConstants.ErrorInputNumberMessage)]
         public double? Weight { get; set; }
 
-        [Range(HeightMinValue, HeightMaxValue, ErrorMessage = GlobalConstants.ErrorInputMessage)]
+        [Range(HeightMinValue, HeightMaxValue, ErrorMessage = GlobalConstants.ErrorInputNumberMessage)]
         public double? Height { get; set; }
 
         public string Interests { get; set; }

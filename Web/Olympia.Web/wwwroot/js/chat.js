@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+let connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
 
 //Disable send button until connection is established
 document.getElementById("sendButton").disabled = true;
@@ -12,9 +12,9 @@ connection.on("ReceiveMessage", () => {
 connection.on("ReceiveMessage", function (currentUser, message) {
 
     isFinished = true;
-    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = currentUser + ": " + msg;
-    var li = document.createElement("li");
+    let msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    let encodedMsg = currentUser + ": " + msg;
+    let li = document.createElement("li");
     li.textContent = encodedMsg;
     li.classList.add(["list-group-item"])
     document.getElementById("messagesList").appendChild(li);
@@ -32,9 +32,10 @@ connection.on("LoadMessage", (currentUser, message) => {
         }
     }
 
-    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = currentUser + ": " + msg;
-    var li = document.createElement("li");
+    let msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    let encodedMsg = currentUser + ": " + msg;
+    let li = document.createElement("li");
+
     li.textContent = encodedMsg;
     li.classList.add(["list-group-item"])
     document.getElementById("messagesList").appendChild(li);

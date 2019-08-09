@@ -7,43 +7,43 @@
     var list = Model.ToList();
 }
 
-    <div>
-        <div class="container">
-            <div class="row">
+<div>
+    <div class="container">
+        <div class="row">
 
-                @if (list.Any())
+            @if (list.Any())
+            {
+                @foreach (var article in list)
                 {
-                    @foreach (var article in list)
-                    {
-                <div class="col-md-8 card mt-3 mb-3 mr-3 ml-3" style="background:#f0ffff">
-                    <h4 class="card-title text-center">@article.Title</h4>
-                    <img class="card-img" src="@article.ImgUrl" alt="Loading...">
-                    <div class="card-body">
+                    <div class="col-md-8 card mt-3 mb-3 mr-3 ml-3" style="background:#f0ffff">
+                        <h4 class="card-title text-center">@article.Title</h4>
+                        <img class="card-img" src="@article.ImgUrl" alt="Loading...">
+                        <div class="card-body">
 
-                        <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
-                        <h5>Author: @article.Author.FullName</h5>
-                        <a asp-area="AreaBlog"
-                           asp-controller="Blog"
-                           asp-action="ArticleDetails"
-                           asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
-                    </div>
-                    <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
-                        <div class="views">
-                            @article.CreatedOn
+                            <p class="card-text">@string.Join("", article.Content.Take(75))...</p>
+                            <h5>Author: @article.Author.FullName</h5>
+                            <a asp-area="AreaBlog"
+                               asp-controller="Blog"
+                               asp-action="ArticleDetails"
+                               asp-route-articleId="@article.Id" class="btn btn-info">Read Me</a>
                         </div>
-                        <div class="stats">
-                            <i class="far fa-eye"></i> @article.TimesRead
-                        </div>
+                        <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+                            <div class="views">
+                                @article.CreatedOn
+                            </div>
+                            <div class="stats">
+                                <i class="far fa-eye"></i> @article.TimesRead
+                            </div>
 
+                        </div>
                     </div>
-                </div>
-                    }
                 }
-                else
-                {
-                    <h2 class="mt-5 text-danger">There are no articles yet.</h2>
-                }
-            </div>
+            }
+            else
+            {
+                <h2 class="mt-5 text-danger">There are no articles yet.</h2>
+            }
         </div>
     </div>
+</div>
 
