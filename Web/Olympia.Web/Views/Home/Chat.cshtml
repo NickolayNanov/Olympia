@@ -22,7 +22,10 @@
                             <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
                             <br />
                             <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
-                            <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                            <div class="row">
+                                <button class="form-control btn btn-success mt-4 col-md-6" id="sendButton" value="Send Message">Send</button>
+                                <button class="form-control btn btn-primary mt-4 col-md-6" id="loadPreviousMessages" value="Load Previous Messages">Chat History</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -60,7 +63,10 @@
                             <select id="userInput" class="form-control" asp-items="@(new SelectList(new[] { Model.TrainerName }))"></select>
                             <br />
                             <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
-                            <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                            <div class="row">
+                                <button class="form-control btn btn-success mt-4 col-md-6" id="sendButton" value="Send Message">Send</button>
+                                <button class="form-control btn btn-primary mt-4 col-md-6" id="loadPreviousMessages" value="Load Previous Messages">Chat History</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -98,7 +104,10 @@
                             <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
                             <br />
                             <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
-                            <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                            <div class="row">
+                                <button class="form-control btn btn-success mt-4 col-md-6" id="sendButton" value="Send Message">Send</button>
+                                <button class="form-control btn btn-primary mt-4 col-md-6" id="loadPreviousMessages" value="Load Previous Messages">Chat History</button>
+                            </div>
                         </form>
                     </div>
                 </div>

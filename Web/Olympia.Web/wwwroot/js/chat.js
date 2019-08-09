@@ -2,16 +2,12 @@
 
 let connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
 
-//Disable send button until connection is established
-document.getElementById("sendButton").disabled = true;
-
 connection.on("ReceiveMessage", () => {
     document.getElementById("messageInput").value = "";
 });
 
 connection.on("ReceiveMessage", function (currentUser, message) {
 
-    isFinished = true;
     let msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     let encodedMsg = currentUser + ": " + msg;
     let li = document.createElement("li");
@@ -52,6 +48,23 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     var message = document.getElementById("messageInput").value;
     connection.invoke("SendMessage", user, message).catch(function (err) {
         return console.error(err.toString());
+    });
+
+    event.preventDefault();
+});
+
+connection.start().then(function () {
+    document.getElementById("loadPreviousMessages").disabled = false;
+}).catch(function (err) {
+    return console.error(err.toString());
+});
+
+document.getElementById("loadPreviousMessages").addEventListener("click", function (event) {
+    var user = document.getElementById("userInput").value;
+    connection.invoke("LoadPreviousMessages", user).catch(function (err) {
+        return console.error(err.toString());
+    }).then(() => {
+        isFinished = true;
     });
 
     event.preventDefault();

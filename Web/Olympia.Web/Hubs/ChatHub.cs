@@ -4,22 +4,17 @@
     using Microsoft.EntityFrameworkCore;
     using Olympia.Data;
     using Olympia.Data.Domain;
-    using Olympia.Services.Contracts;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-
     public class ChatHub : Hub
     {
-        private readonly IUsersService usersService;
         private readonly OlympiaDbContext context;
         private bool isFirstTime = true;
 
-        public ChatHub(IUsersService usersService,
-            OlympiaDbContext context)
+        public ChatHub(OlympiaDbContext context)
         {
-            this.usersService = usersService;
             this.context = context;
         }
 
@@ -29,7 +24,7 @@
             {
                 return;
             }
-            
+
             string senderUsername = this.Context.GetHttpContext().User.Identity.Name;
 
             var sender = this.context.Users
@@ -40,15 +35,22 @@
                 .Include(x => x.Messages)
                 .SingleOrDefault(x => x.UserName == destuser);
 
-            if (isFirstTime)
-            {
-                await LoadPreviousMessagesAsync(sender, receiver);
-                this.isFirstTime = false;
-            }
-
             await AddMessageToDbAsync(message, sender, receiver);
             await this.Clients.User(sender.Id).SendAsync("ReceiveMessage", sender.UserName, message);
             await this.Clients.User(receiver.Id).SendAsync("ReceiveMessage", sender.UserName, message);
+        }
+
+        public async Task LoadPreviousMessages(string destuser)
+        {
+            var sender = this.context.Users
+                .Include(x => x.Messages)
+                .SingleOrDefault(x => x.UserName == this.Context.User.Identity.Name);
+
+            var receiver = this.context.Users
+                .Include(x => x.Messages)
+                .SingleOrDefault(x => x.UserName == destuser);
+
+            await this.LoadPreviousMessagesAsync(sender, receiver);
         }
 
         private async Task LoadPreviousMessagesAsync(OlympiaUser sender, OlympiaUser receiver)
