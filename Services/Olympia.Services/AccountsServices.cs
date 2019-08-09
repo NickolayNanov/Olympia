@@ -132,6 +132,10 @@
                 await this.userManager.CreateAsync(god, password: "imgod123");
                 god.ShoppingCart.UserId = god.Id;
                 await this.userManager.AddToRoleAsync(god, GlobalConstants.AdministratorRoleName);
+
+                god.Address.Location = "Home";
+                this.context.Update(god);
+                await this.context.SaveChangesAsync();
             }
         }
 

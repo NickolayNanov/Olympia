@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/site.css" />   
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
@@ -32,9 +32,9 @@
                             </li>
                         }
                         @if (this.User.IsInRole(GlobalConstants.ClientRoleName) &&
-             this.UserManager.Users
-                 .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
-                 !this.User.IsInRole(GlobalConstants.TrainerRoleName))
+                             this.UserManager.Users
+                                .FirstOrDefault(x => x.UserName == this.User.Identity.Name).Trainer == null &&
+                             !this.User.IsInRole(GlobalConstants.TrainerRoleName))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light"
@@ -59,7 +59,7 @@
 
     <footer class="border-top footer text-muted bg-dark">
         <div class="container">
-            &copy; @DateTime.Now.Year - Olympia.Web 
+            &copy; @DateTime.Now.Year - Olympia.Web
         </div>
     </footer>
 

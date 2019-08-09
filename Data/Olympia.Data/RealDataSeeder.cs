@@ -1,20 +1,24 @@
 ﻿namespace Olympia.Data.Seeding
 {
+    using Microsoft.AspNetCore.Identity;
+    using Olympia.Common;
     using Olympia.Data.Domain;
     using Olympia.Data.Domain.Enums;
     using System.Collections.Generic;
 
     using System.Linq;
 
-    public class DataSeeder
+    public class RealDataSeeder
     {
         private readonly OlympiaDbContext context;
+        private readonly UserManager<OlympiaUser> userManager;
 
-        public DataSeeder(OlympiaDbContext context)
+        public RealDataSeeder(OlympiaDbContext context, UserManager<OlympiaUser> userManager)
         {
             this.context = context;
-
+            this.userManager = userManager;
             this.SeedRoles();
+            this.SeedUser();
             this.SeedWorkoutAndExercises();
             this.SeedCategories();
             this.SeedArticles();
@@ -30,34 +34,27 @@
                 this.context.Roles.Add(new OlympiaUserRole { Name = "Trainer", NormalizedName = "TRAINER" });
                 this.context.Roles.Add(new OlympiaUserRole { Name = "Client", NormalizedName = "CLIENT" });
 
-                this.context.Users.AddRange(new List<OlympiaUser>()
-                {
-                    new OlympiaUser
-                    {
-                        UserName = "root",
-                        FullName = "root root",
-                        PasswordHash = "123123",
-                    },
-                    new OlympiaUser
-                    {
-                        UserName = "Pesho",
-                        FullName = "Pesho Petrov",
-                        PasswordHash = "adasdas"
-                    },
-                    new OlympiaUser
-                    {
-                        UserName = "Mesho",
-                        FullName = "Pesho Petrov",
-                        PasswordHash = "adasdas"
-                    },
-                    new OlympiaUser
-                    {
-                        UserName = "Gesho",
-                        FullName = "Pesho Petrov",
-                        PasswordHash = "adasdas"
-                    }
-                });
+                this.context.SaveChanges();
+            }
+        }
 
+        private void SeedUser()
+        {
+            if (!this.context.Users.Any())
+            {
+                var user = new OlympiaUser("NikolayNanov",
+                                           "nickolaynanov17@gmail.com",
+                                           "Nickolay Borislavov Nanov")
+                {
+                    ProfilePicturImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565266354/egjjjw4a8qd1ugwnam2o.jpg"
+                };
+
+                var result = this.userManager.CreateAsync(user).Result;
+
+                if (result.Succeeded)
+                {
+                    this.userManager.AddToRoleAsync(user, GlobalConstants.TrainerRoleName);
+                }
                 this.context.SaveChanges();
             }
         }
@@ -1248,62 +1245,45 @@
         {
             if (!this.context.Articles.Any())
             {
-                var user = this.context.Users.SingleOrDefault(x => x.UserName == "Pesho");
+                var user = this.context.Users.SingleOrDefault(x => x.UserName == "NikolayNanov");
                 var articles = new List<Article>()
                 {
                     new Article
                     {
                         AuthorId = user.Id,
-                        Title = "How to get stronger today",
-                        Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg"
+                        Title = "Start Here: The Most Important Supplements For Every Body ",
+                        Content = @"You might cringe when you hear nails across a chalkboard—if you can still find a chalkboard, anyway. Me, I cringe when a nearby conversation begins with, What supplement should I take to [fill in the goal]?" +
+                                    "If you are in the health and fitness industry, or just look like you're relatively healthy and fit, you've probably been asked the same thing. There are just too many confused people, wanting to believe the answer lies just one pill or powder away. And there are just as many bad shepherds feeding that misbelief, too. Let's fix that!" +
+                                    "In one way or another, I've walked countless thousands of people through what you're about to read. This is my keep it simple and smart approach to effective supplementation. I'll give you six steps to help you get the most out of whatever supplements you do choose to take, and then my six recommendations for a supplement starter set.",
+                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565266484/bpzhl5fxzqducujc8au5.jpg"
                     },
                     new Article
                     {
                         AuthorId = user.Id,
-                        Title = "How to get stronger today",
-                        Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg"
+                        Title = "The 10 Best Single-Leg Exercises You've Probably Never Tried ",
+                        Content = @"You go to the gym regularly. You do your squats and deadlifts, maybe some stiff-legged deadlifts and leg extensions every now and then. You know that developing your lower body is as important as developing your upper body. Loading up the barbell truly gives you joy; you love getting stronger and watching your quadriceps, hamstrings, and glutes grow.
+                                    Occasionally, you throw in some Bulgarian split squats or lunges, but here's the thing—you're leaving a lot of strength and size gains on the table by not incorporating single-leg exercises more often.
+                                    No, you can't lift as much weight during single-leg exercises as you would with bilateral exercises, meaning with both legs, but you can take your muscle growth and symmetry to the next level with single-leg moves.",
+                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565266958/r00v7s8pxg4aqgfcljs2.jpg"
                     },
                     new Article
                     {
                         AuthorId = user.Id,
-                        Title = "How to get stronger today",
-                        Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg"
-                    },
-                    new Article
-                    {
-                        AuthorId = user.Id,
-                        Title = "How to get stronger today",
-                        Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg"
-                    },
-                    new Article
-                    {
-                        AuthorId = user.Id,
-                        Title = "How to get stronger today",
-                        Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg",
-                        TimesRead = 4
-                    },
-                    new Article
-                    {
-                        AuthorId = user.Id,
-                        Title = "How to get stronger today",
-                        Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg",
-                        TimesRead = 4
-                    },
-                    new Article
-                    {
-                        AuthorId = user.Id,
-                        Title = "How to get stronger today",
-                        Content = "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563984082/eojtgytpm1a0i1q0katk.jpg",
-                        TimesRead = 4
-                    }
+                        Title = "5 Keys to a Bigger Bench Press ",
+                        Content = @"Regardless of how experienced a lifter you are, you should be reanalyzing the basics constantly, particularly on staple exercises like the bench press. It's one of the best strength and size builders for the upper body, so doing it correctly is crucial.
+                                    One of the biggest misconceptions about the bench press is that it is a dangerous exercise. Sure, if you do it improperly, you can get hurt, but you can get hurt crossing the street if you don't pay attention to the crosswalk lights and oncoming traffic.
+                                    The bench press is no more dangerous than any other upper-body pressing exercise you do with dumbbells or even a machine.There are ways to do things in a dangerous manner, and there are ways to do them safely.
+                                    When it comes to bench pressing for size and strength and without injury, follow the list below, and you'll be positioned to make great upper-body gains, minus the injuries.",
 
+                       ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565266886/vwqkwpmg4x5y9oqvhgyg.jpg"
+                    },
+                    new Article
+                    {
+                        AuthorId = user.Id,
+                        Title = "4 BCAA Craft Cocktails to Shake Up Your Summer ",
+                        Content = @"When you commit to the fitness lifestyle, sugary cocktails are one of the first things to go. So much for happy hour margaritas and rooftop cocktails—they're not anabolic. Not to worry, though. Your days of ordering vodka sodas and gazing longingly at your friends' craft cocktails are over. Mixologist Terance Robson of the speakeasy Here Nor There in Austin, Texas, voted Best Bartender in Texas, is here to save your palate with a menu of four complex, grown-up cocktails made with XTEND BCAAs.",
+                        ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565266734/gyiqwqrlgqviiaiystvv.jpg"
+                    },
                 };
 
                 this.context.Articles.AddRange(articles);
@@ -1364,29 +1344,44 @@
 
                 var supplier = this.context.Suppliers.SingleOrDefault(supp => supp.Name == "GymBeam");
 
-                var items = new List<Item>()
+                var itemsSupplements = new List<Item>()
                 {
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
-                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1563565242/prhnarsdb3hny5h82wb3.jpg", Description = "The perfect item for you", Supplier = supplier},
+                    new Item("Protein Crisp ", 21.24m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565267391/ndzwwcxbus6gzdyzfb7k.jpg", Description = @"Crispy Protein Bar Provides 20 Grams Of Protein With 4 Grams Of Sugar Per Bar. Bars Have A Unique Rice Crispy Like Texture", Supplier = supplier},
+                    new Item("100% Gold Standard Whey Protein Powder ", 29.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565267580/owjr93ybaiekhunev7om.jpg", Description = @"24g of Whey Protein with Amino Acids for Muscle Recovery and Growth*Muscle Building Whey Protein Powder*", Supplier = supplier},
+                    new Item("Protein Powder", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565267333/g1z7aijujdmmabxenhaz.jpg", Description = "The perfect item for you", Supplier = supplier},
                 };
 
-                foreach (var item in items)
+                var itemsFitness = new List<Item>()
                 {
-                    item.ItemCategories.Add(new ItemCategory { ChildCategory = fitnessCategory, Item = item });
-                    item.ItemCategories.Add(new ItemCategory { ChildCategory = clothingCategory, Item = item });
-                    item.ItemCategories.Add(new ItemCategory { ChildCategory = supplementsCategory, Item = item });
+                    new Item("Competition Power Belt ", 69.95m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565267671/uwjdhomsuesil5vvxl1k.jpg", Description = @"Model 6010 Super Heavy Duty Belt Perfect For Power Lifters!", Supplier = supplier},
+                    new Item("Expedition Backpack 6 Pack Bag , 3 Meal - Small Black/Black", 170.00m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565267726/oyuhyne9w75mxnuc2bky.jpg", Description = @"Durable, Insulated Backpack For Endurance In And Out Of The Gym!Offers Comprehensive Meal Management Capabilities While Storing Gear For The Gym And Technology For The Office!", Supplier = supplier},
+                    new Item("Assassin Elbow ", 50.00m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565267802/izzrls04ocpe5dbbdy9f.jpg", Description = @"Provide Joint Support During Grueling Workouts And Lifts Made With Sbr Neoprene And Double Stitching For Durability, With Flexible Front Panels And Lycra Side Panels", Supplier = supplier},
+                };
+
+                var itemsClothing = new List<Item>()
+                {
+                    new Item("Est. 1999 Campus Tee ", 20.00m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565267865/sep0milo9sn5n0cxu0za.jpg", Description = @"60% Combed Ring-Spun Cotton, 40% Polyester Tee Breathable, Fitted Cut Supports Intense Exercise Without the Weight of Heavier Fabrics", Supplier = supplier},
+                    new Item("Est. 1999 B Swoosh Mesh Back Trucker Hat , Black One Size - Adjustable", 19.99m){ ImgUrl = "https://res.cloudinary.com/olympiacloudinary/image/upload/v1565268260/rxv1qhgdeiev3q7ep9mt.jpg", Description = "The perfect item for you", Supplier = supplier},
+                };
+
+                foreach (var item in itemsSupplements)
+                {
+                    this.context.ItemCategories.Add(new ItemCategory() { Item = item, ChildCategory = supplementsCategory });
                 }
 
-                this.context.Items.AddRange(items);
+                foreach (var item in itemsFitness)
+                {
+                    this.context.ItemCategories.Add(new ItemCategory() { Item = item, ChildCategory = fitnessCategory });
+                }
+
+                foreach (var item in itemsClothing)
+                {
+                    this.context.ItemCategories.Add(new ItemCategory() { Item = item, ChildCategory = clothingCategory });
+                }
+
+                this.context.Items.AddRange(itemsSupplements);
+                this.context.Items.AddRange(itemsFitness);
+                this.context.Items.AddRange(itemsClothing);
                 this.context.SaveChanges();
             }
         }
