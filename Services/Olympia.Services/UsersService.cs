@@ -180,6 +180,7 @@
             await this.context.SaveChangesAsync();
             await this.userManager.UpdateSecurityStampAsync(realUser);
 
+            var userRemovedFromRole = await this.userManager.RemoveFromRoleAsync(realUser, GlobalConstants.ClientRoleName);
             var roleHasChanged = await this.userManager.AddToRoleAsync(realUser, GlobalConstants.TrainerRoleName);
 
             if (!roleHasChanged.Succeeded)

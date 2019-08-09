@@ -15,9 +15,9 @@
         </div>
     </div>
     <div class="col-md-3">
-        @if ((this.User.IsInRole(GlobalConstants.TrainerRoleName) ||
-           this.User.IsInRole(GlobalConstants.AdministratorRoleName)) &&
-           user.Articles.Select(x => x.Id).Contains(Model.Id))
+        @if ((this.User.IsInRole(GlobalConstants.TrainerRoleName) &&
+           user.Articles.Select(x => x.Id).Contains(Model.Id) ||
+           this.User.IsInRole(GlobalConstants.AdministratorRoleName)))
         {
             <div>
                 <a class="btn btn-danger text-light"
@@ -106,7 +106,6 @@
                         <hr class="bg-danger w-100" />
                     </div>
                 </div>
-
             }
         </div>
     </div>

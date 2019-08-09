@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "ItemDetails";
     @model Olympia.Data.Models.ViewModels.Shop.ItemViewModel
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -54,7 +53,7 @@
                 <hr class="bg-danger w-100" />
                 <div class="card-body">
                     <img class="card-img" src="@Model.ImgUrl" alt="Loading..." />
-                    <p class="text-center text-capitalize font-weight-normal">@Model.Description</p>
+                    <p class="text-center text-capitalize font-weight-normal mt-3">@Model.Description</p>
                 </div>
                 <a asp-area="AreaShop"
                    asp-controller="Shop"
@@ -72,6 +71,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>

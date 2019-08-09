@@ -16,10 +16,9 @@
        asp-action="ProfileIndex"> Profile</a>
 </li>
 <li class="nav-item">
-    <form class="form-inline" 
-          asp-area="Identity" 
-          asp-page="/Account/Logout" 
-          asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+    <form class="form-inline"
+          asp-controller="Accounts"
+          asp-action="Logout">
         <button type="submit" class="nav-link btn btn-link text-light">Logout</button>
     </form>
 </li>

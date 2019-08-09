@@ -1,9 +1,9 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Workouts";
     Layout = "~/Views/Shared/_Layout.cshtml";
     @model Olympia.Data.Models.BindingModels.Client.ClientViewModel
 }
+
 <div class="container">
     <div class="row">
         @foreach (var item in Model.Workouts)

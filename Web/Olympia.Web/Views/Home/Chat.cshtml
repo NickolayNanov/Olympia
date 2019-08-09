@@ -4,119 +4,124 @@
 }
 
 
-@if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
+@if (this.User.Identity.IsAuthenticated)
 {
-    @if (UserManager.Users.SingleOrDefault(x => x.UserName == this.User.Identity.Name).Clients.Any())
+    @if (this.User.IsInRole(GlobalConstants.TrainerRoleName))
     {
-        <h5 class="text-center">Chat with your Client</h5>
+        @if (UserManager.Users.SingleOrDefault(x => x.UserName == this.User.Identity.Name).Clients.Any())
+        {
+            <h5 class="text-center">Chat with your Client</h5>
 
-        <div class="container">
-            <div class="row">&nbsp;</div>
-            <div class="row">
-                <div class="col-6">&nbsp;</div>
-                <div class="col-6">
-                    <form class="form-group">
-                        <br />
-                        <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
-                        <br />
-                        <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
-                        <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
-                    </form>
+            <div class="container">
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-6">&nbsp;</div>
+                    <div class="col-6">
+                        <form class="form-group">
+                            <br />
+                            <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
+                            <br />
+                            <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
+                            <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <hr />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">&nbsp;</div>
+                    <div class="col-6">
+                        <ul id="messagesList" class="list-group list-group-flush"></ul>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <hr />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">&nbsp;</div>
-                <div class="col-6">
-                    <ul id="messagesList" class="list-group list-group-flush"></ul>
-                </div>
-            </div>
-        </div>
+        }
+        else
+        {
+            <h3 class="text-center text-danger">You don't have any clients yet.</h3>
+        }
     }
-    else
+    else if (this.User.IsInRole(GlobalConstants.ClientRoleName))
     {
-        <h3 class="text-center text-danger">You don't have any clients yet.</h3>
+        @if (context.Users.Include(x => x.Trainer).SingleOrDefault(x => x.UserName == this.User.Identity.Name).Trainer != null)
+        {
+            <h5 class="text-center">Chat with your Trainer</h5>
+
+            <div class="container">
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-6">&nbsp;</div>
+                    <div class="col-6">
+                        <form class="form-group">
+                            <br />
+                            <select id="userInput" class="form-control" asp-items="@(new SelectList(new[] { Model.TrainerName }))"></select>
+                            <br />
+                            <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
+                            <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <hr />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">&nbsp;</div>
+                    <div class="col-6">
+                        <ul id="messagesList" class="list-group list-group-flush"></ul>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h3 class="text-center text-danger">You don't have a trainer yet.</h3>
+        }
+    }
+    else if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+    {
+        @if (Model.ClientNames.Count() > 0)
+        {
+            <h5 class="text-center">Chat with users</h5>
+
+            <div class="container">
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-6">&nbsp;</div>
+                    <div class="col-6">
+                        <form class="form-group">
+                            <br />
+                            <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
+                            <br />
+                            <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
+                            <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <hr />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">&nbsp;</div>
+                    <div class="col-6">
+                        <ul id="messagesList" class="list-group list-group-flush"></ul>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h3 class="text-center text-danger">There are no clients to this site yet.</h3>
+        }
     }
 }
-else if (this.User.IsInRole(GlobalConstants.ClientRoleName))
+else
 {
-    @if (context.Users.Include(x => x.Trainer).SingleOrDefault(x => x.UserName == this.User.Identity.Name).Trainer != null)
-    {
-        <h5 class="text-center text-danger">Chat with your Trainer</h5>
-
-        <div class="container">
-            <div class="row">&nbsp;</div>
-            <div class="row">
-                <div class="col-6">&nbsp;</div>
-                <div class="col-6">
-                    <form class="form-group">
-                        <select id="userInput" class="form-control" asp-items="@(new SelectList(new[] { Model.TrainerName }))"></select>
-                        <br />
-                        <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
-                        <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <hr />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">&nbsp;</div>
-                <div class="col-6">
-                    <ul id="messagesList" class="list-group list-group-flush"></ul>
-                </div>
-            </div>
-        </div>
-    }
-    else
-    {
-        <h3 class="text-center text-danger">You don't have a trainer yet.</h3>
-    }
+    <h3 class="text-danger text-center font-weight-normal">You need to login in order to use the chat.</h3>
 }
-else if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-{
-    @if (Model.ClientNames.Count() > 0)
-    {
-        <h5>Chat with users</h5>
-
-        <div class="container">
-            <div class="row">&nbsp;</div>
-            <div class="row">
-                <div class="col-6">&nbsp;</div>
-                <div class="col-6">
-                    <form class="form-group">
-                        <br />
-                        <select id="userInput" class="form-control" asp-items="@(new SelectList(Model.ClientNames))"></select>
-                        <br />
-                        <input type="text" class="form-control" id="messageInput" placeholder="Message.." />
-                        <button class="form-control btn btn-success mt-4" id="sendButton" value="Send Message">Send</button>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <hr />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">&nbsp;</div>
-                <div class="col-6">
-                    <ul id="messagesList" class="list-group list-group-flush"></ul>
-                </div>
-            </div>
-        </div>
-    }
-    else
-    {
-        <h3 class="text-center text-danger">There are no clients to this site yet.</h3>
-    }
-}
-
-
-

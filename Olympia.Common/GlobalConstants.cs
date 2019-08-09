@@ -48,7 +48,7 @@
 
         public const string CommentLengthMessage = "The content's lenght must be between {0} and {1} characters long.";
 
-        public const string InvalidRegisterMessage = "Some of the input data is invalid. Please try again!";
+        public const string InvalidRegisterMessage = "Some of the input data is invalid or the username has already been taken. Please try again!";
         public const string InvalidLoginMessage = "Invalid username or password";
         #endregion
 

@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     @model Olympia.Data.Models.BindingModels.Client.ClientViewModel
     ViewData["Title"] = "CreateFitnessPlan";
@@ -7,7 +6,8 @@
 
 <h1 class="text-lg-center">Fitness plan for @Model.FullName</h1>
 
-<form method="post" asp-antiforgery="true">
+<form method="post"
+      asp-antiforgery="true">
     <hr />
     @if (this.ViewData["Errors"] != null)
     {
@@ -87,6 +87,5 @@
                 Create
             </button>
         </div>
-    </div>
-    
+    </div>  
 </form>

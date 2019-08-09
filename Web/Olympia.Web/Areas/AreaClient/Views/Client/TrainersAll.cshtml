@@ -5,6 +5,7 @@
 }
 
 <h1 class="text-center">Trainers</h1>
+
 @if (Model.Trainers.Any())
 {
     <table class="table table-hover">
@@ -34,11 +35,11 @@
     </table>
 
     <form method="post"
-          asp-antiforgery="true"
           asp-area="AreaClient"
           asp-controller="Client"
           asp-action="ChooseTrainer"
-          asp-route-clientFullName="@Model.TrainerName">
+          asp-route-clientFullName="@Model.TrainerName"         
+          asp-antiforgery="true">
         <div class="position-absolute">
             <div class="form-group">
                 <select class="form-control"

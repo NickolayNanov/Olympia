@@ -12,12 +12,12 @@
         <div class="col-md-4 col-md-offset-5">
             <div class="input-group">
                 <form enctype="multipart/form-data"
-                      asp-antiforgery="true"
+                      method="post"
+                      class="form-group"
                       asp-action="BecomeTrainerAsync"
                       asp-controller="Client"
-                      asp-area="AreaClient"
-                      method="post"
-                      class="form-group">
+                      asp-area="AreaClient"                     
+                      asp-antiforgery="true">
                     <hr />
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group">

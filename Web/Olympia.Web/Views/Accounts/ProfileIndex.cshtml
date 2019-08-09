@@ -1,5 +1,4 @@
-﻿
-@{ 
+﻿@{ 
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "ProfileIndex";
     @model Olympia.Data.Models.ViewModels.Home.UserProfile
@@ -7,14 +6,15 @@
 
 <h1 class="text-center text-danger">Profile</h1>
 
-<form method="post" class="form-group" enctype="multipart/form-data"
+<form enctype="multipart/form-data"
+      method="post" 
+      class="form-group" 
       asp-controller="Accounts"
       asp-action="ProfileIndex"
       asp-antiforgery="true">
     <div class="form-group">
         <div class="form-group">
             <label asp-for="@Model.UserName"></label>
-            <input type="text" asp-for="@Model.UserName" class="form-control" disabled />
             <span asp-validation-for="@Model.UserName" class="text-danger"></span>
         </div>
         <div class="form-group">

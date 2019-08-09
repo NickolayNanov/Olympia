@@ -8,7 +8,11 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form enctype="multipart/form-data" method="post" asp-antiforgery="true">
+        <form enctype="multipart/form-data"
+              method="post"
+              asp-controller="Accounts"
+              asp-area="Register"
+              asp-antiforgery="true">
             <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -66,7 +70,10 @@
             </div>
             <div class="form-group">
                 <p>
-                    <a asp-controller="Accounts" asp-action="Login">Already have an account?</a>
+                    <a asp-controller="Accounts"
+                       asp-action="Login">
+                        Already have an account?
+                    </a>
                 </p>
             </div>
         </form>
