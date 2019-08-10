@@ -16,12 +16,15 @@
     </div>
     <div class="col-md-3">
         @if ((this.User.IsInRole(GlobalConstants.TrainerRoleName) &&
-           user.Articles.Select(x => x.Id).Contains(Model.Id) ||
-           this.User.IsInRole(GlobalConstants.AdministratorRoleName)))
+          user.Articles.Select(x => x.Id).Contains(Model.Id) ||
+          this.User.IsInRole(GlobalConstants.AdministratorRoleName)))
         {
             <div>
                 <a class="btn btn-danger text-light"
-                   data-toggle="modal" data-target="#adminArticleDeleteModal">Delete</a>
+                   data-toggle="modal" data-target="#adminArticleDeleteModal">
+                    Delete
+                </a>
+
                 <div class="modal fade" id="adminArticleDeleteModal" tabindex="-1" role="dialog" aria-labelledby="adminItemDeleteLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -37,8 +40,8 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                 <a type="button" class="btn btn-primary"
-                                   asp-area="AreaAdministration"
-                                   asp-controller="Administration"
+                                   asp-area="AreaTrainer"
+                                   asp-controller="Trainer"
                                    asp-action="DeleteArticle"
                                    asp-route-articleId="@Model.Id">
                                     Confirm
@@ -87,7 +90,7 @@
             }
             else
             {
-                <p class="mt-3 font-weight-normal">@Model.Author.Description</p>
+                <p class="mt-3 font-weight-normal text-center">@Model.Author.Description</p>
             }
         </div>
         <div class="card">

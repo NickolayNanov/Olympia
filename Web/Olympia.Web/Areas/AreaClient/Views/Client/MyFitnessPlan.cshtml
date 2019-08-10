@@ -12,8 +12,15 @@ else
 {
     <h2 class="text-center">@User.Identity.Name's fitness plan</h2>
     <hr class="bg-danger w-100" />
-
-    <h3 class="text-center">Ideal Calories: @Model.Calories</h3>
+    <div class="row">
+        <h1 class="col-md-12 text-center">Calories</h1>
+        <hr class="bg-danger w-100" />
+    </div>
+    <div class="row text-center d-flex justify-content-around">
+        <h3 class="text-center col-md-4">Loosing weight: @Model.LosingWeightCalories</h3>
+        <h3 class="text-center col-md-4">Maintaining weight: @Model.Calories</h3>
+        <h3 class="text-center col-md-4">Gaining weight: @Model.GaingingWeightCalories</h3>
+    </div>
     <hr class="bg-danger w-75" />
 
     <div class="container">

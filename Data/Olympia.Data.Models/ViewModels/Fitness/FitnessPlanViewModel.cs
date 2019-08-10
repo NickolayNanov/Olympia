@@ -8,7 +8,12 @@
     public class FitnessPlanViewModel
     {
         public int Id { get; set; }
+
         public int Calories { get; set; }
+
+        public int LosingWeightCalories => this.Calories - 400;
+
+        public int GaingingWeightCalories => this.Calories + 400;
 
         public WorkoutViewModel Workout { get; set; }
 
