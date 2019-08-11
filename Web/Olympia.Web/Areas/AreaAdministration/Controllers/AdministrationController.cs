@@ -130,7 +130,7 @@
 
             if (!action)
             {
-                this.ViewData["Errors"] = "A supplier with the same name has already been added or the name is invalid! Please try again.";
+                this.ViewData["Errors"] = GlobalConstants.SameSupplierErrorMessage;
                 return this.View(model);
             }
 

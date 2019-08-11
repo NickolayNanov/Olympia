@@ -50,6 +50,8 @@
 
         public const string InvalidRegisterMessage = "Some of the input data is invalid or the username has already been taken. Please try again!";
         public const string InvalidLoginMessage = "Invalid username or password";
+        public const string SameSupplierErrorMessage = "A supplier with the same name has already been added or the name is invalid! Please try again.";
+        public const string NoTrainersErrorMessage = "There are no trainers yet";
         #endregion
 
         #region Display names
@@ -68,6 +70,16 @@
         public const string DisplayDuration = "Duration";
         public const string AlreadyAddedThisItem = "This item has already been added in the cart";
 
+        public const string NoItemsInCartMessage = "Your must have at least one item in your cart.";
+        public const string NoOrdersMessage = "You do not have any orders";
+        public const string TooEarlyFinishOrderDate = "You can't finish the order before the expected date.";
+        public const string NoClientsMessage = "You do not have any clients yet";
+        public const string UnFilledFitnessPlanFieldsMessage = "In order to assign a fitness plan both calories and workout must be filled!";
+
+        #endregion
+
+        #region Messages
+        public const string SuccessfullOrderMessage = "Your order was successfully created.";
         #endregion
     }
 }

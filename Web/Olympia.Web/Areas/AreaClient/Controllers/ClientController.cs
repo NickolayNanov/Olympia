@@ -48,7 +48,7 @@
 
             if (trainers.Count() == 0)
             {
-                this.ViewData["Errors"] = "There are no trainers yet";
+                this.ViewData["Errors"] = GlobalConstants.NoTrainersErrorMessage;
             }
 
             return this.View(model);

@@ -24,6 +24,24 @@
 
     public class UsersService : IUsersService
     {
+        private const double MaleCaloriesNumber = 66.4730;
+        private const double MaleFactorForWeight = 13.7516;
+        private const double MaleFactorForHeight = 5.0033;
+        private const double MaleFactorForAge = 6.7550;
+
+        private const double FemaleCaloriesNumber = 655.0955;
+        private const double FemaleFactorForWeight = 9.5634;
+        private const double FemaleFactorForHeight = 1.8496;
+        private const double FemaleFactorForAge = 4.6756;
+
+        private const double ZeroActivityLevelFactor = 1.2;
+        private const double OneToThreeActivityLevelFactor = 1.375;
+        private const double ThreeToFiveActivityLevelFactor = 1.55;
+        private const double SixToSevenActivityLevelFactor = 1.725;
+        private const double BeastActivityLevelFactor = 1.9;
+
+        private const string AdminUsername = "God";
+
         private readonly OlympiaDbContext context;
         private readonly IMapper mapper;
         private readonly UserManager<OlympiaUser> userManager;
@@ -253,9 +271,9 @@
 
                 var oi = this.context
                     .OrderItems
-                    .Where(x => orders.Select(t => t.Id)
+                    .Where(x => orders.Select(o => o.Id)
                         .Contains(x.Order.Id) && 
-                        items.Select(q => q.Id)
+                        items.Select(i => i.Id)
                         .Contains(x.Item.Id));
 
                 if (this.context.UserRoles.Any(x => x.UserId == userToDelete.Id))
@@ -290,7 +308,7 @@
 
             await Task.Run(() =>
             {
-                var users = this.context.Users.Where(x => x.UserName != "God");
+                var users = this.context.Users.Where(x => x.UserName != AdminUsername);
                 userDtos = this.mapper.ProjectTo<ListedUserViewModel>(users).ToList();
             });
 
@@ -306,7 +324,6 @@
 
             var user = await this.GetUserByUsernameAsync(username);
 
-            user.Trainer = null;
             user.TrainerId = null;
 
             this.context.Update(user);
@@ -328,29 +345,29 @@
 
                 if (realUser.Gender == Gender.Male)
                 {
-                    result = (double)(66.4730 + (13.7516 * realUser.Weight) + (5.0033 * realUser.Height) - (6.7550 * realUser.Age));
+                    result = (double)(MaleCaloriesNumber + MaleFactorForWeight * realUser.Weight + MaleFactorForHeight * realUser.Height - MaleFactorForAge * realUser.Age);
                 }
                 else if (realUser.Gender == Gender.Female)
                 {
-                    result = (double)(655.0955 + (9.5634 * realUser.Weight) + (1.8496 * realUser.Height) - (4.6756 * realUser.Age));
+                    result = (double)(FemaleCaloriesNumber + FemaleFactorForWeight * realUser.Weight + FemaleFactorForHeight * realUser.Height - FemaleFactorForAge * realUser.Age);
                 }
 
                 switch (realUser.Activity)
                 {
                     case ActityLevel.Zero:
-                        result *= 1.2;
+                        result *= ZeroActivityLevelFactor;
                         break;
                     case ActityLevel.OneToThree:
-                        result *= 1.375;
+                        result *= OneToThreeActivityLevelFactor;
                         break;
                     case ActityLevel.ThreeToFive:
-                        result *= 1.55;
+                        result *= ThreeToFiveActivityLevelFactor;
                         break;
                     case ActityLevel.SixToServen:
-                        result *= 1.725;
+                        result *= SixToSevenActivityLevelFactor;
                         break;
                     case ActityLevel.Beast:
-                        result *= 1.9;
+                        result *= BeastActivityLevelFactor;
                         break;
                 }
 

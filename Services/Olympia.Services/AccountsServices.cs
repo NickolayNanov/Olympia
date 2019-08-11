@@ -17,6 +17,8 @@
 
     public class AccountsServices : IAccountsServices
     {
+        private const string AdminUsername = "God";
+
         private readonly IMapper mapper;
         private readonly UserManager<OlympiaUser> userManager;
         private readonly SignInManager<OlympiaUser> signInManager;
@@ -102,7 +104,8 @@
        
         private bool CheckUsername(string username)
         {
-            Regex regex = new Regex(@"^[A-Za-z_]+[0-9]*$");
+            string pattern = @"^[A-Za-z_]+[0-9]*$";
+            Regex regex = new Regex(pattern);
 
             if (!regex.IsMatch(username))
             {
@@ -114,7 +117,8 @@
 
         private bool CheckFullName(string fullName)
         {
-            Regex regex = new Regex(@"^[A-Za-zА-Яа-я ]+$");
+            string pattern = @"^[A-Za-zА-Яа-я ]+$";
+            Regex regex = new Regex(pattern);
 
             if (!regex.IsMatch(fullName))
             {
@@ -126,7 +130,7 @@
 
         private async Task AddRootAdminIfDoesNotExistAsync()
         {
-            if (!this.context.Users.Any(user => user.UserName == "God"))
+            if (!this.context.Users.Any(user => user.UserName == AdminUsername))
             {
                 var god = new OlympiaUser("God", "God@abv.bg", "God God");
                 await this.userManager.CreateAsync(god, password: "imgod123");

@@ -1260,51 +1260,7 @@
             {
                 Assert.Equal(expected, actualIds[index++]);
             }
-        }
-
-        [Fact]
-        public async Task CreateItemAsyncShouldReturnTrue()
-        {
-            this.InitiateInMemmoryDbForShop();
-
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
-            });
-
-            var usermanager = this.TestUserManager<OlympiaUser>();
-            var mockedMapper = new Mock<Mapper>(mappingConfig).Object;
-            var mockUserService = new Mock<UsersService>(this.context, mockedMapper, usermanager).Object;
-            var shoppService = new Mock<ShopService>(mockedMapper, mockUserService, this.context).Object;
-
-            var fileMock = new Mock<IFormFile>();
-            //Setup mock file using a memory stream
-            var content = "Hello World from a Fake File";
-            var fileName = "test.pdf";
-            var ms = new MemoryStream();
-            var writer = new StreamWriter(ms);
-            writer.Write(content);
-            writer.Flush();
-            ms.Position = 0;
-            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
-            fileMock.Setup(_ => _.FileName).Returns(fileName);
-            fileMock.Setup(_ => _.Length).Returns(ms.Length);
-
-            var file = fileMock.Object;
-
-            ItemBindingModel model = new ItemBindingModel()
-            {
-                Name = "Item",
-                Description = "asd",
-                Price = 31.31,
-                ImgUrl = file,
-                CategoryName = Category.Fitness,
-                SupplierName = "GymBeam"
-            };
-
-            var result = await shoppService.CreateItemAsync(model);
-            Assert.True(result);
-        }
+        }        
 
         [Fact]
         public async Task CreateItemAsyncShouldReturnFalse()

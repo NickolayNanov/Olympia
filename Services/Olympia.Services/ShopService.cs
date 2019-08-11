@@ -9,6 +9,7 @@
     using Olympia.Data.Models.ViewModels.Shop;
     using Olympia.Services.Contracts;
     using Olympia.Services.Utilities;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -113,8 +114,8 @@
             {
                 shopViewModels = this.mapper.ProjectTo<ItemViewModel>((await this.context.ChildCategories
                 .Include(x => x.ItemCategories)
-                .ThenInclude(ic => ic.Item)
-                .ThenInclude(item => item.Supplier)
+                    .ThenInclude(ic => ic.Item)
+                    .ThenInclude(item => item.Supplier)
                 .FirstOrDefaultAsync(x => x.Name == categoryName))?
                 .ItemCategories
                 .Select(x => x.Item)
@@ -127,8 +128,10 @@
                 return null;
             }
 
+            SetItemCategory(shopViewModels, categoryName);
+
             return shopViewModels.ToList();
-        }
+        }   
 
         public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync()
         {
@@ -420,6 +423,14 @@
             await this.context.SaveChangesAsync();
 
             return this.context.Orders.Contains(orderFromDb);
+        }
+
+        private void SetItemCategory(IEnumerable<ItemViewModel> shopViewModels, string categoryName)
+        {
+            foreach (var item in shopViewModels)
+            {
+                item.Category = categoryName;
+            }
         }
     }
 }

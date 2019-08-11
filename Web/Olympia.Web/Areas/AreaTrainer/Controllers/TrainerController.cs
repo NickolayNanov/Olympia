@@ -36,7 +36,7 @@
 
             if (clients.Count() == 0)
             {
-                this.ViewData["Errors"] = "You do not have any clients yet";
+                this.ViewData["Errors"] = GlobalConstants.NoClientsMessage;
             }
 
             return this.View(clients);
@@ -131,7 +131,7 @@
             if (model.Calories == 0 || model.WorkoutViewModel == null)
             {
                 model.WorkoutViewModel = new WorkoutViewModel() { Name = "", ImgUrl = "" };
-                this.ViewData["Errors"] = "In order to assign a fitness plan both calories and workout must be filled!";
+                this.ViewData["Errors"] = GlobalConstants.UnFilledFitnessPlanFieldsMessage;
 
                 return this.View("CreateFitnessPlan", model);
             }

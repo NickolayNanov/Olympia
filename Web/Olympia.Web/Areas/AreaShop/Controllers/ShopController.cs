@@ -72,11 +72,6 @@
                 ShoppingCart = cart
             };
 
-            foreach (var item in shopViewModel.Items)
-            {
-                item.Category = category;
-            }
-
             return this.View("ItemsAll", shopViewModel);
         }
 
@@ -113,11 +108,11 @@
         public async Task<IActionResult> FinishOrder()
         {
             var result = await this.shopService.FinishOrderAsync(this.User.Identity.Name);
-            this.ViewData["Messages"] = "Your order was successfully created.";
+            this.ViewData["Messages"] = GlobalConstants.SuccessfullOrderMessage;
 
             if (!result)
             {
-                this.ViewData["Messages"] = "Your must have at least one item in your cart.";
+                this.ViewData["Messages"] = GlobalConstants.NoItemsInCartMessage;
             }
 
             var cart = await this.shopService.GetShoppingCartDtoByUserNameAsync(this.User.Identity.Name);
@@ -130,7 +125,7 @@
 
             if (!orders.Any())
             {
-                this.ViewData["Errors"] = "You do not have any orders";
+                this.ViewData["Errors"] = GlobalConstants.NoOrdersMessage;
             }
 
             return this.View(orders);
@@ -142,7 +137,7 @@
 
             if (!result)
             {
-                this.ViewData["Errors"] = "You can't finish the order before the expected date.";
+                this.ViewData["Errors"] = GlobalConstants.TooEarlyFinishOrderDate;
                 var ordersToReturn = await this.shopService.GetAllOrdersByUsernameAsync(this.User.Identity.Name);
 
                 return this.View("MyOrders", ordersToReturn);
@@ -152,7 +147,7 @@
 
             if (!orders.Any())
             {
-                this.ViewData["Errors"] = "You do not have any orders";
+                this.ViewData["Errors"] = GlobalConstants.NoOrdersMessage;
             }
 
             return this.View("MyOrders", orders);
