@@ -14,6 +14,7 @@
 
     public class AccountsController : Controller
     {
+
         private readonly SignInManager<OlympiaUser> signInManager;
         private readonly IAccountsServices accountsServices;
         private readonly IUsersService usersService;
